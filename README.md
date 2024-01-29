@@ -16,33 +16,50 @@ CS467 - AI Coder - Animal Adoption
     ```
     ** Note this password is hardcoded in settings.py for local development. We will hide credentials before we deploy.
 
-4. **Install Django**: You can install Django by running the following command in your terminal:
+4. **Create a Virtual Environment**: Before installing Django, it's recommended to create a virtual environment. This can be done using the following commands in your terminal:
+
+    ```bash
+    python -m venv env
+    ```
+
+    To activate the virtual environment, use:
+
+    - On Windows:
+      ```bash
+      env\Scripts\activate
+      ```
+    - On MacOS/Linux:
+      ```bash
+      source env/bin/activate
+      ```
+      
+5. **Install Django**: You can install Django by running the following command in your terminal:
 
     ```bash
     pip install Django
     ```
 
-5. **Clone the application repository**: Clone the application repository to your local machine using Git.
+6. **Clone the application repository**: Clone the application repository to your local machine using Git.
 
-6. **Install the required Python packages**: Navigate to the directory where you cloned the repository and install the required Python packages using the following command:
+7. **Install the required Python packages**: Navigate to the directory where you cloned the repository and install the required Python packages using the following command:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-7. **Run the Django migrations**: This will create the necessary tables in your database. Run the following commands:
+8. **Run the Django migrations**: This will create the necessary tables in your database. Run the following commands:
 
     ```bash
     python manage.py makemigrations
     python manage.py migrate
     ```
 
-8. **Create a Django superuser**: To access the admin panel, you need to create a superuser. Run the following command and follow the prompts:
+9. **Create a Django superuser**: To access the admin panel, you need to create a superuser. Run the following command and follow the prompts:
 
     ```bash
     python manage.py createsuperuser
     ```
-9. **Start the Django server**: You can start the Django server using the following command:
+10. **Start the Django server**: You can start the Django server using the following command:
 
     ```bash
     python manage.py runserver
@@ -50,3 +67,4 @@ CS467 - AI Coder - Animal Adoption
 
 Now, you should be able to access the application in your web browser at `http://localhost:8000`.
 The admin page is located at `http://localhost:8000/admin`
+**Note**: Remember to deactivate your virtual environment when you're done working on the project by running `deactivate` in your terminal.
