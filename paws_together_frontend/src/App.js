@@ -1,11 +1,13 @@
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import routes from './routes';
+import Header from './components/header/Header';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header"></header>
+      <Header />
       <Router>
         <Routes>
           {routes.map((route, index) => (
