@@ -1,6 +1,11 @@
 """
 URL configuration for paws_together_backend project.
 
+Available routes:
+- /admin/ : Django admin site.
+- /animals/ : List all animals or create a new animal (GET, POST).
+- /animals/{id}/ : Retrieve, update or delete a specific animal (GET, PUT, PATCH, DELETE).
+
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
@@ -15,8 +20,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+from db_connector.views import AnimalViewSet
+
+router = DefaultRouter()
+router.register(r'animals', AnimalViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
 ]
