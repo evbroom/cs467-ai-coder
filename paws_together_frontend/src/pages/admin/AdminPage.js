@@ -1,4 +1,4 @@
 const AdminPage = () => {
-  return 'Admin Login';
+  return 'Admin Dashboard';
 };
 export default AdminPage;

@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 // TODO: set up .env file
 const url = 'dummy-url';
 
-export default function Component() {
+const SignupForm = () => {
   const {
     register,
     handleSubmit,
@@ -84,4 +84,6 @@ export default function Component() {
       </Form>
     </div>
   );
-}
+};
+
+export default SignupForm;

@@ -19,11 +19,11 @@ const userRoutes = [
 ];
 
 const adminRoutes = [
-  { path: '/admin-login', component: AdminLoginPage },
-  { path: '/admin', component: AdminPage },
-  { path: '/create-pet-profile', component: CreatePetProfilePage },
-  { path: '/manage-pet-profiles', component: ManagePetProfilesPage },
-  { path: '/manage-users', component: ManageUsersPage },
+  { path: '/admin/login', component: AdminLoginPage },
+  { path: '/admin/dashboard', component: AdminPage },
+  { path: '/admin/create-pet-profile', component: CreatePetProfilePage },
+  { path: '/admin/pet-profiles', component: ManagePetProfilesPage },
+  { path: '/admin/users', component: ManageUsersPage },
 ];
 
 export { publicRoutes, userRoutes, adminRoutes };

@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * v0 by Vercel.
@@ -11,21 +10,21 @@ import { useNavigate } from 'react-router-dom';
 
 const url = 'dummy-url';
 
-const LoginForm = () => {
+const LoginForm = ({ isAdmin, onSubmit }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate('/'); // Redirect to home page after successful login
-  };
+
   return (
     <div className="mx-auto max-w-sm space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Login</h1>
+        {isAdmin ? (
+          <h1 className="text-3xl font-bold">Admin Login</h1>
+        ) : (
+          <h1 className="text-3xl font-bold">Login</h1>
+        )}
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
