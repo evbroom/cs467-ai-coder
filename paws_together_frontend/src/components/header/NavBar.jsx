@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { FaPaw } from 'react-icons/fa';
 
 function NavBar() {
-  // TODO: Impmlment authentication
+  // TODO: Implement authentication
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (

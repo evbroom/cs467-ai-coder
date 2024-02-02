@@ -1,10 +1,10 @@
 import Newsfeeds from '../../components/home/Newsfeeds';
-import WelcomeSection from '../../components/home/WelcomeSection';
+import Greeting from '../../components/home/Greeting';
 
 const HomePage = () => {
   return (
     <div>
-      <WelcomeSection />
+      <Greeting />
       <Newsfeeds />
     </div>
   );

@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 
-const WelcomeSection = () => {
+const Greeting = () => {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+          {/* the img is from https://www.pexels.com/ credit to Mariam Antadze */}
           <img
             alt="A cute cat is welcoming you to PawsTogether!"
             className="aspect-video overflow-hidden rounded-xl object-bottom lg:order-last lg:aspect-square"
@@ -39,4 +40,4 @@ const WelcomeSection = () => {
   );
 };
 
-export default WelcomeSection;
+export default Greeting;
