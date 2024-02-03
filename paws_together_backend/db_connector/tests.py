@@ -1,7 +1,11 @@
 from django.test import TestCase
 from django.db import models
+from django.urls import reverse
 from .models import User, Animal
-from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.core.exceptions import ValidationError
+from rest_framework.test import APIClient, APITestCase
+from rest_framework import status
+
 
 class UserTestCase(TestCase):
 
@@ -214,3 +218,107 @@ class AnimalTestCase(TestCase):
         self.assertTrue(available_animals.exists())
         adopted_animals = Animal.objects.filter(availability="adopted")
         self.assertTrue(adopted_animals.exists())
+
+class AnimalAPITestCase(APITestCase):
+    def setUp(self):
+        """Sets up the database for the tests."""
+        self.client = APIClient()
+        self.animal_data = {
+            "type": "dog", 
+            "breed": "Bulldog", 
+            "availability": "available", 
+            "disposition": ["good_with_children"],
+            "picture_url": "http://example.com/dog.jpg",
+            "description": "A friendly bulldog."
+        }
+        self.response = self.client.post(
+            reverse('animal-list'),
+            self.animal_data,
+            format="json"
+        )   
+
+    def test_api_can_create_an_animal(self):
+        """Test the api has animal creation capability."""
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+
+    def test_api_can_get_an_animal(self):
+        """Test the api can get a given animal."""
+        animal = Animal.objects.get()
+        response = self.client.get(
+            reverse('animal-detail', kwargs={'pk': animal.id}), format="json")
+        expected_data = {
+            'id': animal.id,
+            'type': animal.type,
+            'breed': animal.breed,
+            'availability': animal.availability,
+            'disposition': animal.disposition,
+            'picture_url': animal.picture_url,
+            'description': animal.description
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # date_created is in the response, but we don't need it in the expected_data
+        self.assertTrue('date_created' in response.data)
+        response.data.pop('date_created')
+        self.assertEqual(response.data, expected_data)
+
+    def test_api_can_update_animal(self):
+        """Test the api can update a given animal."""
+        animal = Animal.objects.get()
+
+        change_animal = {
+            'type': 'cat',
+            'breed': 'Siamese',
+            'availability': 'available',
+            'disposition': ['good_with_animals'],
+            'picture_url': animal.picture_url,
+            'description': animal.description
+        }
+        res = self.client.put(
+            reverse('animal-detail', kwargs={'pk': animal.id}),
+            change_animal, format='json'
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_can_delete_animal(self):
+        """Test the api can delete a animal."""
+        animal = Animal.objects.get()
+        response = self.client.delete(
+            reverse('animal-detail', kwargs={'pk': animal.id}),
+            format='json', follow=True)
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_api_can_get_all_animals(self):
+        """Test the api can get a list of all animals."""
+        # Delete all animals from setUp
+        Animal.objects.all().delete()
+
+        # Create some animals
+        Animal.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
+        Animal.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
+
+        # Send a GET request to the API
+        response = self.client.get(reverse('animal-list'), format='json')
+
+        # Check that the status code is 200
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check that the number of animals returned is correct
+        self.assertEqual(len(response.data), 2)
+
+    def test_api_returns_error_for_invalid_animal_id(self):
+        """Test the api returns an error for an invalid animal id."""
+        # Send a GET request with an invalid id
+        response = self.client.get(reverse('animal-detail', kwargs={'pk': 999}), format='json')
+
+        # Check that the status code is 404
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_api_returns_error_for_invalid_data(self):
+        """Test the api returns an error for invalid data."""
+        # Send a POST request with invalid data
+        invalid_data = {'type': 'elephant', 'breed': 'African', 'availability': 'available'}
+        response = self.client.post(reverse('animal-list'), invalid_data, format='json')
+
+        # Check that the status code is 400
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
