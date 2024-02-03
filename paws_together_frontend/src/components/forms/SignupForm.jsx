@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
+import { postUserSignup } from '../../utils/api';
 
 /**
  * v0 by Vercel.
@@ -16,27 +17,19 @@ const SignupForm = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const apiUrl = process.env.REACT_APP_API_URL;
+
   const onSubmit = async (data) => {
-    try {
-      const response = await fetch(`${apiUrl}/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        console.log('User created successfully');
-        navigate('/'); // Redirect to home page
-      } else {
-        // notify user of error
-        console.log('User creation failed');
-      }
-    } catch (err) {
-      console.log(err);
+    const response = await postUserSignup(data);
+    if (response.ok) {
+      console.log('User created successfully');
+      // Store user login status
+      navigate('/');
+    } else {
+      // Handle error (e.g. display error message to user)
+      console.log('User creation failed');
     }
   };
+
   return (
     <div className="mx-auto max-w-sm space-y-6">
       <div className="space-y-2 text-center">

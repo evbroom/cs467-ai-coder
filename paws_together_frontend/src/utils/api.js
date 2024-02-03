@@ -56,12 +56,10 @@ export const getPetProfiles = async (
       data: response.data,
       hasNextPage: response.data.nextPage,
     };
-  } catch {
-    (error) => {
-      // Handle error (e.g. 404, 500, etc.)
-      console.error(error);
-      throw new Error('Error fetching pet profiles');
-    };
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    console.error(error);
+    throw new Error('Error fetching pet profiles');
   }
 };
 
@@ -83,12 +81,10 @@ export const getSinglePetProfile = async (id) => {
     return {
       data: response.data,
     };
-  } catch {
-    (error) => {
-      // Handle error (e.g. 404, 500, etc.)
-      console.log(error);
-      throw new Error("Error fetching pet profile's details");
-    };
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    console.log(error);
+    throw new Error("Error fetching pet profile's details");
   }
 };
 
@@ -110,12 +106,10 @@ export const postUserSignup = async (userData) => {
     // Handle success
     console.log(response);
     return response.data;
-  } catch {
-    (error) => {
-      // Handle error (e.g. 404, 500, etc.)
-      console.error(error);
-      throw new Error('Error posting user signup');
-    };
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    console.error(error);
+    throw new Error('Error posting user signup');
   }
 };
 
@@ -137,11 +131,9 @@ export const postLogin = async (userData) => {
     // Handle success
     console.log(response);
     return response.data;
-  } catch {
-    (error) => {
-      // Handle error (e.g. 404, 500, etc.)
-      console.error(error);
-      throw new Error('Error posting user login');
-    };
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    console.error(error);
+    throw new Error('Error posting user login');
   }
 };
