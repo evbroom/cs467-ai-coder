@@ -9,9 +9,6 @@ import { useNavigate } from 'react-router-dom';
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 
-// TODO: set up .env file
-const url = 'dummy-url';
-
 const SignupForm = () => {
   const {
     register,
@@ -19,9 +16,10 @@ const SignupForm = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(url, {
+      const response = await fetch(`${apiUrl}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,13 +28,13 @@ const SignupForm = () => {
       });
       if (response.ok) {
         console.log('User created successfully');
+        navigate('/'); // Redirect to home page
       } else {
+        // notify user of error
         console.log('User creation failed');
       }
     } catch (err) {
       console.log(err);
-    } finally {
-      navigate('/'); // Redirect to home page
     }
   };
   return (
