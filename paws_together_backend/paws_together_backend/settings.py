@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'db_connector',
     'rest_framework',
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +51,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'paws_together_backend.urls'
 
@@ -127,3 +132,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'authentication.PawsTogetherUser'
+LOGIN_REDIRECT_URL = 'home'  # Default redirect for regular users
+LOGIN_REDIRECT_URL_PRIVILEGED = 'pawsadmin'  # Redirect for privileged users

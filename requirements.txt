@@ -5,3 +5,4 @@ psycopg2==2.9.9
 pytz==2023.4
 sqlparse==0.4.4
 tzdata==2023.4
+django_cors_headers==4.3.1
