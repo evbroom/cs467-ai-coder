@@ -23,8 +23,8 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from db_connector.views import AnimalViewSet
-from django.contrib.auth import views as auth_views
 from django.urls import path
+from . import views
 
 
 router = DefaultRouter()
@@ -33,5 +33,6 @@ router.register(r'animals', AnimalViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('login/', auth_views.LoginView.as_view(template_name='authentication/login.html'), name='login'),
+    path('signup/', views.user_signup, name='user_signup'),
+    path('login/', views.user_login, name='user_login'),
 ]
