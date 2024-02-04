@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  DJANGO_SETTINGS_MODULE: paws_together_backend.settings
+  DJANGO_SETTINGS_MODULE: cs467-ai-coder.paws_together_backend.paws_together_backend.settings
   DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
 
 jobs:
