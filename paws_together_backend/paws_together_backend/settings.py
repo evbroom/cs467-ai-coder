@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'db_connector',
     'rest_framework',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'authentication.PawsTogetherUser'
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.CustomUserAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
