@@ -38,8 +38,10 @@ jobs:
     - name: Setup Database
       run: |
         sudo apt-get -yqq install libpq-dev
-        python paws_together_backend/manage.py makemigrations
-        python paws_together_backend/manage.py migrate
+        python manage.py makemigrations
+        python manage.py migrate
+      working-directory: ./paws_together_backend
     - name: Run tests
       run: |
-        python paws_together_backend/manage.py test
+        python manage.py test
+      working-directory: ./paws_together_backend
