@@ -2,7 +2,6 @@ import HomePage from './pages/public/HomePage';
 import UserLoginPage from './pages/public/UserLoginPage.js';
 import UserSignupPage from './pages/public/UserSignupPage.js';
 import BrowsePetsPage from './pages/public/BrowsePetsPage.js';
-import AdminLoginPage from './pages/admin/AdminLoginPage.js';
 import AdminPage from './pages/admin/AdminPage.js';
 import CreatePetProfilePage from './pages/admin/CreatePetProfilePage.js';
 import ManagePetProfilesPage from './pages/admin/ManagePetProfilesPage.js';
@@ -19,7 +18,6 @@ const userRoutes = [
 ];
 
 const adminRoutes = [
-  { path: '/admin/login', component: AdminLoginPage },
   { path: '/admin/dashboard', component: AdminPage },
   { path: '/admin/create-pet-profile', component: CreatePetProfilePage },
   { path: '/admin/pet-profiles', component: ManagePetProfilesPage },

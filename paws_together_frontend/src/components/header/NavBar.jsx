@@ -1,12 +1,18 @@
-import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { FaPaw } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../slices/loginStatusSlice';
 
 function NavBar() {
-  // TODO: Implement authentication
-  const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
+  const username = useSelector((state) => state.loginStatus.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -17,12 +23,14 @@ function NavBar() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/browse-pets">Browse Pets</Nav.Link>
-            {loggedIn ? (
+            {userLoggedIn ? (
               <>
-                <Nav.Link href="/logout">Logout</Nav.Link>
+                <Nav.Link href="#" onClick={handleLogout}>
+                  Logout
+                </Nav.Link>
               </>
             ) : (
               <>
@@ -31,6 +39,9 @@ function NavBar() {
               </>
             )}
           </Nav>
+          <Navbar.Text className="ml-auto">
+            Hello, {userLoggedIn ? username : 'Guest'}!
+          </Navbar.Text>
         </Navbar.Collapse>
       </Container>
     </Navbar>

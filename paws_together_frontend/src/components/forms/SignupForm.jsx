@@ -3,6 +3,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 import { postUserSignup } from '../../utils/api';
+import { useDispatch } from 'react-redux';
+import { login } from '../../slices/loginStatusSlice';
 
 /**
  * v0 by Vercel.
@@ -16,17 +18,19 @@ const SignupForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     const response = await postUserSignup(data);
     if (response.ok) {
-      console.log('User created successfully');
+      console.log('User creatd successfully');
       // Store user login status
+      dispatch(login(data.username));
       navigate('/');
     } else {
       // Handle error (e.g. display error message to user)
-      console.log('User creation failed');
+      console.log('User create failed');
     }
   };
 
