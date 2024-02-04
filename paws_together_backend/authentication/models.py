@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class CustomUser(AbstractUser):
+class PawsTogetherUser(AbstractUser):
     USER_TYPES = (
         ('regular', 'Regular'),
         ('privileged', 'Privileged'),

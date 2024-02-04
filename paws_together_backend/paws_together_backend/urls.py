@@ -24,7 +24,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from db_connector.views import AnimalViewSet
 from django.urls import path
-from . import views
+from authentication import views
 
 
 router = DefaultRouter()
@@ -35,4 +35,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('signup/', views.user_signup, name='user_signup'),
     path('login/', views.user_login, name='user_login'),
+    path('home/', views.home_view, name='home'),
+    path('pawsadmin/', views.pawsadmin_view, name='pawsadmin'),
 ]

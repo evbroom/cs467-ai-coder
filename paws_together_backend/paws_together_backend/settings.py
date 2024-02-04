@@ -133,7 +133,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.PawsTogetherUser'
-AUTHENTICATION_BACKENDS = [
-    'authentication.backends.CustomUserAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+LOGIN_REDIRECT_URL = 'home'  # Default redirect for regular users
+LOGIN_REDIRECT_URL_PRIVILEGED = 'pawsadmin'  # Redirect for privileged users
