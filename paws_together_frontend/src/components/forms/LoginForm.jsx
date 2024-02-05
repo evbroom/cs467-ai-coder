@@ -69,7 +69,7 @@ const LoginForm = () => {
           </div>
 
           <Button className="w-full" variant="dark" type="submit">
-            Sign Up
+            Login
           </Button>
         </div>
       </Form>
