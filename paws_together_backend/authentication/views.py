@@ -1,26 +1,42 @@
-from django.contrib.auth.models import User
+from db_connector.models import User
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from authentication.models import PawsTogetherUser
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
+@csrf_exempt
 def user_signup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        user_type = request.POST.get('user_type', 'regular')
-
         try:
-            user = PawsTogetherUser.objects.create_user(username=username, email=email, password=password)
-            user.user_type = user_type
-            user.save()
-            return JsonResponse({'message': 'User created successfully'})
+            # Parse the JSON data from the request body
+            data = json.loads(request.body.decode('utf-8'))
+            print(data)
+            username = data.get('username')
+            print(username)
+            password = data.get('password')
+            email = data.get('email')
+            account_type = data.get('account_type', 'public')
+
+            if username and email and password:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                user.account_type = account_type
+                user.save()
+                return JsonResponse({'message': 'User created successfully'})
+            else:
+                return JsonResponse({'error': 'Invalid data provided'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+@csrf_exempt
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -44,3 +60,7 @@ def home_view(request):
 def pawsadmin_view(request):
     # Your logic for the 'pawsadmin' view
     return render(request, 'authentication/pawsadmin.html')
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrf_token': csrf_token})

@@ -13,8 +13,8 @@ const publicRoutes = [
 ];
 
 const userRoutes = [
-  { path: '/signup', component: UserSignupPage },
-  { path: '/login', component: UserLoginPage },
+  { path: '/signup/', component: UserSignupPage },
+  { path: '/login/', component: UserLoginPage },
 ];
 
 const adminRoutes = [
