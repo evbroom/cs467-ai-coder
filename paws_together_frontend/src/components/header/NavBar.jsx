@@ -34,8 +34,8 @@ function NavBar() {
               </>
             ) : (
               <>
-                <Nav.Link href="/signup">Sign Up</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
+                <Nav.Link href="/signup/">Sign Up</Nav.Link>
+                <Nav.Link href="/login/">Login</Nav.Link>
               </>
             )}
           </Nav>

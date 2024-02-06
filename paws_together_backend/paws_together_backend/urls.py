@@ -37,4 +37,5 @@ urlpatterns = [
     path('login/', views.user_login, name='user_login'),
     path('home/', views.home_view, name='home'),
     path('pawsadmin/', views.pawsadmin_view, name='pawsadmin'),
+    path('get_csrf_token/', views.get_csrf_token, name='get_csrf_token'),
 ]
