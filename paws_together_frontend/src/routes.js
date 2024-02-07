@@ -10,9 +10,6 @@ import ManageUsersPage from './pages/admin/ManageUsersPage.js';
 const publicRoutes = [
   { path: '/', exact: true, component: HomePage },
   { path: '/browse-pets', component: BrowsePetsPage },
-];
-
-const userRoutes = [
   { path: '/signup/', component: UserSignupPage },
   { path: '/login/', component: UserLoginPage },
 ];
@@ -24,4 +21,4 @@ const adminRoutes = [
   { path: '/admin/users', component: ManageUsersPage },
 ];
 
-export { publicRoutes, userRoutes, adminRoutes };
+export { publicRoutes, adminRoutes };

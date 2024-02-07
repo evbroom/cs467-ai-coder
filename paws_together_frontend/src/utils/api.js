@@ -51,7 +51,7 @@ export const getPetProfiles = async (
     });
 
     // Handle success
-    console.log(response.data);
+    console.log(response);
     return {
       data: response.data,
       hasNextPage: response.data.nextPage,
@@ -77,7 +77,7 @@ export const getSinglePetProfile = async (id) => {
     const response = await axios.get(`${API_URL}/pets/${id}`);
 
     // Handle success
-    console.log(response.data);
+    console.log(response);
     return {
       data: response.data,
     };
@@ -93,7 +93,6 @@ export const getSinglePetProfile = async (id) => {
  *
  * @param {Object} userData - User data to be posted. (username: string, email: string, password: string)
  * @returns {Object} - Returns a success message if the user is created.
- * @throws {Error} - Throws an error if there is an issue with the request.
  */
 export const postUserSignup = async (userData) => {
   try {
@@ -104,12 +103,10 @@ export const postUserSignup = async (userData) => {
     });
 
     // Handle success
-    console.log(response);
-    return response.data;
+    return response;
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    console.error(error);
-    throw new Error('Error posting user signup');
+    return error.response;
   }
 };
 
@@ -118,7 +115,6 @@ export const postUserSignup = async (userData) => {
  *
  * @param {Object} userData - User data to be posted. (username: string, password: string)
  * @returns {Object} - Returns a success message if the user is logged in.
- * @throws {Error} - Throws an error if there is an issue with the request.
  */
 export const postLogin = async (userData) => {
   try {
@@ -127,13 +123,10 @@ export const postLogin = async (userData) => {
         'Content-Type': 'application/json',
       },
     });
-
     // Handle success
-    console.log(response);
-    return response.data;
+    return response;
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    console.error(error);
-    throw new Error('Error posting user login');
+    return error.response;
   }
 };

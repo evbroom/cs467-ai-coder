@@ -39,17 +39,18 @@ def user_signup(request):
 @csrf_exempt
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        data = json.loads(request.body.decode('utf-8'))
+        username = data.get('username')
+        password = data.get('password')
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.user_type == 'privileged':
-                return redirect(LOGIN_REDIRECT_URL_PRIVILEGED)
-            else:
-                return redirect(LOGIN_REDIRECT_URL)
-            return JsonResponse({'message': 'User logged in successfully'})
+            response = {'message': 'User logged in successfully'}
+            if user.is_admin:
+                # Add extra authentication here for admin users
+                response['is_admin'] = True    
+            return JsonResponse(response)
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
         

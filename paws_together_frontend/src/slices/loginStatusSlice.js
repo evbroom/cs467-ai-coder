@@ -5,11 +5,13 @@ export const loginStatusSlice = createSlice({
   initialState: {
     loggedIn: false,
     user: null,
+    isAdmin: false,
   },
   reducers: {
     login: (state, action) => {
       state.loggedIn = true;
-      state.user = action.payload;
+      state.user = action.payload.user;
+      state.isAdmin = action.payload.isAdmin;
     },
     logout: (state) => {
       state.loggedIn = false;
