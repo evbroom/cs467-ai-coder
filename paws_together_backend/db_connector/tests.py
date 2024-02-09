@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.db import models
 from django.urls import reverse
 from .models import User, Animal
@@ -322,3 +322,80 @@ class AnimalAPITestCase(APITestCase):
 
         # Check that the status code is 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class AnimalViewSetTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        # Create five animals
+        Animal.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children', 'good_with_animals'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
+        Animal.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
+        Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog2.jpg', description='A friendly labrador.')
+        Animal.objects.create(type='cat', breed='Domestic Shorthair', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat2.jpg', description='A friendly domestic shorthair.')
+        Animal.objects.create(type='dog', breed='Beagle', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/dog3.jpg', description='A friendly beagle.')
+        Animal.objects.create(type='other', breed='Other', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/other.jpg', description='A friendly other.')
+
+    def test_type_filter_dog(self):
+        """Test that the type filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'type': 'dog'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 3)
+
+    def test_type_filter_cat(self):
+        """Test that the type filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'type': 'cat'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 2)
+    
+    def test_type_filter_other(self):
+        """Test that the other type filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'type': 'other'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+
+    def test_breed_filter(self):
+        """Test that the breed filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'breed': 'Bulldog'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+
+    def test_availability_filter(self):
+        """Test that the availability filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'availability': 'available'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 6)
+
+    def test_disposition_filter(self):
+        """Test that the disposition filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'disposition': 'good_with_children'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 4)
+    
+    def test_multiple_filters(self):
+        """Test that multiple filters work correctly."""
+        response = self.client.get(reverse('animal-list'), {'type': 'dog', 'availability': 'available'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 3)
+
+    def test_multiple_dispositions_filter(self):
+        """Test that multiple dispositions filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'disposition': 'good_with_children', 'disposition': 'leash_needed'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 2)
+    
+    def test_breed_options(self):
+        """Test that the breed options are returned correctly."""
+        # Test with 'type' parameter set to 'dog'
+        response = self.client.get(reverse('breed_options'), {'type': 'dog'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), Animal.DOG_BREEDS)
+
+        # Test with 'type' parameter set to 'cat'
+        response = self.client.get(reverse('breed_options'), {'type': 'cat'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), Animal.CAT_BREEDS)
+
+        # Test with 'type' parameter to 'other'
+        response = self.client.get(reverse('breed_options'), {'type': 'other'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), ['Other'])
