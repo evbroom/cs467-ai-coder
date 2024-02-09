@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { postUserSignup } from '../../utils/api';
+import { postUserSignup } from '../../utils/auth';
 import { useDispatch } from 'react-redux';
 import { login } from '../../slices/loginStatusSlice';
 import { useState } from 'react';
@@ -19,9 +19,7 @@ const SignupForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await postUserSignup(data);
-      console.log(response);
       if (response.status >= 200 && response.status < 300) {
-        console.log('User creatd successfully');
         // Store user login status
         dispatch(login(data.username));
         navigate('/');

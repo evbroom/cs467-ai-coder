@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { postLogin } from '../../utils/api';
+import { postLogin } from '../../utils/auth';
 import { useDispatch } from 'react-redux';
 import { login } from '../../slices/loginStatusSlice';
 import { useState } from 'react';
