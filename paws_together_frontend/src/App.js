@@ -6,7 +6,7 @@ import {
   Routes,
   Outlet,
 } from 'react-router-dom';
-import { publicRoutes, userRoutes, adminRoutes } from './routes';
+import { publicRoutes, adminRoutes } from './routes';
 import Header from './components/header/Header';
 
 function PublicOutlet() {
@@ -33,14 +33,6 @@ function App() {
               />
             ))}
           </Route>
-
-          {userRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
 
           {adminRoutes.map((route, index) => (
             <Route

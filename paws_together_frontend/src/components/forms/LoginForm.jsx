@@ -1,16 +1,10 @@
 import { useForm } from 'react-hook-form';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { postLogin } from '../../utils/api';
 import { useDispatch } from 'react-redux';
 import { login } from '../../slices/loginStatusSlice';
-
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/9I7fb3MwnuW
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+import { useState } from 'react';
 
 const LoginForm = () => {
   const {
@@ -18,28 +12,41 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState('');
 
   const onSubmit = async (data) => {
-    const response = await postLogin(data);
-    if (response.ok) {
-      console.log('User logged in successfully');
-      // Store user login status
-      // TODO: get user role ? (e.g. admin or user)
-      dispatch(login(data.username));
-      navigate('/');
-    } else {
-      // Handle error (e.g. display error message to user)
-      console.log('User login failed');
+    try {
+      const response = await postLogin(data);
+      if (response.status >= 200 && response.status < 300) {
+        // Store user login status
+        const isAdmin = response?.data?.is_admin || false;
+        const payload = {
+          user: data.username,
+          isAdmin: isAdmin,
+        };
+        dispatch(login(payload));
+        navigate('/');
+      } else {
+        setServerError('Server error. Please try again.');
+        return;
+      }
+    } catch (error) {
+      setServerError('Server error. Please try again.');
+      return;
     }
   };
 
+  /**
+   * v0 by Vercel.
+   * @see https://v0.dev/t/9I7fb3MwnuW
+   * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
+   */
   return (
-    <div className="mx-auto max-w-sm space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Login</h1>
+    <div className="mx-auto max-w-sm space-y-6 mt-5">
+      <div>
+        <h1 className="font-bold text-center">Login</h1>
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
@@ -67,7 +74,11 @@ const LoginForm = () => {
               )}
             </Form.Group>
           </div>
-
+          {serverError && (
+            <Alert key="danger" variant="danger">
+              {serverError}
+            </Alert>
+          )}
           <Button className="w-full" variant="dark" type="submit">
             Login
           </Button>

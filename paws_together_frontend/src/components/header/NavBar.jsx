@@ -9,6 +9,7 @@ function NavBar() {
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
   const username = useSelector((state) => state.loginStatus.user);
+  const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -39,10 +40,10 @@ function NavBar() {
               </>
             )}
           </Nav>
-          <Navbar.Text className="ml-auto">
-            Hello, {userLoggedIn ? username : 'Guest'}!
-          </Navbar.Text>
         </Navbar.Collapse>
+        <Navbar.Text className="ml-auto hidden lg:block">
+          Hello, {userLoggedIn ? username : 'Guest'} {isAdmin && ' (Admin)'}!
+        </Navbar.Text>
       </Container>
     </Navbar>
   );
