@@ -16,7 +16,7 @@ class AnimalViewSet(viewsets.ModelViewSet):
         type = self.request.query_params.get('type', None)
         breed = self.request.query_params.get('breed', None)
         availability = self.request.query_params.get('availability', None)
-        disposition = self.request.query_params.get('disposition', None)
+        dispositions = self.request.query_params.getlist('disposition')
 
         # Filter queryset based on query parameters
         if type is not None:
@@ -25,8 +25,9 @@ class AnimalViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(breed=breed)
         if availability is not None:
             queryset = queryset.filter(availability=availability)
-        if disposition is not None:
-            queryset = queryset.filter(disposition__contains=[disposition])
+        if dispositions is not None:
+            for disposition in dispositions:
+                queryset = queryset.filter(disposition__contains=[disposition])
         
         return queryset
 

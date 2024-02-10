@@ -379,10 +379,16 @@ class AnimalViewSetTestCase(TestCase):
 
     def test_multiple_dispositions_filter(self):
         """Test that multiple dispositions filter works correctly."""
-        response = self.client.get(reverse('animal-list'), {'disposition': 'good_with_children', 'disposition': 'leash_needed'})
+        response = self.client.get(reverse('animal-list'), {'disposition': ['good_with_children', 'leash_needed']})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 2)
     
+    def test_empty_dispositions_filter(self):
+        """Test that multiple dispositions filter works correctly."""
+        response = self.client.get(reverse('animal-list'), {'disposition': ['good_with_children', 'leash_needed', 'good_with_animals']})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 0)
+
     def test_breed_options(self):
         """Test that the breed options are returned correctly."""
         # Test with 'type' parameter set to 'dog'
