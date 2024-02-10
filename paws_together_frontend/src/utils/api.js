@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from './helpers';
+import { format } from 'date-fns';
 
 /**
  *  API - Requests from Public Users
@@ -41,25 +42,25 @@ export const getPetBreeds = async (type) => {
  * @param {string} dateCreated - Date created of pet profile. (Format: YYYY-MM-DD)
  * @returns {Object} - Returns an object with pet profiles, including a boolean indicating if next page exists.
  */
-export const getPetProfiles = async (
+export const getPetProfiles = async ({
   page,
   type,
   breed,
   disposition,
-  dateCreated
-) => {
+  dateCreated,
+}) => {
   const queryParams = { page };
-  if (type) {
+  if (type && type !== 'Select Type') {
     queryParams.type = type;
   }
-  if (breed) {
+  if (breed && breed !== 'Select Breed') {
     queryParams.breed = breed;
   }
   if (disposition) {
     queryParams.disposition = disposition;
   }
   if (dateCreated) {
-    queryParams.dateCreated = dateCreated;
+    queryParams.dateCreated = format(dateCreated, 'yyyy-MM-dd');
   }
 
   try {
@@ -81,7 +82,6 @@ export const getPetProfiles = async (
  *
  * @param {number} id - Pet profile id.
  * @returns {Object} - Returns an object with pet profile details.
- * @throws {Error} - Throws an error if there is an issue with the request.
  */
 export const getSinglePetProfile = async (id) => {
   try {
@@ -91,6 +91,5 @@ export const getSinglePetProfile = async (id) => {
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
     console.log(error);
-    throw new Error("Error fetching pet profile's details");
   }
 };
