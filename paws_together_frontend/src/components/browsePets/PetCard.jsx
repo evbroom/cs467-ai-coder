@@ -9,9 +9,9 @@ import React from 'react';
  * @param {*} param0
  * @returns
  */
-const PetCard = ({ image, breed, availability }) => {
+const PetCard = ({ image, breed, availability, onClick }) => {
   return (
-    <div className="rounded">
+    <div className="border-2 rounded hover:cursor-pointer" onClick={onClick}>
       <img
         className="w-full"
         src={image}

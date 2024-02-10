@@ -14,7 +14,7 @@ const PetProfile = ({ pet }) => {
     >
       {/* Pet Picture */}
       <img
-        src={pet.pictureUrl}
+        src={pet.image}
         alt="Pet"
         className="w-700 h-700 object-cover mb-4"
       />
@@ -29,7 +29,12 @@ const PetProfile = ({ pet }) => {
           <Card.Body>Breed: {pet.breed}</Card.Body>
         </Card>
         <Card className="mb-3">
-          <Card.Body>Dispositions: {pet.dispositions.join(', ')}</Card.Body>
+          <Card.Body>
+            Dispositions:{' '}
+            {pet.disposition.forEach((item) => {
+              return <li>{item}</li>;
+            })}
+          </Card.Body>
         </Card>
         <Card className="mb-3">
           <Card.Body>Availability: {pet.availability}</Card.Body>
