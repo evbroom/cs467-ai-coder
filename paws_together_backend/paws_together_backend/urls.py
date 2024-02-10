@@ -22,7 +22,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from db_connector.views import AnimalViewSet
+from db_connector.views import AnimalViewSet, breed_options
 from django.urls import path
 from authentication import views
 
@@ -38,4 +38,5 @@ urlpatterns = [
     path('home/', views.home_view, name='home'),
     path('pawsadmin/', views.pawsadmin_view, name='pawsadmin'),
     path('get_csrf_token/', views.get_csrf_token, name='get_csrf_token'),
+    path('breed_options/', breed_options, name='breed_options')
 ]
