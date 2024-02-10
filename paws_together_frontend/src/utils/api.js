@@ -7,7 +7,7 @@ import { format } from 'date-fns';
  *  ------------
  *  getPetBreeds
  *  getPetProfiles
- *  getSinglePetProfile
+ *  getPetProfileById
  *
  */
 
@@ -76,14 +76,14 @@ export const getPetProfiles = async ({
 };
 
 /**
- * GET request for a single pet profile.
+ * GET request for a pet profile by ID
  *
  * Use it to fetch a single pet profile based on the pet profile id.
  *
  * @param {number} id - Pet profile id.
  * @returns {Object} - Returns an object with pet profile details.
  */
-export const getSinglePetProfile = async (id) => {
+export const getPetProfileById = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/pets/${id}`);
     // Handle success
