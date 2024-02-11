@@ -11,7 +11,7 @@ from rest_framework import status
 # Create your views here.
 
 class PetPagination(PageNumberPagination):
-    page_size = 5  # Set the number of items per page
+    page_size = 100  # Set the number of items per page
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -28,7 +28,7 @@ class PetViewSet(viewsets.ModelViewSet):
     pagination_class = PetPagination
 
     def get_queryset(self):
-        queryset = Pet.objects.all()
+        queryset = Pet.objects.all().order_by('id')
 
         # Get query parameters
         type = self.request.query_params.get('type', None)

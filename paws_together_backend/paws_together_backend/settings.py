@@ -157,5 +157,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGIN_REDIRECT_URL = 'home'  # Default redirect for regular users
-LOGIN_REDIRECT_URL_PRIVILEGED = 'pawsadmin'  # Redirect for privileged users
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
