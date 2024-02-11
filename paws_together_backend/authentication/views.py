@@ -4,6 +4,7 @@ from rest_framework import status, permissions, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserSerializer, UserSignupSerializer
+from rest_framework.authtoken.models import Token
 
 
 # Signup View
@@ -31,8 +32,10 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
+            token, created = Token.objects.get_or_create(user=user)
             return Response({
-                "message": "Successfully logged in."
+                "message": "Successfully logged in.",
+                "token": token.key
             }, status=status.HTTP_200_OK)
         return Response({
             "error": "Invalid credentials"
