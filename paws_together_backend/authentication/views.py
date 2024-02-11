@@ -5,14 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserSerializer, UserSignupSerializer
 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # Signup View
-@method_decorator(csrf_exempt, name='dispatch')
 class SignupView(APIView):
     permission_classes = [permissions.AllowAny]
-    
+
     def post(self, request, *args, **kwargs):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
@@ -24,7 +21,6 @@ class SignupView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Login View
-@method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -43,7 +39,6 @@ class LoginView(APIView):
         }, status=status.HTTP_401_UNAUTHORIZED)
 
 # User ViewSet for CRUD operations
-@method_decorator(csrf_exempt, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
