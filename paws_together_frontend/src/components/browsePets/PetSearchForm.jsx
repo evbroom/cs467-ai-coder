@@ -89,7 +89,7 @@ const PetSearchForm = ({ onSearch }) => {
                   onChange={onChange}
                   maxDate={new Date()}
                   dateFormat="MM-dd-yyyy"
-                  className="border-2 rounded w-full text-center"
+                  className="border-2 rounded text-center"
                   placeholderText="Select Date"
                 />
               );
