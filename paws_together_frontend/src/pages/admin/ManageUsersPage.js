@@ -1,4 +1,4 @@
 const ManageUsersPage = () => {
-  return 'Manage User Page';
+  return 'Manage Users';
 };
 export default ManageUsersPage;

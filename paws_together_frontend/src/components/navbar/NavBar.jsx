@@ -1,17 +1,18 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 import { FaPaw } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../slices/loginStatusSlice';
+import AdminNavDropdown from './AdminNavDropdown';
 
 function NavBar() {
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
   const username = useSelector((state) => state.loginStatus.user);
-  const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
+  // const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
+  const isAdmin = true;
 
   const handleLogout = () => {
+    // TODO: Send logout request to server
     dispatch(logout());
   };
 
@@ -39,6 +40,7 @@ function NavBar() {
                 <Nav.Link href="/login/">Login</Nav.Link>
               </>
             )}
+            {isAdmin && <AdminNavDropdown />}
           </Nav>
         </Navbar.Collapse>
         <Navbar.Text className="ml-auto hidden lg:block">

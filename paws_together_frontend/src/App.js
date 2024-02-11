@@ -6,13 +6,13 @@ import {
   Routes,
   Outlet,
 } from 'react-router-dom';
-import { publicRoutes, adminRoutes } from './routes';
-import Header from './components/header/Header';
+import routes from './routes';
+import NavBar from './components/navbar/NavBar';
 
-function PublicOutlet() {
+function NavBarOutlet() {
   return (
     <div>
-      <Header />
+      <NavBar />
       <Outlet />
     </div>
   );
@@ -23,8 +23,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route element={<PublicOutlet />}>
-            {publicRoutes.map((route, index) => (
+          <Route element={<NavBarOutlet />}>
+            {routes.map((route, index) => (
               <Route
                 key={index}
                 path={route.path}
@@ -33,14 +33,6 @@ function App() {
               />
             ))}
           </Route>
-
-          {adminRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
         </Routes>
       </Router>
     </div>
