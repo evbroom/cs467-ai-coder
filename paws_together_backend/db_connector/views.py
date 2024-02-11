@@ -21,8 +21,8 @@ class PetPagination(PageNumberPagination):
             'pets': data
         })
 class PetViewSet(viewsets.ModelViewSet):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
     pagination_class = PetPagination
