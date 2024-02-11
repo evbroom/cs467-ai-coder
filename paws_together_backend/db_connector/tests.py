@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.db import models
 from django.urls import reverse
-from .models import User, Animal
+from .models import User, Pet
 from django.core.exceptions import ValidationError
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
@@ -59,14 +59,14 @@ class UserTestCase(TestCase):
         self.assertEqual(user_admin.account_type, "admin")
         self.assertEqual(user_public.account_type, "public")
 
-class AnimalTestCase(TestCase):
+class PetTestCase(TestCase):
     def setUp(self):
         """Sets up the database for the tests."""
-        Animal.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children'])
+        Pet.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children'])
 
     def test_animal_creation(self):
-        """Tests that the Animal is correctly created."""
-        animal = Animal.objects.filter(type='dog', breed='Bulldog').first()
+        """Tests that the Pet is correctly created."""
+        animal = Pet.objects.filter(type='dog', breed='Bulldog').first()
         self.assertEqual(animal.type, 'dog')
         self.assertEqual(animal.breed, 'Bulldog')
         self.assertEqual(animal.availability, 'available')
@@ -74,53 +74,53 @@ class AnimalTestCase(TestCase):
 
     def test_type_field_choices(self):
         """Tests that the type field choices are correct."""
-        animal = Animal.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'])
+        animal = Pet.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'])
         self.assertEqual(animal.type, 'cat')
 
     def test_invalid_animal_type(self):
         """Tests that an invalid animal type raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='unicorn', breed='Unknown', availability='available', disposition=['good_with_animals'])
+            animal = Pet.objects.create(type='unicorn', breed='Unknown', availability='available', disposition=['good_with_animals'])
             animal.full_clean()
 
     def test_invalid_disposition(self):
         """Tests that an invalid disposition raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['bad_with_animals'])
+            animal = Pet.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['bad_with_animals'])
             animal.full_clean()
 
     def test_invalid_breed(self):
         """Tests that an invalid breed raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='dog', breed='Unknown', availability='available', disposition=['good_with_animals'])
+            animal = Pet.objects.create(type='dog', breed='Unknown', availability='available', disposition=['good_with_animals'])
             animal.full_clean()
     
     def test_invalid_availability(self):
         """Tests that an invalid availability raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='dog', breed='Labrador Retriever', availability='unknown', disposition=['good_with_animals'])
+            animal = Pet.objects.create(type='dog', breed='Labrador Retriever', availability='unknown', disposition=['good_with_animals'])
             animal.full_clean()
     
     def test_invalid_picture_url(self):
         """Tests that an invalid picture URL raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals'], picture_url='invalid_url')
+            animal = Pet.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals'], picture_url='invalid_url')
             animal.full_clean()
 
     def test_invalid_description(self):
         """Tests that an invalid description raises a ValidationError."""
         with self.assertRaises(ValidationError):
-            animal = Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals'], description='a' * 1001)
+            animal = Pet.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals'], description='a' * 1001)
             animal.full_clean()
     
     def test_valid_disposition(self):
         """Tests that a valid disposition is saved correctly."""
-        animal = Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals', 'leash_needed'])
+        animal = Pet.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_animals', 'leash_needed'])
         self.assertEqual(animal.disposition, ['good_with_animals', 'leash_needed'])
     
     def test_availability_choices(self):
         """Tests that the availability choices are correct."""
-        animal = Animal.objects.create(
+        animal = Pet.objects.create(
             type="dog", 
             breed="Beagle", 
             disposition=["leash_needed"], 
@@ -132,7 +132,7 @@ class AnimalTestCase(TestCase):
 
     def test_date_auto_creation(self):
         """Tests that the date_created field is automatically created."""
-        animal = Animal.objects.create(
+        animal = Pet.objects.create(
             type="cat", 
             breed="Bengal", 
             disposition=["good_with_children"], 
@@ -144,7 +144,7 @@ class AnimalTestCase(TestCase):
 
     def test_filtering_by_type(self):
         """Tests that filtering by type works correctly."""
-        Animal.objects.create(
+        Pet.objects.create(
             type="cat", 
             breed="Siamese", 
             disposition=["leash_needed"], 
@@ -152,14 +152,14 @@ class AnimalTestCase(TestCase):
             availability="available", 
             description="Quiet cat"
         )
-        dogs = Animal.objects.filter(type="dog")
+        dogs = Pet.objects.filter(type="dog")
         self.assertTrue(dogs.exists())
-        cats = Animal.objects.filter(type="cat")
+        cats = Pet.objects.filter(type="cat")
         self.assertTrue(cats.exists())
     
     def test_filtering_by_breed(self):
         """Tests that filtering by breed works correctly."""
-        Animal.objects.create(
+        Pet.objects.create(
             type="dog", 
             breed="Labrador Retriever", 
             disposition=["leash_needed"], 
@@ -167,14 +167,14 @@ class AnimalTestCase(TestCase):
             availability="available", 
             description="Friendly dog"
         )
-        labs = Animal.objects.filter(breed="Labrador Retriever")
+        labs = Pet.objects.filter(breed="Labrador Retriever")
         self.assertTrue(labs.exists())
-        siamese = Animal.objects.filter(breed="Siamese")
+        siamese = Pet.objects.filter(breed="Siamese")
         self.assertFalse(siamese.exists())
 
     def test_filtering_by_disposition(self):
         """Tests that filtering by disposition works correctly."""
-        Animal.objects.create(
+        Pet.objects.create(
             type="cat", 
             breed="Siamese", 
             disposition=["leash_needed"], 
@@ -182,16 +182,16 @@ class AnimalTestCase(TestCase):
             availability="available", 
             description="Quiet cat"
         )
-        good_with_animals = Animal.objects.filter(disposition__contains=["good_with_animals"])
+        good_with_animals = Pet.objects.filter(disposition__contains=["good_with_animals"])
         self.assertFalse(good_with_animals.exists())
-        good_with_children = Animal.objects.filter(disposition__contains=["good_with_children"])
+        good_with_children = Pet.objects.filter(disposition__contains=["good_with_children"])
         self.assertTrue(good_with_children.exists())
-        leash_needed = Animal.objects.filter(disposition__contains=["leash_needed"])
+        leash_needed = Pet.objects.filter(disposition__contains=["leash_needed"])
         self.assertTrue(leash_needed.exists())
     
     def test_filtering_by_picture_url(self):
         """Tests that filtering by picture URL works correctly."""
-        Animal.objects.create(
+        Pet.objects.create(
             type="cat", 
             breed="Siamese", 
             disposition=["leash_needed"], 
@@ -199,14 +199,14 @@ class AnimalTestCase(TestCase):
             availability="available", 
             description="Quiet cat"
         )
-        cat = Animal.objects.filter(picture_url="http://example.com/cat.jpg")
+        cat = Pet.objects.filter(picture_url="http://example.com/cat.jpg")
         self.assertTrue(cat.exists())
-        dog = Animal.objects.filter(picture_url="http://example.com/dog.jpg")
+        dog = Pet.objects.filter(picture_url="http://example.com/dog.jpg")
         self.assertFalse(dog.exists())
 
     def test_filtering_by_availability(self):
         """Tests that filtering by availability works correctly."""
-        Animal.objects.create(
+        Pet.objects.create(
             type="cat", 
             breed="Siamese", 
             disposition=["leash_needed"], 
@@ -214,12 +214,12 @@ class AnimalTestCase(TestCase):
             availability="adopted", 
             description="Quiet cat"
         )
-        available_animals = Animal.objects.filter(availability="available")
+        available_animals = Pet.objects.filter(availability="available")
         self.assertTrue(available_animals.exists())
-        adopted_animals = Animal.objects.filter(availability="adopted")
+        adopted_animals = Pet.objects.filter(availability="adopted")
         self.assertTrue(adopted_animals.exists())
 
-class AnimalAPITestCase(APITestCase):
+class PetAPITestCase(APITestCase):
     def setUp(self):
         """Sets up the database for the tests."""
         self.client = APIClient()
@@ -243,7 +243,7 @@ class AnimalAPITestCase(APITestCase):
 
     def test_api_can_get_an_animal(self):
         """Test the api can get a given animal."""
-        animal = Animal.objects.get()
+        animal = Pet.objects.get()
         response = self.client.get(
             reverse('animal-detail', kwargs={'pk': animal.id}), format="json")
         expected_data = {
@@ -264,7 +264,7 @@ class AnimalAPITestCase(APITestCase):
 
     def test_api_can_update_animal(self):
         """Test the api can update a given animal."""
-        animal = Animal.objects.get()
+        animal = Pet.objects.get()
 
         change_animal = {
             'type': 'cat',
@@ -282,7 +282,7 @@ class AnimalAPITestCase(APITestCase):
 
     def test_api_can_delete_animal(self):
         """Test the api can delete a animal."""
-        animal = Animal.objects.get()
+        animal = Pet.objects.get()
         response = self.client.delete(
             reverse('animal-detail', kwargs={'pk': animal.id}),
             format='json', follow=True)
@@ -291,11 +291,11 @@ class AnimalAPITestCase(APITestCase):
     def test_api_can_get_all_animals(self):
         """Test the api can get a list of all animals."""
         # Delete all animals from setUp
-        Animal.objects.all().delete()
+        Pet.objects.all().delete()
 
         # Create some animals
-        Animal.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
-        Animal.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
+        Pet.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
+        Pet.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
 
         # Send a GET request to the API
         response = self.client.get(reverse('animal-list'), format='json')
@@ -323,17 +323,17 @@ class AnimalAPITestCase(APITestCase):
         # Check that the status code is 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-class AnimalViewSetTestCase(TestCase):
+class PetViewSetTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
         # Create five animals
-        Animal.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children', 'good_with_animals'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
-        Animal.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
-        Animal.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog2.jpg', description='A friendly labrador.')
-        Animal.objects.create(type='cat', breed='Domestic Shorthair', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat2.jpg', description='A friendly domestic shorthair.')
-        Animal.objects.create(type='dog', breed='Beagle', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/dog3.jpg', description='A friendly beagle.')
-        Animal.objects.create(type='other', breed='Other', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/other.jpg', description='A friendly other.')
+        Pet.objects.create(type='dog', breed='Bulldog', availability='available', disposition=['good_with_children', 'good_with_animals'], picture_url='http://example.com/dog.jpg', description='A friendly bulldog.')
+        Pet.objects.create(type='cat', breed='Siamese', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat.jpg', description='A friendly cat.')
+        Pet.objects.create(type='dog', breed='Labrador Retriever', availability='available', disposition=['good_with_children'], picture_url='http://example.com/dog2.jpg', description='A friendly labrador.')
+        Pet.objects.create(type='cat', breed='Domestic Shorthair', availability='available', disposition=['good_with_animals'], picture_url='http://example.com/cat2.jpg', description='A friendly domestic shorthair.')
+        Pet.objects.create(type='dog', breed='Beagle', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/dog3.jpg', description='A friendly beagle.')
+        Pet.objects.create(type='other', breed='Other', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url='http://example.com/other.jpg', description='A friendly other.')
 
     def test_type_filter_dog(self):
         """Test that the type filter works correctly."""
@@ -394,12 +394,12 @@ class AnimalViewSetTestCase(TestCase):
         # Test with 'type' parameter set to 'dog'
         response = self.client.get(reverse('breed_options'), {'type': 'dog'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), Animal.DOG_BREEDS)
+        self.assertEqual(response.json(), Pet.DOG_BREEDS)
 
         # Test with 'type' parameter set to 'cat'
         response = self.client.get(reverse('breed_options'), {'type': 'cat'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), Animal.CAT_BREEDS)
+        self.assertEqual(response.json(), Pet.CAT_BREEDS)
 
         # Test with 'type' parameter to 'other'
         response = self.client.get(reverse('breed_options'), {'type': 'other'})

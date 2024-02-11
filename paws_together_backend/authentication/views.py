@@ -1,67 +1,74 @@
-from db_connector.models import User
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
+from django.contrib.auth.models import User
+from rest_framework import status, permissions, viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import UserSerializer, UserSignupSerializer
+
 from django.views.decorators.csrf import csrf_exempt
-import json
+from django.utils.decorators import method_decorator
 
+# Signup View
+@method_decorator(csrf_exempt, name='dispatch')
+class SignupView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        serializer = UserSignupSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({
+                "id": user.id,
+                "username": user.username
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
-def user_signup(request):
-    if request.method == 'POST':
-        try:
-            # Parse the JSON data from the request body
-            data = json.loads(request.body.decode('utf-8'))
-            print(data)
-            username = data.get('username')
-            print(username)
-            password = data.get('password')
-            email = data.get('email')
-            account_type = data.get('account_type', 'public')
+# Login View
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
 
-            if username and email and password:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.account_type = account_type
-                user.save()
-                return JsonResponse({'message': 'User created successfully'})
-            else:
-                return JsonResponse({'error': 'Invalid data provided'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-@csrf_exempt
-def user_login(request):
-    if request.method == 'POST':
-        data = json.loads(request.body.decode('utf-8'))
-        username = data.get('username')
-        password = data.get('password')
-
-        user = authenticate(request, username=username, password=password)
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        print(f"Logging in with username={username}, password={password}") 
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            response = {'message': 'User logged in successfully'}
-            if user.is_admin:
-                # Add extra authentication here for admin users
-                response['is_admin'] = True    
-            return JsonResponse(response)
+            return Response({
+                "message": "Successfully logged in."
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "error": "Invalid credentials"
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+# User ViewSet for CRUD operations
+@method_decorator(csrf_exempt, name='dispatch')
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = [permissions.AllowAny]
+        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            permission_classes = [permissions.IsAuthenticated]
         else:
-            return JsonResponse({'error': 'Invalid credentials'}, status=401)
-        
-def home_view(request):
-    # Your logic for the 'home' view
-    return render(request, 'authentication/home.html')
+            permission_classes = [permissions.IsAdminUser]
+        return [permission() for permission in permission_classes]
 
-def pawsadmin_view(request):
-    # Your logic for the 'pawsadmin' view
-    return render(request, 'authentication/pawsadmin.html')
+    def perform_create(self, serializer):
+        # Custom logic for creating a user can be added here
+        serializer.save()
 
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    return JsonResponse({'csrf_token': csrf_token})
+    def perform_update(self, serializer):
+        # Custom logic for updating a user can be added here
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        # Custom logic for deleting a user can be added here
+        instance.delete()
