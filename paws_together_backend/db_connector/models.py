@@ -1,41 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
-        if not email:
-            raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
 
-    def create_superuser(self, username, email, password=None):
-        user = self.create_user(username, email, password)
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
-class User(AbstractBaseUser):
-
-    ACCOUNT_TYPE_CHOICES = [
-        ('admin', 'Admin'),
-        ('public', 'Public'),
-    ]
-
-    username = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True)
-    account_type = models.CharField(max_length=50, choices=ACCOUNT_TYPE_CHOICES)  # 'admin' or 'public'
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-
-    objects = UserManager()
-
-    REQUIRED_FIELDS = ['email']
-    USERNAME_FIELD = 'username'
-
-class Animal(models.Model):
+class Pet(models.Model):
     TYPE_CHOICES = [
         ('dog', 'Dog'),
         ('cat', 'Cat'),
@@ -64,7 +31,7 @@ class Animal(models.Model):
     DISPOSITION_CHOICES = [
         ('good_with_animals', 'Good with other animals'),
         ('good_with_children', 'Good with children'),
-        ('leash_needed', 'Animal must be leashed at all times'),
+        ('leash_needed', 'Pet must be leashed at all times'),
     ]
 
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
