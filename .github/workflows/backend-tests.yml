@@ -10,6 +10,7 @@ env:
   PYTHONPATH: ${{ github.workspace }}/paws_together_backend
   DJANGO_SETTINGS_MODULE: paws_together_backend.settings
   DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
+  DEFAULT_FILE_STORAGE: ${{ secrets.DEFAULT_FILE_STORAGE }}
 
 jobs:
   build:
@@ -23,7 +24,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: github_actions
-          DEFAULT_FILE_STORAGE: ${{ secrets.DEFAULT_FILE_STORAGE }}
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
