@@ -22,21 +22,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from db_connector.views import AnimalViewSet, breed_options
+from db_connector.views import PetViewSet, breed_options
+from authentication.views import UserViewSet, SignupView, LoginView
 from django.urls import path
-from authentication import views
 
 
 router = DefaultRouter()
-router.register(r'animals', AnimalViewSet)
+router.register(r'pets', PetViewSet)
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('signup/', views.user_signup, name='user_signup'),
-    path('login/', views.user_login, name='user_login'),
-    path('home/', views.home_view, name='home'),
-    path('pawsadmin/', views.pawsadmin_view, name='pawsadmin'),
-    path('get_csrf_token/', views.get_csrf_token, name='get_csrf_token'),
-    path('breed_options/', breed_options, name='breed_options')
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('pets/breeds/<str:type>/', breed_options, name='breed_options'),
 ]
