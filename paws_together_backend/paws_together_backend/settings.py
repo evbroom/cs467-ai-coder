@@ -144,7 +144,11 @@ AWS_LOCATION = 'static'
 STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-DEFAULT_FILE_STORAGE = os.getenv('DEFAULT_FILE_STORAGE')
+if os.getenv('GITHUB_ACTIONS') == 'true':
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+else:
+    DEFAULT_FILE_STORAGE = os.getenv('DEFAULT_FILE_STORAGE')
+
 DEFAULT_STORAGE_ALIAS = 'django.core.files.storage.FileSystemStorage'
 
 
