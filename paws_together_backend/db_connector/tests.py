@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.db import models
 from django.urls import reverse
 from .models import Pet
@@ -9,10 +9,16 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from authentication.serializers import UserSignupSerializer
 from rest_framework.exceptions import ValidationError as DRFValidationError
-
-
-
-
+from django.core.files.uploadedfile import SimpleUploadedFile
+import boto3
+import os
+import shutil
+from botocore.exceptions import NoCredentialsError
+from dotenv import load_dotenv
+from django.conf import settings
+from io import BytesIO
+from PIL import Image
+import json
 class UserTestCase(TestCase):
 
     def setUp(self):
@@ -247,6 +253,7 @@ class PetTestCase(TestCase):
         adopted_pets = Pet.objects.filter(availability="adopted")
         self.assertTrue(adopted_pets.exists())
 
+@override_settings(DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage')
 class PetAPITestCase(APITestCase):
     def setUp(self):
         """Sets up the database for the tests."""
@@ -259,19 +266,32 @@ class PetAPITestCase(APITestCase):
         token = Token.objects.create(user=self.test_user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
+        # Create an image file for the test
+        image = Image.new('RGB', (100, 100))
+        image_file = BytesIO()
+        image.save(image_file, 'jpeg')
+        image_file.seek(0)
+
+        # Create a SimpleUploadedFile object from the BytesIO object
+        image_content_file = SimpleUploadedFile('test.jpg', image_file.getvalue(), content_type='image/jpeg')
+
+
         self.pet_data = {
             "type": "dog", 
             "breed": "Bulldog", 
             "availability": "available", 
             "disposition": ["good_with_children"],
-            "picture_url": "http://example.com/dog.jpg",
+            "picture_url": image_content_file,
             "description": "A friendly bulldog."
         }
         self.response = self.client.post(
             reverse('pet-list'),
             self.pet_data,
-            format="json"
-        )   
+            format="multipart"
+        )
+
+        # self.created_pet_picture_url = Pet.objects.get().picture_url
+        # print('created_pet_picture_url: ', self.created_pet_picture_url)
 
     def test_api_can_create_an_pet(self):
         """Test the api has pet creation capability."""
@@ -282,6 +302,10 @@ class PetAPITestCase(APITestCase):
         pet = Pet.objects.get()
         response = self.client.get(
             reverse('pet-detail', kwargs={'pk': pet.id}), format="json")
+        
+        # response_path = urlparse(response.data['picture_url']).path
+        # expected_path = urlparse(str(self.created_pet_picture_url)).path
+
         expected_data = {
             'id': pet.id,
             'type': pet.type,
@@ -291,28 +315,45 @@ class PetAPITestCase(APITestCase):
             'picture_url': pet.picture_url,
             'description': pet.description
         }
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # date_created is in the response, but we don't need it in the expected_data
         self.assertTrue('date_created' in response.data)
         response.data.pop('date_created')
-        self.assertEqual(response.data, expected_data)
 
+        # Convert the ImageFieldFile object to a string
+        expected_data['picture_url'] = 'http://testserver/' + str(expected_data['picture_url'])
+
+        self.assertEqual(response.data, expected_data)
+    
     def test_api_can_update_pet(self):
         """Test the api can update a given pet."""
         pet = Pet.objects.get()
+
+        # Create a new image file
+        image = Image.new('RGB', (100, 100))
+        image_file = BytesIO()
+        image.save(image_file, 'jpeg')
+        image_file.seek(0)
+
+        # Create a new image file
+        new_image = SimpleUploadedFile(
+            name='new_test.jpg',
+            content=image_file.getvalue(),
+            content_type='image/jpeg'
+        )
 
         change_pet = {
             'type': 'dog',
             'breed': 'Boxer',
             'availability': 'available',
             'disposition': ['good_with_animals'],
-            'picture_url': pet.picture_url,
+            # 'picture_url': new_image,
             'description': pet.description
         }
         res = self.client.patch(
             reverse('pet-detail', kwargs={'pk': pet.id}),
-            change_pet, format='json'
+            {'picture_url': new_image, 'data': json.dumps(change_pet)},  # Pass the image file separately from the JSON data
+            format='multipart'
         )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -343,6 +384,7 @@ class PetAPITestCase(APITestCase):
         # Check that the number of pets returned is correct
         self.assertEqual(len(response.data), 2)
 
+
     def test_api_returns_error_for_invalid_pet_id(self):
         """Test the api returns an error for an invalid pet id."""
         # Send a GET request with an invalid id
@@ -359,6 +401,15 @@ class PetAPITestCase(APITestCase):
 
         # Check that the status code is 400
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def tearDown(self):
+        # Call the superclass's tearDown method first
+        super().tearDown()
+
+        # Delete the test image folder
+        test_image_folder = os.path.join(settings.MEDIA_ROOT, 'pets')
+        if os.path.isdir(test_image_folder):
+            shutil.rmtree(test_image_folder)
 
 class PetViewSetTestCase(TestCase):
     def setUp(self):
@@ -470,3 +521,63 @@ class PetViewSetTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), ['Other'])
+
+
+# from .image_utils import is_image
+# class UploadImageTest(TestCase):
+#     def setUp(self):
+#         load_dotenv()
+#         self.session = boto3.session.Session()
+#         self.client = self.session.client('s3',
+#                                             region_name='nyc3',
+#                                             endpoint_url='https://nyc3.digitaloceanspaces.com',
+#                                             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+#                                             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+
+#     def test_upload_image(self):
+#         image_path = 'db_connector/test_files/dog_test_upload.jpeg'
+#         self.assertTrue(is_image(image_path)), "Uploaded file is not an image"
+#         with open(image_path, 'rb') as img:
+#             file_content = img.read()
+#             try:
+#                 self.client.upload_fileobj(BytesIO(file_content), 'pawstogetherimgs', 'dog_test_upload.jpeg')
+#                 print("Upload Successful")
+
+#                 # Create a new Pet instance with the uploaded image
+#                 image = SimpleUploadedFile(name='dog_test_upload.jpeg', content=file_content, content_type='image/jpeg')
+#                 pet = Pet.objects.create(type='dog', breed='Beagle', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url=image, description='A friendly beagle.')
+
+#                 # Check that the picture_url field is not empty
+#                 print(pet.picture_url)
+#                 self.assertIsNotNone(pet.picture_url)
+#                 self.assertNotEqual(pet.picture_url, '')
+
+
+#             except FileNotFoundError:
+#                 print("The file was not found")
+#             except NoCredentialsError:
+#                 print("Credentials not available")
+    
+#     def test_get_image(self):
+#         try:
+#             self.client.download_file('pawstogetherimgs', 'cat_test.jpeg', 'db_connector/test_files/downloaded_cat_test.jpeg')
+#             print("Download Successful")
+#         except botocore.exceptions.ClientError as e:
+#             if e.response['Error']['Code'] == "404":
+#                 print("The object does not exist.")
+#             else:
+#                 raise
+    
+#     def test_upload_not_an_image(self):
+#         image_path = 'db_connector/test_files/not_an_image.txt'
+#         if not is_image(image_path):
+#             print("Uploaded file is not an image")
+#         else:
+#             with open(image_path, 'rb') as img:
+#                 try:
+#                     self.client.upload_fileobj(img, 'pawstogetherimgs', 'not_an_image.txt')
+#                     print("Upload Successful")
+#                 except FileNotFoundError:
+#                     print("The file was not found")
+#                 except NoCredentialsError:
+#                     print("Credentials not available")
