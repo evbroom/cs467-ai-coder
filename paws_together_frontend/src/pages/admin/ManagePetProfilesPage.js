@@ -5,19 +5,92 @@ import {
   deletePetProfile,
 } from '../../utils/adminPetApi';
 import { useState, useEffect } from 'react';
+import PetProfileTable from '../../components/admin/TableContainer';
+import PetProfileRow from '../../components/admin/PetProfileRow';
+import TableContainer from '../../components/admin/TableContainer';
 
 const ManagePetProfilePage = () => {
-  const [petProfiles, setPetProfiles] = useState([]);
-
-  const fetchPetProfiles = async () => {
-    const response = await getPetProfiles();
-    console.log(response);
+  const generateDummyData = () => {
+    const dummyData = [];
+    for (let i = 6; i <= 15; i++) {
+      const petProfile = {
+        id: i,
+        type: 'dogs',
+        breed: `Breed ${i}`,
+        disposition: ['good with kids', 'good with other pets'],
+        imageUrl: `https://example.com/dog${i}.jpg`,
+        dateCreated: `2022-01-0${i}`,
+      };
+      dummyData.push(petProfile);
+    }
+    return dummyData;
   };
+  const dummyPetProfiles = [
+    {
+      id: 1,
+      type: 'dogs',
+      breed: 'Labrador Retriever',
+      disposition: ['good with kids', 'good with other pets'],
+      imageUrl: 'https://example.com/dog1.jpg',
+      dateCreated: '2022-01-01',
+    },
+    {
+      id: 2,
+      type: 'cats',
+      breed: 'Siamese',
+      disposition: ['good with other pets'],
+      imageUrl: 'https://example.com/cat1.jpg',
+      dateCreated: '2022-01-02',
+    },
+    {
+      id: 3,
+      type: 'dogs',
+      breed: 'Golden Retriever',
+      disposition: ['always leashed'],
+      imageUrl: 'https://example.com/dog2.jpg',
+      dateCreated: '2022-01-03',
+    },
+    {
+      id: 4,
+      type: 'other',
+      breed: 'Rabbit',
+      disposition: ['good with kids', 'good with other pets'],
+      imageUrl: 'https://example.com/rabbit1.jpg',
+      dateCreated: '2022-01-04',
+    },
+    {
+      id: 5,
+      type: 'cats',
+      breed: 'Persian',
+      disposition: ['good with other pets'],
+      imageUrl: 'https://example.com/cat2.jpg',
+      dateCreated: '2022-01-05',
+    },
+    ...generateDummyData(),
+  ];
 
-  useEffect(() => {
-    fetchPetProfiles();
-  }, []);
+  const [petProfiles, setPetProfiles] = useState(dummyPetProfiles);
 
+  const petFieldset = ['Type', 'Breed', 'Dispositions', 'Date Created'];
+  // const fetchPetProfiles = async () => {
+  //   const response = await getPetProfiles();
+  //   console.log(response);
+  // };
+
+  // useEffect(() => {
+  //   fetchPetProfiles();
+  // }, []);
+
+  return (
+    <div>
+      <TableContainer
+        fieldset={petFieldset}
+        data={petProfiles}
+        RowComponent={PetProfileRow}
+        setData={setPetProfiles}
+      />
+    </div>
+  );
   // return <div>{
   //   petProfiles.map((petProfile) => {
   //     return <div key={petProfile.id}>
@@ -30,4 +103,5 @@ const ManagePetProfilePage = () => {
   //   })
   // }</div>
 };
+
 export default ManagePetProfilePage;
