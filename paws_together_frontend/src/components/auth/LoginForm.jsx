@@ -26,6 +26,7 @@ const LoginForm = () => {
           user: data.username,
           isAdmin: isAdmin,
         };
+        console.log(response);
         dispatch(login(payload));
         navigate('/');
       } else {

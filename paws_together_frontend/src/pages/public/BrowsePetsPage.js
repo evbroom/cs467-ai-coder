@@ -6,7 +6,7 @@ import FetchPetProfiles from '../../components/browsePets/FetchPetProfiles';
 
 /**
  * Modified from the generated code by OpenAI's ChatGPT 4:
- * Source: https://chat.openai.com/share/4450b131-f86a-4e31-a976-b90b37ccdc53
+ * Source: https://chat.openai.com/share/20b55a1d-8825-49da-8127-682eebcc2908
  */
 const BrowsePetsPage = () => {
   const dummyPetData = (() => {

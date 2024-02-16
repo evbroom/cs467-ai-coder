@@ -8,8 +8,7 @@ function NavBar() {
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
   const username = useSelector((state) => state.loginStatus.user);
-  // const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
-  const isAdmin = true;
+  const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
 
   const handleLogout = () => {
     // TODO: Send logout request to server

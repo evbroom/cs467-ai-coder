@@ -1,4 +1,4 @@
 const AddPetProfilePage = () => {
-  return 'Add Pet Profile';
+  return 'AddPetProfilePage';
 };
 export default AddPetProfilePage;

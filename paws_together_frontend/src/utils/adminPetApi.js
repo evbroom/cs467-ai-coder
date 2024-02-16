@@ -20,7 +20,9 @@ import { API_URL } from './helpers';
  */
 export const getPetProfiles = async () => {
   try {
-    const response = await axios.get(`${API_URL}/pets/`);
+    const response = await axios.get(`${API_URL}/pets/`, {
+      token: 'Bearer 64c791e438adb7c92172802b109eb9a0dd0c58f9',
+    });
     // Handle success
     return response;
   } catch (error) {
