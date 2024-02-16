@@ -10,8 +10,6 @@ env:
   PYTHONPATH: ${{ github.workspace }}/paws_together_backend
   DJANGO_SETTINGS_MODULE: paws_together_backend.settings
   DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
-  DEFAULT_FILE_STORAGE: ${{ secrets.DEFAULT_FILE_STORAGE }}
-  AWS_STORAGE_BUCKET_NAME: ${{ secrets.AWS_STORAGE_BUCKET_NAME }}
 
 jobs:
   build:
@@ -47,4 +45,5 @@ jobs:
     - name: Run tests
       run: |
         python manage.py test
+      env:
       working-directory: ./paws_together_backend
