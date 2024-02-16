@@ -8,6 +8,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
+import os
+import boto3
+from botocore.exceptions import NoCredentialsError
+from django.conf import settings
 # Create your views here.
 
 class PetPagination(PageNumberPagination):
@@ -51,6 +55,31 @@ class PetViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
+
+        # Get the picture file from the request
+        picture_file = request.FILES.get('picture')
+        if picture_file:
+            # Configure the S3 client
+            s3 = boto3.client('s3',
+                              region_name='nyc3',
+                              endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                              aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                              aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        
+            # Define the bucket and file name
+            bucket_name = 'pawstogetherimgs'
+            file_extension = os.path.splitext(picture_file.name)[1]
+            file_name = f'pets/{response.data["id"]}/pet_picture{file_extension}'
+            
+            try:
+                # Upload the file to DigitalOcean Spaces
+                s3.upload_fileobj(picture_file, bucket_name, file_name)
+                
+                # Update the picture_url in the response
+                response.data['picture_url'] = f'https://nyc3.digitaloceanspaces.com/{bucket_name}/{file_name}'
+            except NoCredentialsError:
+                print("No credentials available for uploading to DigitalOcean Spaces")
+        
         # Customize the response as needed
         return Response({
             'id': response.data['id'],

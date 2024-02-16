@@ -10,11 +10,8 @@ from rest_framework.authtoken.models import Token
 from authentication.serializers import UserSignupSerializer
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-import boto3
 import os
 import shutil
-from botocore.exceptions import NoCredentialsError
-from dotenv import load_dotenv
 from django.conf import settings
 from io import BytesIO
 from PIL import Image
@@ -521,63 +518,3 @@ class PetViewSetTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), ['Other'])
-
-
-# from .image_utils import is_image
-# class UploadImageTest(TestCase):
-#     def setUp(self):
-#         load_dotenv()
-#         self.session = boto3.session.Session()
-#         self.client = self.session.client('s3',
-#                                             region_name='nyc3',
-#                                             endpoint_url='https://nyc3.digitaloceanspaces.com',
-#                                             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-#                                             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-
-#     def test_upload_image(self):
-#         image_path = 'db_connector/test_files/dog_test_upload.jpeg'
-#         self.assertTrue(is_image(image_path)), "Uploaded file is not an image"
-#         with open(image_path, 'rb') as img:
-#             file_content = img.read()
-#             try:
-#                 self.client.upload_fileobj(BytesIO(file_content), 'pawstogetherimgs', 'dog_test_upload.jpeg')
-#                 print("Upload Successful")
-
-#                 # Create a new Pet instance with the uploaded image
-#                 image = SimpleUploadedFile(name='dog_test_upload.jpeg', content=file_content, content_type='image/jpeg')
-#                 pet = Pet.objects.create(type='dog', breed='Beagle', availability='available', disposition=['good_with_children', 'leash_needed'], picture_url=image, description='A friendly beagle.')
-
-#                 # Check that the picture_url field is not empty
-#                 print(pet.picture_url)
-#                 self.assertIsNotNone(pet.picture_url)
-#                 self.assertNotEqual(pet.picture_url, '')
-
-
-#             except FileNotFoundError:
-#                 print("The file was not found")
-#             except NoCredentialsError:
-#                 print("Credentials not available")
-    
-#     def test_get_image(self):
-#         try:
-#             self.client.download_file('pawstogetherimgs', 'cat_test.jpeg', 'db_connector/test_files/downloaded_cat_test.jpeg')
-#             print("Download Successful")
-#         except botocore.exceptions.ClientError as e:
-#             if e.response['Error']['Code'] == "404":
-#                 print("The object does not exist.")
-#             else:
-#                 raise
-    
-#     def test_upload_not_an_image(self):
-#         image_path = 'db_connector/test_files/not_an_image.txt'
-#         if not is_image(image_path):
-#             print("Uploaded file is not an image")
-#         else:
-#             with open(image_path, 'rb') as img:
-#                 try:
-#                     self.client.upload_fileobj(img, 'pawstogetherimgs', 'not_an_image.txt')
-#                     print("Upload Successful")
-#                 except FileNotFoundError:
-#                     print("The file was not found")
-#                 except NoCredentialsError:
-#                     print("Credentials not available")
