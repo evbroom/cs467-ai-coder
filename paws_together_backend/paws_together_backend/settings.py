@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from pathlib import Path
-from decouple import config
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -145,7 +144,7 @@ AWS_LOCATION = 'static'
 STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
+DEFAULT_FILE_STORAGE = os.getenv('DEFAULT_FILE_STORAGE')
 
 
 
