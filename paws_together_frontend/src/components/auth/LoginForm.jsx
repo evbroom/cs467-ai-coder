@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { postLogin } from '../../utils/auth';
-import { useDispatch } from 'react-redux';
 import { login } from '../../slices/loginStatusSlice';
 import { useState } from 'react';
 
@@ -12,7 +11,6 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
 
@@ -22,12 +20,7 @@ const LoginForm = () => {
       if (response.status >= 200 && response.status < 300) {
         // Store user login status
         const isAdmin = response?.data?.is_admin || false;
-        const payload = {
-          user: data.username,
-          isAdmin: isAdmin,
-        };
         console.log(response);
-        dispatch(login(payload));
         navigate('/');
       } else {
         setServerError('Server error. Please try again.');

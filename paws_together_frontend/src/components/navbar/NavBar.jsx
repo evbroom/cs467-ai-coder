@@ -1,18 +1,14 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { FaPaw } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../slices/loginStatusSlice';
 import AdminNavDropdown from './AdminNavDropdown';
 
 function NavBar() {
-  const dispatch = useDispatch();
-  const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
-  const username = useSelector((state) => state.loginStatus.user);
-  const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
+  const userLoggedIn = null;
+  const username = null;
+  const isAdmin = false;
 
   const handleLogout = () => {
     // TODO: Send logout request to server
-    dispatch(logout());
   };
 
   return (

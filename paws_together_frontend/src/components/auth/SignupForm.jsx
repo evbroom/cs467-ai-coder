@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { postUserSignup } from '../../utils/auth';
-import { useDispatch } from 'react-redux';
 import { login } from '../../slices/loginStatusSlice';
 import { useState } from 'react';
 
@@ -12,7 +11,6 @@ const SignupForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
 
@@ -21,7 +19,6 @@ const SignupForm = () => {
       const response = await postUserSignup(data);
       if (response.status >= 200 && response.status < 300) {
         // Store user login status
-        dispatch(login(data.username));
         navigate('/');
       } else if (response.status === 400) {
         setServerError('Username or email already exists. Please try again.');
