@@ -9,10 +9,17 @@ import 'react-datepicker/dist/react-datepicker.css';
  * Modified from the generated code by ChatGPT by OpenAI
  * URL: https://chat.openai.com/share/4450b131-f86a-4e31-a976-b90b37ccdc53
  */
-const PetSearchForm = ({ onSearch }) => {
+const PetSearchForm = ({ setPets }) => {
   const { handleSubmit, watch, register, control } = useForm();
   const selectedType = watch('type');
   const [breeds, setBreeds] = useState([]);
+
+  const onSearch = (data) => {
+    // console.log(data);
+    // using the data to fetch pet profiles
+    // setPets(response.data);
+    setPets(data);
+  };
 
   return (
     <Form onSubmit={handleSubmit(onSearch)} className="space-y-4">

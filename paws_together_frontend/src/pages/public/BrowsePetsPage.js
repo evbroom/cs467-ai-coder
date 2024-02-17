@@ -46,17 +46,11 @@ const BrowsePetsPage = () => {
   const [pets, setPets] = useState(dummyPetData);
   const [page, setPage] = useState(1);
   const [isNextPage, setIsNextPage] = useState(false);
-  const onSearch = (data) => {
-    // console.log(data);
-    // using the data to fetch pet profiles
-    // setPets(response.data);
-    setPets(dummyPetData2);
-  };
 
   return (
     <div className="grid lg:grid-cols-12 p-6 lg:p-12 space-y-4">
       <div className="lg:col-span-2">
-        <PetSearchForm onSearch={onSearch} />
+        <PetSearchForm setPets={setPets} />
       </div>
       <div className="lg:col-span-10 flex flex-col">
         {/* <FetchPetProfiles setPets={setPets} page={page} setIsNextPage={setIsNextPage}/> */}

@@ -2,7 +2,7 @@
 
 const TableContainer = ({ fieldset, data, RowComponent, setData }) => {
   return (
-    <table className="my-10 mx-auto table-fixed">
+    <table className="my-10 mx-auto">
       <thead className="table-fixed">
         <tr className="border">
           {fieldset.map((field) => {

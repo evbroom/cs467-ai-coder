@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import PetProfileTable from '../../components/admin/TableContainer';
 import PetProfileRow from '../../components/admin/PetProfileRow';
 import TableContainer from '../../components/admin/TableContainer';
+import AddButton from '../../components/admin/AddButton';
+import AddPetProfileForm from '../../components/admin/AddPetProfileForm';
 
 const ManagePetProfilePage = () => {
   const generateDummyData = () => {
@@ -82,7 +84,11 @@ const ManagePetProfilePage = () => {
   // }, []);
 
   return (
-    <div>
+    <div className="container my-8">
+      <h1 className="text-center">Manage Pet Profiles</h1>
+      <div className="flex justify-end">
+        <AddButton route="/admin/add/pet-profiles" />
+      </div>
       <TableContainer
         fieldset={petFieldset}
         data={petProfiles}

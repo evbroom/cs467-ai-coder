@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TableContainer from '../../components/admin/TableContainer';
 import UserRow from '../../components/admin/UserRow';
+import AddButton from '../../components/admin/AddButton';
 
 const ManageUsersPage = () => {
   // Generate dummy data
@@ -16,7 +17,11 @@ const ManageUsersPage = () => {
   const userFieldset = ['Username', 'Email'];
 
   return (
-    <div>
+    <div className="container my-8">
+      <h1 className="text-center">Manage Users</h1>
+      <div className="flex justify-end">
+        <AddButton route="/admin/add/users" />
+      </div>
       <TableContainer
         fieldset={userFieldset}
         data={users}
