@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from './helpers';
+import { set } from 'lodash';
 
 /**
  *  API - Manage Pet Profiles in Admin Dashboard
@@ -18,16 +19,19 @@ import { API_URL } from './helpers';
  *
  * @returns {Object} - status code and array of pet profiles
  */
-export const getPetProfiles = async () => {
+export const getPetProfiles = async (obj) => {
+  const { authToken, setPetProfiles, setError } = obj;
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
-      token: 'Bearer 64c791e438adb7c92172802b109eb9a0dd0c58f9',
+      authorization: `Bearer ${authToken}`,
     });
-    // Handle success
-    return response;
+    setPetProfiles(response.data);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      setError(`${error.response.status} ${error.response.statusText}`);
+    } else {
+      setError('Failed to fetch pet profiles');
+    }
   }
 };
 
@@ -93,13 +97,17 @@ export const patchPetProfile = async (obj) => {
  * @param {Number} id - The id of the pet profile to be deleted.
  * @returns {Object} - status code
  */
-export const deletePetProfile = async (id) => {
+export const deletePetProfile = async (obj) => {
+  const { id, authToken, setError } = obj;
   try {
-    const response = await axios.delete(`${API_URL}/pets/${id}/`);
-    // Handle success
-    return response;
+    await axios.delete(`${API_URL}/pets/${id}/`, {
+      authorization: `Bearer ${authToken}`,
+    });
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      setError(`${error.response.status} ${error.response.statusText}`);
+    } else {
+      setError('Failed to delete pet profile');
+    }
   }
 };

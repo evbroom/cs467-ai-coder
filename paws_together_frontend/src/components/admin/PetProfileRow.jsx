@@ -1,17 +1,27 @@
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-// TODO: Complete edit and delete functionality
-// TODO: responsive design
-// TODO: table design
+import { useAuth } from '../auth/AuthContext';
+import { deletePetProfile } from '../../utils/adminPetApi';
+import { useState } from 'react';
+
 const PetProfileRow = ({ item, setData }) => {
   const navigate = useNavigate();
-
+  const { authToken } = useAuth();
+  const [error, setError] = useState();
   const handlePetProfileEdit = (id) => {
     navigate(`/admin/pet-profiles/${id}`);
   };
   const handlePetProfileDelete = (id) => {
-    console.log(`${id} Delete pet profile`);
-    setData((prevData) => prevData.filter((item) => item.id !== id));
+    // TODO: Add confirmation modal
+    // TODO: Display error message
+    if (authToken === null) {
+      navigate('/login');
+    } else {
+      deletePetProfile({ id, authToken, setError });
+      if (!error) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+      }
+    }
   };
 
   const { id, type, breed, disposition, dateCreated } = item;
