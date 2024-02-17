@@ -2,6 +2,9 @@ import axios from 'axios';
 import { API_URL } from './helpers';
 import { format } from 'date-fns';
 
+// Helper function to get the auth token from localStorage
+const getAuthToken = () => localStorage.getItem('authToken');
+
 /**
  *  API - Requests from Public Users
  *  ------------
@@ -21,7 +24,11 @@ import { format } from 'date-fns';
  */
 export const getPetBreeds = async (type) => {
   try {
-    const response = await axios.get(`${API_URL}/pets/breeds/${type}`);
+    const response = await axios.get(`${API_URL}/pets/breeds/${type}`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -66,6 +73,10 @@ export const getPetProfiles = async ({
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
       params: queryParams,
+    }, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
     });
     // Handle success
     return response;
@@ -85,7 +96,11 @@ export const getPetProfiles = async ({
  */
 export const getPetProfileById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/pets/${id}`);
+    const response = await axios.get(`${API_URL}/pets/${id}`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {

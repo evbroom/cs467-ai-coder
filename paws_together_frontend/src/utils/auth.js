@@ -14,7 +14,8 @@ export const postUserSignup = async (userData) => {
         'Content-Type': 'application/json',
       },
     });
-
+    // Save token to localStorage
+    localStorage.setItem('authToken', response.data.token);
     // Handle success
     return response;
   } catch (error) {
@@ -36,6 +37,8 @@ export const postLogin = async (userData) => {
         'Content-Type': 'application/json',
       },
     });
+    // Save token to localStorage
+    localStorage.setItem('authToken', response.data.token);
     // Handle success
     return response;
   } catch (error) {

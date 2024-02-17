@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { API_URL } from './helpers';
 
+// Helper function to get the auth token from localStorage
+const getAuthToken = () => localStorage.getItem('authToken');
+
 /**
  *  API - Manage Users in Admin Dashboard
  *  ------------
@@ -20,7 +23,11 @@ import { API_URL } from './helpers';
  */
 export const getUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users/`);
+    const response = await axios.get(`${API_URL}/users/`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -39,7 +46,11 @@ export const getUsers = async () => {
  */
 export const postUser = async (user) => {
   try {
-    const response = await axios.post(`${API_URL}/users/`, user);
+    const response = await axios.post(`${API_URL}/users/`, user, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -57,7 +68,11 @@ export const postUser = async (user) => {
  */
 export const patchUser = async (user, id) => {
   try {
-    const response = await axios.patch(`${API_URL}/users/${id}/`, user);
+    const response = await axios.patch(`${API_URL}/users/${id}/`, user, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -76,7 +91,11 @@ export const patchUser = async (user, id) => {
  */
 export const deleteUser = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/users/${id}/`);
+    const response = await axios.delete(`${API_URL}/users/${id}/`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {

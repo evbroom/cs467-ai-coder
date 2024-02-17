@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { API_URL } from './helpers';
 
+// Helper function to get the auth token from localStorage
+const getAuthToken = () => localStorage.getItem('authToken');
+
 /**
  *  API - Manage Pet Profiles in Admin Dashboard
  *  ------------
@@ -20,7 +23,11 @@ import { API_URL } from './helpers';
  */
 export const getPetProfiles = async () => {
   try {
-    const response = await axios.get(`${API_URL}/pets/`);
+    const response = await axios.get(`${API_URL}/pets/`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -39,7 +46,11 @@ export const getPetProfiles = async () => {
  */
 export const postPetProfile = async (petProfile) => {
   try {
-    const response = await axios.post(`${API_URL}/pets/`, petProfile);
+    const response = await axios.post(`${API_URL}/pets/`, petProfile, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -59,7 +70,11 @@ export const postPetProfile = async (petProfile) => {
  */
 export const patchPetProfile = async (petProfile, id) => {
   try {
-    const response = await axios.patch(`${API_URL}/pets/${id}/`, petProfile);
+    const response = await axios.patch(`${API_URL}/pets/${id}/`, petProfile, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
@@ -78,7 +93,11 @@ export const patchPetProfile = async (petProfile, id) => {
  */
 export const deletePetProfile = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/pets/${id}/`);
+    const response = await axios.delete(`${API_URL}/pets/${id}/`, {
+      headers: {
+        'Authorization': `Token ${getAuthToken()}`, // Include the token in the request header
+      },
+    });
     // Handle success
     return response;
   } catch (error) {
