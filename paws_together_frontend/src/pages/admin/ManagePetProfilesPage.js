@@ -5,11 +5,9 @@ import {
   deletePetProfile,
 } from '../../utils/adminPetApi';
 import { useState, useEffect } from 'react';
-import PetProfileTable from '../../components/admin/TableContainer';
 import PetProfileRow from '../../components/admin/PetProfileRow';
 import TableContainer from '../../components/admin/TableContainer';
 import AddButton from '../../components/admin/AddButton';
-import AddPetProfileForm from '../../components/admin/AddPetProfileForm';
 
 const ManagePetProfilePage = () => {
   const generateDummyData = () => {
@@ -31,7 +29,7 @@ const ManagePetProfilePage = () => {
     {
       id: 1,
       type: 'dogs',
-      breed: 'Labrador Retriever',
+      breed: 'Labrador',
       disposition: ['good with kids', 'good with other pets'],
       imageUrl: 'https://example.com/dog1.jpg',
       dateCreated: '2022-01-01',
@@ -72,8 +70,8 @@ const ManagePetProfilePage = () => {
   ];
 
   const [petProfiles, setPetProfiles] = useState(dummyPetProfiles);
-
   const petFieldset = ['Type', 'Breed', 'Dispositions', 'Date Created'];
+
   // const fetchPetProfiles = async () => {
   //   const response = await getPetProfiles();
   //   console.log(response);
@@ -87,7 +85,7 @@ const ManagePetProfilePage = () => {
     <div className="container my-8">
       <h1 className="text-center">Manage Pet Profiles</h1>
       <div className="flex justify-end">
-        <AddButton route="/admin/add/pet-profiles" />
+        <AddButton route="/admin/add-pet-profiles" />
       </div>
       <TableContainer
         fieldset={petFieldset}

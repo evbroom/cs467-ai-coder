@@ -7,6 +7,7 @@ import ManagePetProfilesPage from './pages/admin/ManagePetProfilesPage';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
 import AddPetProfilePage from './pages/admin/AddPetProfilePage';
 import AddUserPage from './pages/admin/AddUserPage';
+import EditPetProfilePage from './pages/admin/EditPetProfilePage';
 
 const routes = [
   { path: '/', exact: true, component: HomePage },
@@ -15,9 +16,10 @@ const routes = [
   { path: '/signup/', component: SignupPage },
   { path: '/login/', component: LoginPage },
   { path: '/admin/pet-profiles', component: ManagePetProfilesPage },
+  { path: '/admin/pet-profiles/:id', component: EditPetProfilePage },
   { path: '/admin/users', component: ManageUsersPage },
-  { path: '/admin/add/pet-profiles', component: AddPetProfilePage },
-  { path: '/admin/add/users', component: AddUserPage },
+  { path: '/admin/add-pet-profiles', component: AddPetProfilePage },
+  { path: '/admin/add-users', component: AddUserPage },
 ];
 
 export default routes;

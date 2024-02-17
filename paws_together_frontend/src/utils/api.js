@@ -21,7 +21,7 @@ import { format } from 'date-fns';
  */
 export const getPetBreeds = async (type) => {
   try {
-    const response = await axios.get(`${API_URL}/pets/breeds/${type}`);
+    const response = await axios.get(`${API_URL}/pets/breeds/${type}/`);
     // Handle success
     return response;
   } catch (error) {
@@ -90,6 +90,6 @@ export const getPetProfileById = async (id) => {
     return response;
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    console.log(error);
+    return error.response;
   }
 };

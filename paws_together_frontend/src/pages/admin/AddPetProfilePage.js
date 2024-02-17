@@ -1,16 +1,10 @@
-import AddPetProfileForm from '../../components/admin/AddPetProfileForm';
-import GoBackButton from '../../components/common/GoBackButton';
+import AddEditPetProfileForm from '../../components/admin/AddEditPetProfileForm';
 
 const AddPetProfilePage = () => {
   return (
-    <div className="container">
-      <h1 className="text-center py-6 ">Add a Pet Profile</h1>
-      <div className="flex justify-end">
-        <GoBackButton route="/admin/pet-profiles/" />
-      </div>
-      <div className="mx-auto">
-        <AddPetProfileForm />
-      </div>
+    <div className="container my-6 space-y-4">
+      <h1 className="text-center">Add Pet Profile</h1>
+      <AddEditPetProfileForm />
     </div>
   );
 };

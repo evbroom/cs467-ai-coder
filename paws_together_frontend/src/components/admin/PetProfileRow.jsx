@@ -1,11 +1,13 @@
 import { Button } from 'react-bootstrap';
-
+import { useNavigate } from 'react-router-dom';
 // TODO: Complete edit and delete functionality
 // TODO: responsive design
 // TODO: table design
 const PetProfileRow = ({ item, setData }) => {
+  const navigate = useNavigate();
+
   const handlePetProfileEdit = (id) => {
-    console.log(`${id} Edit pet profile`);
+    navigate(`/admin/pet-profiles/${id}`);
   };
   const handlePetProfileDelete = (id) => {
     console.log(`${id} Delete pet profile`);

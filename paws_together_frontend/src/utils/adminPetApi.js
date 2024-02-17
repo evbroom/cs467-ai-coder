@@ -39,14 +39,21 @@ export const getPetProfiles = async () => {
  * @param {Object} petProfile - The new pet profile.
  * @returns {Object} - status code and the new pet profile id.
  */
-export const postPetProfile = async (petProfile) => {
+export const postPetProfile = async (obj) => {
+  const { data, navigate, setIsSubmitted, setSubmitStatusText } = obj;
   try {
-    const response = await axios.post(`${API_URL}/pets/`, petProfile);
-    // Handle success
-    return response;
+    await axios.post(`${API_URL}/pets/`, data);
+    setIsSubmitted(true);
+    setSubmitStatusText('Pet profile added successfully! Redirecting...');
+    setTimeout(() => navigate('/admin/pet-profiles'), 3000);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      setSubmitStatusText(
+        `${error.response.status} ${error.response.statusText} - Failed to add pet profile. Please try again later.`
+      );
+    } else {
+      setSubmitStatusText('Something went wrong. Please try again later.');
+    }
   }
 };
 
@@ -55,18 +62,26 @@ export const postPetProfile = async (petProfile) => {
  *
  * Use it to update an existing pet profile in the database.
  *
- * @param {Object} petProfile - The updated pet profile.
+ * @param {Object} updatedData - The updated pet profile.
  * @param {Number} id - The id of the pet profile to be updated.
  * @returns {Object} - status code, if picture is updated, return the picture url
  */
-export const patchPetProfile = async (petProfile, id) => {
+export const patchPetProfile = async (obj) => {
+  const { updatedData, id, navigate, setSubmitStatusText, setIsSubmitted } =
+    obj;
   try {
-    const response = await axios.patch(`${API_URL}/pets/${id}/`, petProfile);
-    // Handle success
-    return response;
+    await axios.patch(`${API_URL}/pets/${id}/`, updatedData);
+    setIsSubmitted(true);
+    setSubmitStatusText('Pet profile updated successfully! Redirecting...');
+    setTimeout(() => navigate('/admin/pet-profiles'), 3000);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      setSubmitStatusText(
+        `${error.response.status} ${error.response.statusText} - Failed to update pet profile. Please try again later.`
+      );
+    } else {
+      setSubmitStatusText('Something went wrong. Please try again later.');
+    }
   }
 };
 

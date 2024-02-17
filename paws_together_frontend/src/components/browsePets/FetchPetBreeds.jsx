@@ -1,7 +1,10 @@
 import { getPetBreeds } from '../../utils/api';
 import { useEffect, useState } from 'react';
 
-const FetchPetBreeds = ({ type, setPetBreeds }) => {
+const FetchPetBreeds = ({ type, setPetBreeds, setSelectBreedError }) => {
+  const [dogBreeds, setDogBreeds] = useState([]);
+  const [catBreeds, setCatBreeds] = useState([]);
+
   useEffect(() => {
     //if (type ==! 'Other'){
     //   const fetchPetBreeds = async () => {
@@ -14,6 +17,9 @@ const FetchPetBreeds = ({ type, setPetBreeds }) => {
     // else {
     //  setPetBreeds(['Other']);
     //}
+
+    // const dummyError = 'Fetching breeds failed. Please try again later';
+    // setBreedError(dummyError);
     type === 'dogs'
       ? setPetBreeds(['Labrador', 'Beagle'])
       : type === 'cats'
