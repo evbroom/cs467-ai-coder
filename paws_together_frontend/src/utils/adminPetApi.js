@@ -78,14 +78,12 @@ export const getPetProfileById = async ({
  * @param {Object} petProfile - The new pet profile.
  * @param {String} authToken - The user's token.
  * @param {Function} navigate - Function to navigate to another page.
- * @param {Function} setIsSubmitted - Function to set the submission status.
  * @param {Function} setError - Function to set the request error message.
  */
 export const postPetProfile = async ({
   petProfile,
   authToken,
   navigate,
-  setIsSubmitted,
   setError,
 }) => {
   const formData = new FormData();
@@ -104,7 +102,6 @@ export const postPetProfile = async ({
       },
     });
     // Handle success
-    setIsSubmitted(true);
     navigate('/admin/pet-profiles');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
@@ -121,7 +118,6 @@ export const postPetProfile = async ({
  * @param {String} petId - The ID of the pet profile to be updated.
  * @param {String} authToken - The user's token.
  * @param {Function} navigate - Function to navigate to another page.
- * @param {Function} setIsSubmitted - Function to set the submission status.
  * @param {Function} setError - Function to set the request error message.
  */
 export const patchPetProfile = async ({
@@ -129,7 +125,6 @@ export const patchPetProfile = async ({
   petId,
   authToken,
   navigate,
-  setIsSubmitted,
   setError,
 }) => {
   const formData = new FormData();
@@ -148,7 +143,6 @@ export const patchPetProfile = async ({
       },
     });
     // Handle success
-    setIsSubmitted(true);
     navigate('/admin/pet-profiles');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)

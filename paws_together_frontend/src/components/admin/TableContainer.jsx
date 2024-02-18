@@ -1,5 +1,4 @@
-// table container used by both managing pet profiles and managing users
-
+// Table contianer component for both pet profiles and users
 const TableContainer = ({ fieldset, data, RowComponent, setData }) => {
   return (
     <table className="mx-auto">
@@ -15,8 +14,8 @@ const TableContainer = ({ fieldset, data, RowComponent, setData }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item) => {
-          return <RowComponent key={item.id} item={item} setData={setData} />;
+        {data.map((row) => {
+          return <RowComponent key={row.id} row={row} setData={setData} />;
         })}
       </tbody>
     </table>

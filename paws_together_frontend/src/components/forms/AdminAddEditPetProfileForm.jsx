@@ -1,20 +1,16 @@
 import { Form, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { format } from 'date-fns';
-import { getPetBreeds } from '../../utils/api';
-import { isEqual } from 'lodash';
-import { postPetProfile, patchPetProfile } from '../../utils/adminPetApi';
 import { useNavigate } from 'react-router-dom';
-import GoBackButton from '../../components/common/GoBackButton';
+import { format } from 'date-fns';
+import { isEqual } from 'lodash';
+import { getPetBreeds } from '../../utils/api';
+import { postPetProfile, patchPetProfile } from '../../utils/adminPetApi';
+import { useAuth } from '../../contexts/AuthContext';
+import LinkButton from '../common/LinkButton';
+import { openInNewWindow } from '../../utils/helper';
 
-/**
- * Add and edit pet profile form
- *
- * @param {Object} initialPetData - The initial pet data to be edited. Passed by EditPetProfilePage.
- * @returns {JSX.Element} - Add and edit pet profile form.
- */
-const AddEditPetProfileForm = ({ initialPetData }) => {
+const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
   const {
     handleSubmit,
     watch,
@@ -23,55 +19,53 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: initialPetData ? initialPetData : {},
+    defaultValues: initialPetProfile ? initialPetProfile : {},
   });
   const navigate = useNavigate();
-
-  // State for selected file (picture)
-  const [selectedFile, setSelectedFile] = useState(
-    initialPetData?.picture || null
-  );
-
-  // States for submission
-  const [submitStatusText, setSubmitStatusText] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { authToken } = useAuth();
+  const [error, setError] = useState('');
 
   // States for pet breeds selection
   const type = watch('type');
   const [breeds, setBreeds] = useState([]);
+  const [dogBreeds, setDogBreeds] = useState([]);
+  const [catBreeds, setCatBreeds] = useState([]);
   const [selectBreedError, setSelectBreedError] = useState('');
 
-  // Fetch and set breed options once type is selected
+  // State for selected file (picture)
+  const [selectedFile, setSelectedFile] = useState(
+    initialPetProfile?.picture_url || null
+  );
+
+  // Fetch breed options and then for edit, set breed option to the initial pet profile's breed
   useEffect(() => {
     if (type) {
-      const fetchPetBreeds = async () => {
-        try {
-          const response = await getPetBreeds(type);
-          if (response.status === 200) {
-            setBreeds(response.data);
-          } else {
-            setSelectBreedError(
-              'Failed to fetch pet breeds. Please try again later.'
-            );
-          }
-        } catch (error) {
-          setSelectBreedError('Something went wrong. Please try again later.');
-        }
-      };
-      fetchPetBreeds();
+      if (type === 'dog' && dogBreeds.length === 0) {
+        getPetBreeds({ type, setBreeds, setError: setSelectBreedError });
+        setDogBreeds(breeds);
+      } else {
+        setBreeds(dogBreeds);
+      }
+      if (type === 'cat' && catBreeds.length === 0) {
+        getPetBreeds({ type, setBreeds, setError: setSelectBreedError });
+        setCatBreeds(breeds);
+      } else {
+        setBreeds(catBreeds);
+      }
+      if (type === 'other') {
+        setBreeds(['Other']);
+      }
     }
-    if (initialPetData && initialPetData.breed) {
-      setValue('breed', initialPetData.breed);
+    if (initialPetProfile && initialPetProfile.breed) {
+      setValue('breed', initialPetProfile.breed);
     }
-  }, [type, initialPetData, setValue]);
+  }, [type, initialPetProfile, setValue]);
 
-  // Handle file input change when editing pet profile.
-  // InitilaPetDta.picture is a string of imageUrl from the database.
-  // The file of selectedFile is a file object.
   /**
-   * handle file input change is referenced from OpenAI's ChatGPT-4.
-   * Date: 2-17-2024
-   * URL: https://chat.openai.com/share/db5c7cb9-8db0-4ea3-8c3a-2d69930f4601
+   * Handle file input change when editing pet profile.
+   * Reference from OpenAI's ChatGPT-4
+   * Access Date: 2-17-2024
+   * Source: https://chat.openai.com/share/db5c7cb9-8db0-4ea3-8c3a-2d69930f4601
    */
   const onFileChange = (e) => {
     const file = e.target.files[0];
@@ -82,48 +76,12 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
     }
   };
   useEffect(() => {
-    if (!selectedFile && initialPetData) {
-      setValue('picture', initialPetData.picture);
+    if (!selectedFile && initialPetProfile) {
+      setValue('picture', initialPetProfile.picture_url);
     }
-  }, [selectedFile, setValue, initialPetData?.picture]);
+  }, [selectedFile, setValue, initialPetProfile?.picture_url]);
 
-  const onSubmit = (data) => {
-    // Handle edit pet profile submission
-    if (initialPetData && !isEqual(data, initialPetData)) {
-      // Prepare updated data for patch request
-      const updatedData = Object.keys(data).reduce((acc, key) => {
-        if (!isEqual(data[key], initialPetData[key])) {
-          acc[key] = data[key];
-        }
-        return acc;
-      }, {});
-
-      // Send patch request to update pet profile
-      patchPetProfile({
-        updatedData,
-        id: initialPetData.id,
-        navigate,
-        setSubmitStatusText,
-        setIsSubmitted,
-      });
-    } else if (initialPetData) {
-      setSubmitStatusText(
-        'No changes detected. Please make changes to update.'
-      );
-    }
-
-    // Handle add pet profile submission
-    else {
-      data['date_created'] = format(new Date(), 'MM-dd-yyyy');
-      postPetProfile({ data, navigate, setIsSubmitted, setSubmitStatusText });
-    }
-  };
-
-  // Open image in new window
-  const openImageInNewWindow = (imageUrl) => {
-    window.open(imageUrl, '_blank');
-  };
-
+  // Validate picture file type
   const validateFile = (files) => {
     if (files.length > 0) {
       const file = files[0];
@@ -134,10 +92,41 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
     }
   };
 
+  const onSubmit = (data) => {
+    if (initialPetData && !isEqual(data, initialPetData)) {
+      // Handle edit pet profile
+      const petProfile = Object.keys(data).reduce((acc, key) => {
+        if (!isEqual(data[key], initialPetData[key])) {
+          acc[key] = data[key];
+        }
+        return acc;
+      }, {});
+      patchPetProfile({
+        petProfile,
+        petId: initialPetProfile.id,
+        authToken,
+        navigate,
+        setError,
+      });
+    } else if (initialPetProfile) {
+      // Handle edit pet profile no changes
+      setError('No changes detected. Please make changes to update.');
+    } else {
+      // Handle add pet profile
+      data['date_created'] = format(new Date(), 'MM-dd-yyyy');
+      postPetProfile({
+        petProfile: data,
+        authToken,
+        navigate,
+        setError,
+      });
+    }
+  };
+
   return (
     <div className="w-1/2 mx-auto">
       <div className="flex justify-end">
-        <GoBackButton route="/admin/pet-profile/" />
+        <LinkButton route="/admin/pet-profile/" text="Go Back" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Form.Text>Fields with * are required.</Form.Text>
@@ -153,10 +142,10 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
             <option value="cat">Cat</option>
             <option value="other">Other</option>
           </Form.Select>
+          {errors.type && (
+            <Form.Text className="text-danger">{errors.type.message}</Form.Text>
+          )}
         </Form.Group>
-        {errors.type && (
-          <Form.Text className="text-danger">{errors.type.message}</Form.Text>
-        )}
 
         <Form.Group controlId="breed">
           <Form.Label className="font-bold mx-auto">Breed*</Form.Label>
@@ -174,7 +163,7 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
                 ))}
               </Form.Select>
             )}
-          />{' '}
+          />
           {errors.breed && (
             <Form.Text className="text-danger">
               {errors.breed.message}
@@ -210,18 +199,40 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
           />
         </Form.Group>
 
+        <Form.Group controlId="availability">
+          <Form.Label className="font-bold mx-auto">Availability*</Form.Label>
+          <Form.Select
+            aria-label="Select pet availability"
+            name="availability"
+            {...register('availability', {
+              required: 'Availability is required.',
+            })}
+          >
+            <option value="">Select Availability</option>
+            <option value="Not Available">Not Available</option>
+            <option value="Available">Available</option>
+            <option value="Pending">Pending</option>
+            <option value="Adopted">Adopted</option>
+          </Form.Select>
+          {errors.availability && (
+            <Form.Text className="text-danger">
+              {errors.availability.message}
+            </Form.Text>
+          )}
+        </Form.Group>
+
         <Form.Group controlId="picture" onChange={onFileChange}>
           <Form.Label className="font-bold mx-auto">Picture</Form.Label>
-          {initialPetData ? (
-            initialPetData.picture ? (
+          {initialPetProfile ? (
+            initialPetProfile.picture_url ? (
               <img
-                src={initialPetData.picture}
+                src={initialPetProfile.picture_url}
                 alt="Pet profile picture"
                 className="pb-4 max-w-64 max-h-64 hover:cursor-pointer"
-                onClick={() => openImageInNewWindow(initialPetData.picture)}
+                onClick={() => openInNewWindow(initialPetProfile.picture_url)}
               />
             ) : (
-              <p>No picture uploaded</p>
+              <p>No picture</p>
             )
           ) : null}
           <Form.Control
@@ -262,11 +273,7 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
         </Form.Group>
 
         <div className="flex justify-center">
-          {submitStatusText && (
-            <Form.Text className={isSubmitted ? 'text-success' : 'text-danger'}>
-              {submitStatusText}
-            </Form.Text>
-          )}
+          {error && <Form.Text className="text-danger">{error}</Form.Text>}
         </div>
         <div className="flex justify-center">
           <Button type="submit" variant="dark" className="w-1/2">
@@ -278,4 +285,4 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
   );
 };
 
-export default AddEditPetProfileForm;
+export default AdminAddEditPetProfileForm;

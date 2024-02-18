@@ -47,3 +47,7 @@ export const userSignupLoginErrorHandler = (
       break;
   }
 };
+
+export const openInNewWindow = (url) => {
+  window.open(url, '_blank');
+};

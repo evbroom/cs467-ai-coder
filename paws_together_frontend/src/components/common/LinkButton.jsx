@@ -1,12 +1,11 @@
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const GoBackButton = ({ route }) => {
+const AddButton = ({ route, text }) => {
   return (
     <Link to={`${route}`}>
-      <Button variant="dark">Go Back</Button>
+      <Button variant="dark">{text}</Button>
     </Link>
   );
 };
-
-export default GoBackButton;
+export default AddButton;

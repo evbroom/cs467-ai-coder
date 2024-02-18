@@ -3,44 +3,53 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { deletePetProfile } from '../../utils/adminPetApi';
 import { useState } from 'react';
+import DeleteConfirmModal from '../common/DeleteConfirmModal';
 
-const PetProfileRow = ({ item, setData }) => {
+const PetProfileRow = ({ row, setData }) => {
+  const { id, type, breed, dispositions, availability, date_created } = row;
   const navigate = useNavigate();
   const { authToken } = useAuth();
   const [error, setError] = useState();
-  const handlePetProfileEdit = (id) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleEdit = (id) => {
     navigate(`/admin/pet-profiles/${id}`);
   };
-  const handlePetProfileDelete = (id) => {
-    // TODO: Add confirmation modal
-    // TODO: Display error message
-    if (authToken === null) {
-      navigate('/login');
-    } else {
-      deletePetProfile({ id, authToken, setError });
+
+  const handleDelete = (id) => {
+    // Passing delete function to confirm modal
+    const onConfrim = async () => {
+      await deletePetProfile({ petId: id, authToken, setError });
       if (!error) {
         setData((prevData) => prevData.filter((item) => item.id !== id));
       }
-    }
+    };
+    setShowModal(true);
+    return (
+      <DeleteConfirmModal
+        show={showModal}
+        setShow={setShowModal}
+        onConfirm={onConfrim}
+      />
+    );
   };
 
-  const { id, type, breed, disposition, dateCreated } = item;
   return (
     <tr className="border text-center">
       <td className="p-2 border">{type}</td>
       <td className="p-2 border">{breed}</td>
       <td className="p-2 border whitespace-pre text-left">
-        {disposition.join('\n')}
+        {dispositions.join('\n')}
       </td>
-      <td className="p-2 border">{dateCreated}</td>
-
+      <td className="p-2 border">{date_created}</td>
+      <td className="p-2 border">{availability}</td>
       <td className="p-2 border">
-        <Button variant="primary" onClick={() => handlePetProfileEdit(id)}>
+        <Button variant="primary" onClick={() => handleEdit(id)}>
           Edit
         </Button>
       </td>
       <td className="p-2 border">
-        <Button variant="danger" onClick={() => handlePetProfileDelete(id)}>
+        <Button variant="danger" onClick={() => handleDelete(id)}>
           Delete
         </Button>
       </td>

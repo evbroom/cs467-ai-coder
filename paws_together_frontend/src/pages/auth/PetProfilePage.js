@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPetProfileById } from '../../utils/api';
-import { useAuth } from '../../contexts/authContext';
+import { useAuth } from '../../contexts/AuthContext';
 import PetProfile from '../../components/petProfile/PetProfile';
 
 const PetProfilePage = () => {

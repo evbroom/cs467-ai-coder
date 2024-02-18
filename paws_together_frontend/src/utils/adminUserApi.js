@@ -69,16 +69,9 @@ export const getUserById = async ({ authToken, userId, setUser, setError }) => {
  * @param {Object} User - The new user data.
  * @param {String} authToken - The admin user's token.
  * @param {Function} navigate - Function to navigate to another page.
- * @param {Function} setIsSubmitted - Function to set the submission status.
  * @param {Function} setError - Function to set the request error message.
  */
-export const postUser = async ({
-  user,
-  authToken,
-  navigate,
-  setIsSubmitted,
-  setError,
-}) => {
+export const postUser = async ({ user, authToken, navigate, setError }) => {
   try {
     await axios.post(`${API_URL}/users/`, user, {
       headers: {
@@ -86,7 +79,6 @@ export const postUser = async ({
       },
     });
     // Handle success
-    setIsSubmitted(true);
     navigate('/admin/users');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
@@ -111,7 +103,6 @@ export const patchUser = async ({
   userId,
   authToken,
   navigate,
-  setIsSubmitted,
   setError,
 }) => {
   try {
@@ -121,7 +112,6 @@ export const patchUser = async ({
       },
     });
     // Handle success
-    setIsSubmitted(true);
     navigate('/admin/users');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)

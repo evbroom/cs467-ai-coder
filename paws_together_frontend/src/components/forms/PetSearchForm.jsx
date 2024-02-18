@@ -23,19 +23,20 @@ const PetSearchForm = ({
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
+  const [error, setError] = useState('');
   const { authToken } = useAuth();
 
   // Fetch breeds based on type
   useEffect(() => {
     if (type) {
       if (type === 'dog' && dogBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds });
+        getPetBreeds({ type, setBreeds, setError });
         setDogBreeds(breeds);
       } else {
         setBreeds(dogBreeds);
       }
       if (type === 'cat' && catBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds });
+        getPetBreeds({ type, setBreeds, setError });
         setCatBreeds(breeds);
       } else {
         setBreeds(catBreeds);
@@ -126,6 +127,7 @@ const PetSearchForm = ({
           }}
         />
       </Form.Control>
+      {error && <Form.Text className="text-danger">{error}</Form.Text>}
       <Button type="submit" variant="dark" className="w-full">
         Search
       </Button>

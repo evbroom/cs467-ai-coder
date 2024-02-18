@@ -1,7 +1,6 @@
 import NewsCard from './NewsCard';
 
 const Newsfeeds = () => {
-  // Dummy data for display featured news items.
   // TODO: Replace with actual data from the backend.
   const dummyString50chrs =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
