@@ -37,7 +37,15 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
  *
  * Use it to fetch pet profiles based on the search criteria or all pet profiles.
  *
- * @param {*} param0
+ * @param {Number} page - Page number to fetch.
+ * @param {String} type - Pet type (e.g. dog, cat, other)
+ * @param {String} breed - Pet breed
+ * @param {Array} dispositions - Pet dispositions
+ * @param {Date} dateCreated - Pet profile creation date
+ * @param {String} authToken - User authentication token
+ * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
+ * @param {Function} setIsNextPage - Function to set the next page status.
+ * @param {Function} setError - Function to set the request error message.
  */
 export const getPetProfiles = async ({
   page,
@@ -83,6 +91,14 @@ export const getPetProfiles = async ({
   }
 };
 
+/**
+ * GET request for pet profile by ID.
+ *
+ * @param {String} petId - The pet's ID.
+ * @param {String} authToken - The user's token.
+ * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
 export const getPetProfileById = async ({
   petId,
   authToken,

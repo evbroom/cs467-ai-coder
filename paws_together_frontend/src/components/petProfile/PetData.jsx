@@ -1,15 +1,21 @@
 import Card from 'react-bootstrap/Card';
 
 const PetData = ({ field, value }) => {
-  if (Array.isArray(value)) {
-    value = value.join(', ');
-  }
-
   return (
     <div className="space-y-4">
       <h3>{field}</h3>
       <Card>
-        <Card.Body>{value}</Card.Body>
+        <Card.Body>
+          {field === 'Dispositions' ? (
+            <ul>
+              {value.map((disposition) => (
+                <li key={disposition}>{disposition}</li>
+              ))}
+            </ul>
+          ) : (
+            { value }
+          )}
+        </Card.Body>
       </Card>
     </div>
   );

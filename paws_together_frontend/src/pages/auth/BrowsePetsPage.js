@@ -3,6 +3,7 @@ import PetSearchForm from '../../components/forms/PetSearchForm';
 import PetCardContainer from '../../components/browsePets/PetCardContainer';
 import PetCardPagination from '../../components/browsePets/PetCardPagination';
 import { getPetProfiles } from '../../utils/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * Modified from the generated code by OpenAI's ChatGPT 4:
@@ -15,11 +16,13 @@ const BrowsePetsPage = () => {
   const [isNextPage, setIsNextPage] = useState(false);
   const [fetchError, setFetchError] = useState('');
   const [currentFilters, setCurrentFilters] = useState({});
+  const { authToken } = useAuth();
 
   useEffect(() => {
     getPetProfiles({
       page,
       ...currentFilters,
+      authToken,
       setPetProfiles,
       setIsNextPage,
       setError: setFetchError,

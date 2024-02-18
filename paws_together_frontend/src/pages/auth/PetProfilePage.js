@@ -1,25 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import FetchPetProfileById from '../../components/petProfile/FetchPetProfileById';
+import { getPetProfileById } from '../../utils/api';
+import { useAuth } from '../../contexts/authContext';
 import PetProfile from '../../components/petProfile/PetProfile';
 
 const PetProfilePage = () => {
   const { id } = useParams();
-  // TODO: Validate id
-  const dummyDescription = 'Good doggo! ';
-  const [pet, setPet] = useState({
-    type: 'Dog',
-    breed: 'German Shepherd',
-    disposition: ['Good With Kids', 'Good With Other Pets'],
-    availability: 'Available',
-    description: dummyDescription.repeat(100),
-    image: 'https://images.pexels.com/photos/2071555/pexels-photo-2071555.jpeg',
-  });
+  const { authToken } = useAuth();
+  const [petProfile, setPetProfile] = useState({});
+  const [fetchError, setFetchError] = useState('');
+
+  useEffect(() => {
+    getPetProfileById({
+      petId: id,
+      authToken,
+      setPetProfile,
+      setError: setFetchError,
+    });
+  }, [id, authToken]);
 
   return (
     <div>
-      {/* <FetchPetProfileById id={id} setPet={setPet} /> */}
-      <PetProfile pet={pet} />
+      {fetchError ? (
+        <p className="text-red-500">{fetchError}</p>
+      ) : (
+        <PetProfile petProfile={petProfile} />
+      )}
     </div>
   );
 };
