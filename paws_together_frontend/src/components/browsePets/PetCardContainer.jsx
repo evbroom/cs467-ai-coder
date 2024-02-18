@@ -1,10 +1,10 @@
 import PetCard from './PetCard';
 
-const PetCardContainer = ({ pets }) => {
+const PetCardContainer = ({ petProfiles }) => {
   return (
     <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
-      {pets.map((pet) => {
-        return <PetCard key={pet.id} {...pet} />;
+      {petProfiles.map((petProfile) => {
+        return <PetCard key={petProfile.id} {...petProfile} />;
       })}
     </div>
   );

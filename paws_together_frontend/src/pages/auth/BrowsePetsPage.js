@@ -1,60 +1,54 @@
 import { useState, useEffect } from 'react';
-import PetSearchForm from '../../components/browsePets/PetSearchForm';
+import PetSearchForm from '../../components/forms/PetSearchForm';
 import PetCardContainer from '../../components/browsePets/PetCardContainer';
 import PetCardPagination from '../../components/browsePets/PetCardPagination';
-import FetchPetProfiles from '../../components/browsePets/FetchPetProfiles';
+import { getPetProfiles } from '../../utils/api';
 
 /**
  * Modified from the generated code by OpenAI's ChatGPT 4:
+ * Accessed on: 2/13/24
  * Source: https://chat.openai.com/share/20b55a1d-8825-49da-8127-682eebcc2908
  */
 const BrowsePetsPage = () => {
-  const dummyPetData = (() => {
-    const arr = [];
-    for (let i = 0; i < 20; i++) {
-      arr.push({
-        type: 'Dog',
-        breed: 'german shepherd',
-        disposition: ['Good with Kids', 'Good with Other Pets'],
-        availability: 'Available',
-        image:
-          'https://images.pexels.com/photos/2071555/pexels-photo-2071555.jpeg',
-        dateCreated: '2024-02-10',
-        id: `${i}`,
-      });
-    }
-    return arr;
-  })();
-
-  const dummyPetData2 = (() => {
-    const arr = [];
-    for (let i = 0; i < 20; i++) {
-      arr.push({
-        type: 'Dog',
-        breed: 'labrador',
-        disposition: ['Good with Kids'],
-        availability: 'Available',
-        image:
-          'https://images.pexels.com/photos/1696589/pexels-photo-1696589.jpeg',
-        dateCreated: '2024-02-09',
-        id: `${i}`,
-      });
-    }
-    return arr;
-  })();
-
-  const [pets, setPets] = useState(dummyPetData);
+  const [petProfiles, setPetProfiles] = useState([]);
   const [page, setPage] = useState(1);
   const [isNextPage, setIsNextPage] = useState(false);
+  const [fetchError, setFetchError] = useState('');
+  const [currentFilters, setCurrentFilters] = useState({});
+
+  useEffect(() => {
+    getPetProfiles({
+      page,
+      ...currentFilters,
+      setPetProfiles,
+      setIsNextPage,
+      setError: setFetchError,
+    });
+  }, [page, setPetProfiles, setIsNextPage, setFetchError]);
 
   return (
     <div className="grid lg:grid-cols-12 p-6 lg:p-12 space-y-4">
       <div className="lg:col-span-2">
-        <PetSearchForm setPets={setPets} />
+        <PetSearchForm
+          setPetProfiles={setPetProfiles}
+          setPage={setPage}
+          setIsNextPage={setIsNextPage}
+          setError={setFetchError}
+          setCurrentFilters={setCurrentFilters}
+        />
       </div>
       <div className="lg:col-span-10 flex flex-col">
-        {/* <FetchPetProfiles setPets={setPets} page={page} setIsNextPage={setIsNextPage}/> */}
-        <PetCardContainer pets={pets} />
+        {petProfiles ? (
+          petProfiles.length === 0 ? (
+            <p>No pet profiles found.</p>
+          ) : (
+            <PetCardContainer petProfiles={petProfiles} />
+          )
+        ) : fetchError ? (
+          <p className="text-red-500">{fetchError}</p>
+        ) : (
+          <p>Loading...</p>
+        )}
         <PetCardPagination
           page={page}
           setPage={setPage}

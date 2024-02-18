@@ -8,7 +8,7 @@ import { userSignupLoginErrorHandler } from './helper';
  *
  * Use it to populate the breed dropdown in the Pet Search/Add/Edit form.
  *
- * @param {String} type - Pet type (e.g. Dog, Cat, Other)
+ * @param {String} type - Pet type (e.g. dog, cat, other)
  * @param {Function} setBreeds - Function to set the pet breeds to be displayed.
  * @param {Function} setError - Function to set the request error message.
  */
@@ -47,6 +47,7 @@ export const getPetProfiles = async ({
   dateCreated,
   authToken,
   setPetProfiles,
+  setIsNextPage,
   setError,
 }) => {
   const queryParams = { page };
@@ -66,7 +67,8 @@ export const getPetProfiles = async ({
       { headers: { Authorization: `Bearer ${authToken}` } }
     );
     // Handle success
-    setPetProfiles(response.data);
+    setIsNextPage(response.data.is_next_page);
+    setPetProfiles(response.data.pets);
   } catch (error) {
     switch (error.response.status) {
       case 404:
