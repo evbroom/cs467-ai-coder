@@ -19,8 +19,11 @@ import { set } from 'lodash';
  *
  * @returns {Object} - status code and array of pet profiles
  */
-export const getPetProfiles = async (obj) => {
-  const { authToken, setPetProfiles, setError } = obj;
+export const getPetProfiles = async ({
+  authToken,
+  setPetProfiles,
+  setError,
+}) => {
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
       authorization: `Bearer ${authToken}`,

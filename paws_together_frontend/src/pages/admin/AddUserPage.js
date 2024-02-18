@@ -1,16 +1,10 @@
-import AddUserForm from '../../components/admin/AddUserForm';
-import GoBackButton from '../../components/common/GoBackButton';
+import AddEditUserForm from '../../components/admin/AddEditUserForm';
 
 const AddUserPage = () => {
   return (
-    <div className="container">
-      <h1 className="text-center py-6 ">Add a User</h1>
-      <div className="flex justify-end">
-        <GoBackButton route="/admin/pet-profiles/" />
-      </div>
-      <div className="mx-auto">
-        <AddUserForm />
-      </div>
+    <div className="container my-6 space-y-4">
+      <h1 className="text-center">Add User</h1>
+      <AddEditUserForm />
     </div>
   );
 };

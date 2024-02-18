@@ -18,14 +18,18 @@ import { API_URL } from './helpers';
  *
  * @returns {Object} - status code and array of users.
  */
-export const getUsers = async () => {
+export const getUsers = async ({ authToken, setUsers, setError }) => {
   try {
-    const response = await axios.get(`${API_URL}/users/`);
-    // Handle success
-    return response;
+    const response = await axios.get(`${API_URL}/users/`, {
+      authorization: `Bearer ${authToken}`,
+    });
+    setUsers(response.data);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      setError(`${error.response.status} ${error.response.statusText}`);
+    } else {
+      setError('Failed to fetch users');
+    }
   }
 };
 
@@ -37,7 +41,7 @@ export const getUsers = async () => {
  * @param {Object} user - The new user.
  * @returns {Object} - status code and the new user id.
  */
-export const postUser = async (user) => {
+export const postUser = async ({ user }) => {
   try {
     const response = await axios.post(`${API_URL}/users/`, user);
     // Handle success

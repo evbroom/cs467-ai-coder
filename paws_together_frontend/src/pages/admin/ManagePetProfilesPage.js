@@ -4,6 +4,7 @@ import PetProfileRow from '../../components/admin/PetProfileRow';
 import TableContainer from '../../components/admin/TableContainer';
 import AddButton from '../../components/admin/AddButton';
 import { useAuth } from '../../components/auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ManagePetProfilePage = () => {
   // TODO: remove dummy data
@@ -54,12 +55,13 @@ const ManagePetProfilePage = () => {
   const [error, setError] = useState(null);
   const petFieldset = ['Type', 'Breed', 'Dispositions', 'Date Created'];
   const { authToken } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!authToken) {
-      setError('Unauthorized');
+      navigate('/login');
     } else {
-      getPetProfiles(authToken, setPetProfiles, setError);
+      getPetProfiles({ authToken, setPetProfiles, setError });
     }
   }, [petProfiles, setPetProfiles]);
 
@@ -68,7 +70,7 @@ const ManagePetProfilePage = () => {
       <h1 className="text-center">Manage Pet Profiles</h1>
       <div className="w-1/2 mx-auto">
         <div className="flex justify-end pb-2">
-          <AddButton route="/admin/add-pet-profiles" />
+          <AddButton route="/admin/add-pet-profile" />
         </div>
         {petProfiles ? (
           petProfiles.length === 0 ? (

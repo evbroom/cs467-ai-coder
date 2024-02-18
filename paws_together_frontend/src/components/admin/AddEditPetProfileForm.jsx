@@ -137,7 +137,7 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
   return (
     <div className="w-1/2 mx-auto">
       <div className="flex justify-end">
-        <GoBackButton route="/admin/pet-profiles/" />
+        <GoBackButton route="/admin/pet-profile/" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Form.Text>Fields with * are required.</Form.Text>
@@ -270,7 +270,7 @@ const AddEditPetProfileForm = ({ initialPetData }) => {
         </div>
         <div className="flex justify-center">
           <Button type="submit" variant="dark" className="w-1/2">
-            {initialPetData ? 'Update Pet Profile' : 'Add Pet Profile'}
+            {initialPetData ? 'Update' : 'Add'}
           </Button>
         </div>
       </Form>
