@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import PetProfileRow from '../../components/admin/PetProfileRow';
 import TableContainer from '../../components/admin/TableContainer';
 import AddButton from '../../components/admin/AddButton';
-import { useAuth } from '../../components/auth/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ManagePetProfilePage = () => {

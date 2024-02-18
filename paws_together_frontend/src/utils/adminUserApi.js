@@ -1,90 +1,152 @@
 import axios from 'axios';
-import { API_URL } from './helpers';
+import { API_URL } from './constants';
+import { adminAPIErrorHandler } from './helper';
 
 /**
- *  API - Manage Users in Admin Dashboard
- *  ------------
- *  getUsers
- *  postUser
- *  patchUser
- *  deleteUser
- *
+ * Manage Users
+ * -------------------
+ * getUsers
+ * getUserById
+ * postUser
+ * patchUser
+ * deleteUser
  */
 
 /**
- * Get request for Users.
+ * GET request for users.
  *
- * Use it to fetch all users and display them in the Admin Dashboard.
+ * Use it to fetch all user data and display them on the Manage Users Page.
  *
- * @returns {Object} - status code and array of users.
+ * @param {String} authToken - The admin user's token.
+ * @param {Function} setUsers - Function to set the user data to be displayed.
+ * @param {Function} setError - Function to set the request error message.
  */
 export const getUsers = async ({ authToken, setUsers, setError }) => {
   try {
     const response = await axios.get(`${API_URL}/users/`, {
-      authorization: `Bearer ${authToken}`,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
+    // Handle success
     setUsers(response.data);
   } catch (error) {
-    if (error.response) {
-      setError(`${error.response.status} ${error.response.statusText}`);
-    } else {
-      setError('Failed to fetch users');
-    }
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response.status, setError);
   }
 };
 
 /**
- * POST request for User.
+ * GET request for user by ID.
+ *
+ * Use it to fetch a specific user data by its ID.
+ *
+ * @param {String} authToken - The admin user's token.
+ * @param {String} userId - The user's ID.
+ * @param {Function} setUser - Function to set the user data to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getUserById = async ({ authToken, userId, setUser, setError }) => {
+  try {
+    const response = await axios.get(`${API_URL}/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    // Handle success
+    setUser(response.data);
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response.status, setError);
+  }
+};
+
+/**
+ * POST request for user.
  *
  * Use it to add a new user to the database.
  *
- * @param {Object} user - The new user.
- * @returns {Object} - status code and the new user id.
+ * @param {Object} User - The new user data.
+ * @param {String} authToken - The admin user's token.
+ * @param {Function} navigate - Function to navigate to another page.
+ * @param {Function} setIsSubmitted - Function to set the submission status.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const postUser = async ({ user }) => {
+export const postUser = async ({
+  user,
+  authToken,
+  navigate,
+  setIsSubmitted,
+  setError,
+}) => {
   try {
-    const response = await axios.post(`${API_URL}/users/`, user);
+    await axios.post(`${API_URL}/users/`, user, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
     // Handle success
-    return response;
+    setIsSubmitted(true);
+    navigate('/admin/users');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    adminAPIErrorHandler(error.response.status, setError);
   }
 };
 
 /**
- * PATCH request for User.
+ * PATCH request for user.
  *
- * @param {Object} user - The updated user.
- * @param {Number} id - The id of the user to be updated.
- * @returns {Object} - status code.
+ * Use it to update an existing user data in the database.
+ *
+ * @param {Object} User - The updated user data.
+ * @param {String} userId - The ID of the user to be updated.
+ * @param {String} authToken - The admin user's token.
+ * @param {Function} navigate - Function to navigate to another page.
+ * @param {Function} setIsSubmitted - Function to set the submission status.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const patchUser = async (user, id) => {
+export const patchUser = async ({
+  user,
+  userId,
+  authToken,
+  navigate,
+  setIsSubmitted,
+  setError,
+}) => {
   try {
-    const response = await axios.patch(`${API_URL}/users/${id}/`, user);
+    await axios.patch(`${API_URL}/users/${userId}`, user, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
     // Handle success
-    return response;
+    setIsSubmitted(true);
+    navigate('/admin/users');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    adminAPIErrorHandler(error.response.status, setError);
   }
 };
 
 /**
- * DELETE request for User.
+ * DELETE request for user.
  *
- * Use it to delete an existing user from the database.
+ * Use it to delete a user from the database.
  *
- * @param {*} id - The id of the user to be deleted.
- * @returns {Object} - status code.
+ * @param {String} userId - The ID of the user to be deleted.
+ * @param {String} authToken - The admin user's token.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const deleteUser = async (id) => {
+export const deleteUser = async ({ userId, authToken, setError }) => {
   try {
-    const response = await axios.delete(`${API_URL}/users/${id}/`);
-    // Handle success
-    return response;
+    await axios.delete(`${API_URL}/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    adminAPIErrorHandler(error.response.status, setError);
   }
 };

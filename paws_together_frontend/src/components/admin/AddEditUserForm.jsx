@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { postUser, patchUser } from '../../utils/adminUserApi';
-import { useAuth } from '../../components/auth/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import GoBackButton from '../../components/common/GoBackButton';
 

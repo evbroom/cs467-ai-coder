@@ -1,11 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Outlet,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import routes from './routes';
 import NavBar from './components/navbar/NavBar';
 
@@ -21,20 +16,19 @@ function NavBarOutlet() {
 function App() {
   return (
     <div className="App">
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route element={<NavBarOutlet />}>
+          <Route path="/" element={<NavBarOutlet />}>
             {routes.map((route, index) => (
               <Route
                 key={index}
                 path={route.path}
-                exact={route.exact}
                 element={<route.component />}
               />
             ))}
           </Route>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }

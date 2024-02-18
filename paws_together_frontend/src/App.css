@@ -1,9 +1,11 @@
+/* Style for form error messages */
 form .error {
   color: red;
   font-size: 0.8em;
   margin-top: 0.25em;
 }
 
+/* Animation dots for loading text */
 @keyframes loadingDots {
   0% {
     content: '';
