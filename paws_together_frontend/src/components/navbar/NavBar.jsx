@@ -1,14 +1,14 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { FaPaw } from 'react-icons/fa';
+import { useAuth } from '../../contexts/AuthContext';
 import AdminNavDropdown from './AdminNavDropdown';
 
 function NavBar() {
-  const userLoggedIn = null;
-  const username = null;
-  const isAdmin = false;
+  const { user, isAdmin, logout } = useAuth();
 
   const handleLogout = () => {
-    // TODO: Send logout request to server
+    // TODO: Send logout request to the backend
+    logout();
   };
 
   return (
@@ -23,7 +23,7 @@ function NavBar() {
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/browse-pets">Browse Pets</Nav.Link>
-            {userLoggedIn ? (
+            {user ? (
               <>
                 <Nav.Link href="#" onClick={handleLogout}>
                   Logout
@@ -39,7 +39,7 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <Navbar.Text className="ml-auto hidden lg:block">
-          Hello, {userLoggedIn ? username : 'Guest'} {isAdmin && ' (Admin)'}!
+          Hello, {user ? user : 'Guest'} {isAdmin && ' (Admin)'}!
         </Navbar.Text>
       </Container>
     </Navbar>

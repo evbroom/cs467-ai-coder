@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { postUserSignup } from '../../utils/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const SignupForm = () => {
   const {
