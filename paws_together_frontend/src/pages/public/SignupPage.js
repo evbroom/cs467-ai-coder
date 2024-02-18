@@ -1,13 +1,10 @@
-import FormContainer from '../../components/common/FormContainer';
-import FormTitle from '../../components/common/FormTitle';
-import SignupForm from '../../components/auth/SignupForm';
+import SignupForm from '../../components/forms/SignupForm';
 
 const SignupPage = () => {
   return (
-    <FormContainer>
-      <FormTitle title="Sign Up" />
+    <div className="container mt-5">
       <SignupForm />
-    </FormContainer>
+    </div>
   );
 };
 export default SignupPage;

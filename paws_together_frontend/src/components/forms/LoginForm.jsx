@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { Button, Form, Alert } from 'react-bootstrap';
-import { postLogin } from '../../utils/auth';
+import { postLogin } from '../../utils/api';
 import { useAuth } from '../../contexts/AuthContext';
 
 const LoginForm = () => {
@@ -19,7 +19,7 @@ const LoginForm = () => {
     postLogin({
       credentials,
       navigate,
-      setLoginError,
+      setError: setLoginError,
       login,
     });
   };
