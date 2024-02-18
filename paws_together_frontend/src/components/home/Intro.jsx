@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
  * @see https://v0.dev/t/ZOlDZtVLCh2
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-const Welcome = () => {
+const Intro = () => {
   const catImageUrl =
     'https://images.pexels.com/photos/6631855/pexels-photo-6631855.jpeg?auto=compress&cs=tinysrgb&w=600';
   return (
@@ -44,4 +44,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default Intro;
