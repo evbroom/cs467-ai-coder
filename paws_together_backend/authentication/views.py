@@ -15,9 +15,13 @@ class SignupView(APIView):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            login(request, user)
+            token, created = Token.objects.get_or_create(user=user)
             return Response({
                 "id": user.id,
-                "username": user.username
+                "username": user.username,
+                "token": token.key,
+                "is_admin": user.is_staff
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -35,7 +39,8 @@ class LoginView(APIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({
                 "message": "Successfully logged in.",
-                "token": token.key
+                "token": token.key,
+                "is_admin": user.is_staff
             }, status=status.HTTP_200_OK)
         return Response({
             "error": "Invalid credentials"
