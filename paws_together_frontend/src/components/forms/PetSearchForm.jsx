@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Button } from 'react-bootstrap';
-import { getPetBreeds, getPetProfile } from '../../utils/api';
+import { getPetBreeds, getPetProfiles } from '../../utils/api';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../contexts/AuthContext';
@@ -23,7 +23,6 @@ const PetSearchForm = ({
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
-  const [error, setError] = useState('');
   const { authToken } = useAuth();
 
   // Fetch breeds based on type
@@ -48,7 +47,7 @@ const PetSearchForm = ({
   }, [type, setBreeds]);
 
   const onSearch = (filters) => {
-    getPetProfile({
+    getPetProfiles({
       page: 1,
       ...filters,
       authToken,
@@ -127,7 +126,6 @@ const PetSearchForm = ({
           }}
         />
       </Form.Control>
-      {error && <Form.Text className="text-danger">{error}</Form.Text>}
       <Button type="submit" variant="dark" className="w-full">
         Search
       </Button>

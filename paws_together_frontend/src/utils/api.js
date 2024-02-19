@@ -59,12 +59,12 @@ export const getPetProfiles = async ({
   setError,
 }) => {
   const queryParams = { page };
-  type ? (queryParams.type = type) : null;
-  breed ? (queryParams.breed = breed) : null;
-  dispositions ? (queryParams.dispositions = dispositions) : null;
-  dateCreated
-    ? (queryParams.dateCreated = format(dateCreated, 'yyyy-MM-dd'))
-    : null;
+  if (type) queryParams.type = type;
+  if (breed) queryParams.breed = breed;
+  if (dispositions) queryParams.dispositions = dispositions;
+  if (dateCreated) {
+    queryParams.dateCreated = format(dateCreated, 'yyyy-MM-dd');
+  }
 
   try {
     const response = await axios.get(

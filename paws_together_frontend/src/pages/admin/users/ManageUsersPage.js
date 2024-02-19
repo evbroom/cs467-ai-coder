@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getUsers } from '../../../utils/adminUserApi';
 import UserRow from '../../../components/admin/UserRow';
-import TableContainer from '../../components/admin/TableContainer';
+import TableContainer from '../../../components/admin/TableContainer';
 import LinkButton from '../../../components/common/LinkButton';
 
 const ManageUsersPage = () => {

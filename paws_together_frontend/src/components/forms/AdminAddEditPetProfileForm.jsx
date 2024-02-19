@@ -93,10 +93,10 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
   };
 
   const onSubmit = (data) => {
-    if (initialPetData && !isEqual(data, initialPetData)) {
+    if (initialPetProfile && !isEqual(data, initialPetProfile)) {
       // Handle edit pet profile
       const petProfile = Object.keys(data).reduce((acc, key) => {
-        if (!isEqual(data[key], initialPetData[key])) {
+        if (!isEqual(data[key], initialPetProfile[key])) {
           acc[key] = data[key];
         }
         return acc;
@@ -277,7 +277,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
         </div>
         <div className="flex justify-center">
           <Button type="submit" variant="dark" className="w-1/2">
-            {initialPetData ? 'Update' : 'Add'}
+            {initialPetProfile ? 'Update' : 'Add'}
           </Button>
         </div>
       </Form>
