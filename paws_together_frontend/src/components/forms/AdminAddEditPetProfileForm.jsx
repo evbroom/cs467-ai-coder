@@ -126,7 +126,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
   return (
     <div className="w-1/2 mx-auto">
       <div className="flex justify-end">
-        <LinkButton route="/admin/pet-profile/" text="Go Back" />
+        <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Form.Text>Fields with * are required.</Form.Text>

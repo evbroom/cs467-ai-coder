@@ -7,7 +7,7 @@ import { Alert } from 'react-bootstrap';
 
 const EditPetProfilePage = () => {
   const { id } = useParams();
-  const [petProfile, setPetProfile] = useState({});
+  const [petProfile, setPetProfile] = useState(null);
   const [error, setError] = useState(null);
   const { authToken } = useAuth();
 
@@ -18,7 +18,7 @@ const EditPetProfilePage = () => {
       setPetProfile,
       setError,
     });
-  }, [id]);
+  }, []);
 
   return (
     <div className="container my-6 space-y-4">

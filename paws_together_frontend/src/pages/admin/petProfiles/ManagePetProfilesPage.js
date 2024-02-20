@@ -6,7 +6,7 @@ import TableContainer from '../../../components/admin/TableContainer';
 import LinkButton from '../../../components/common/LinkButton';
 
 const ManagePetProfilePage = () => {
-  const [petProfiles, setPetProfiles] = useState({});
+  const [petProfiles, setPetProfiles] = useState([]);
   const [error, setError] = useState('');
   const { authToken } = useAuth();
 
@@ -20,12 +20,12 @@ const ManagePetProfilePage = () => {
 
   useEffect(() => {
     getPetProfiles({ authToken, setPetProfiles, setError });
-  }, [petProfiles, setPetProfiles]);
+  }, []);
 
   return (
     <div className="container my-6 space-y-2">
       <h1 className="text-center">Manage Pet Profiles</h1>
-      <div className="w-1/2 mx-auto">
+      <div className="mx-auto">
         <div className="flex justify-end pb-2">
           <LinkButton
             route="/admin/add-pet-profile"

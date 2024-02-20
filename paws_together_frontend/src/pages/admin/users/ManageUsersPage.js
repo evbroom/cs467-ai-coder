@@ -6,7 +6,7 @@ import TableContainer from '../../../components/admin/TableContainer';
 import LinkButton from '../../../components/common/LinkButton';
 
 const ManageUsersPage = () => {
-  const [users, setUsers] = useState({});
+  const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const { authToken } = useAuth();
 

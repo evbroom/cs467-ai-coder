@@ -7,7 +7,7 @@ import { Alert } from 'react-bootstrap';
 
 const EditUserPage = () => {
   const { id } = useParams();
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const { authToken } = useAuth();
 

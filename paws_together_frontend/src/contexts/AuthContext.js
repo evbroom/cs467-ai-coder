@@ -1,18 +1,49 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [authToken, setAuthToken] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState(() => localStorage.getItem('user') || null);
+  const [authToken, setAuthToken] = useState(
+    () => localStorage.getItem('authToken') || null
+  );
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const isAdmin = localStorage.getItem('isAdmin');
+    if (!isAdmin) {
+      return false;
+    }
+    if (isAdmin === 'null' || isAdmin === 'undefined') {
+      return false;
+    }
+    return true;
+  });
 
-  const login = async ({ username, token, isAdmin }) => {
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(localStorage.getItem('user') || null);
+      setAuthToken(localStorage.getItem('authToken') || null);
+      setIsAdmin(localStorage.getItem('isAdmin') || false);
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  const login = async ({ username, token, is_admin }) => {
+    // TODO: token validation.
+    localStorage.setItem('user', username);
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('isAdmin', is_admin);
     setUser(username);
     setAuthToken(token);
-    setIsAdmin(isAdmin);
+    setIsAdmin(is_admin);
   };
   const logout = async () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('isAdmin');
     setUser(null);
     setAuthToken(null);
     setIsAdmin(false);
@@ -23,9 +54,9 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         authToken,
+        isAdmin,
         login,
         logout,
-        isAdmin,
       }}
     >
       {children}

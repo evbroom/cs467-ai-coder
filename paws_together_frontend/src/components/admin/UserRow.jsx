@@ -15,39 +15,40 @@ const UserRow = ({ row, setData }) => {
   const handleEdit = (id) => {
     navigate(`/admin/users/${id}`);
   };
-  const handleDelete = (id) => {
+
+  const onConfirm = async () => {
+    await deleteUser({ userId: id, authToken, setError });
+    if (!error) {
+      setData((prevData) => prevData.filter((item) => item.id !== id));
+    }
+  };
+  const handleDelete = () => {
     // Passing delete function to confirm modal
-    const onConfrim = async () => {
-      await deleteUser({ userId: id, authToken, setError });
-      if (!error) {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
-      }
-    };
     setShowModal(true);
-    return (
-      <DeleteConfirmModal
-        show={showModal}
-        setShow={setShowModal}
-        onConfirm={onConfrim}
-      />
-    );
   };
 
   return (
-    <tr className="border text-center">
-      <td className="p-2 border">{username}</td>
-      <td className="p-2 border">{email}</td>
-      <td className="p-2 border">
-        <Button variant="primary" onClick={() => handleEdit(id)}>
-          Edit
-        </Button>
-      </td>
-      <td className="p-2 border">
-        <Button variant="danger" onClick={() => handleDelete(id)}>
-          Delete
-        </Button>
-      </td>
-    </tr>
+    <>
+      <tr className="border text-center">
+        <td className="p-2 border">{username}</td>
+        <td className="p-2 border">{email}</td>
+        <td className="p-2 border">
+          <Button variant="primary" onClick={() => handleEdit(id)}>
+            Edit
+          </Button>
+        </td>
+        <td className="p-2 border">
+          <Button variant="danger" onClick={() => handleDelete()}>
+            Delete
+          </Button>
+        </td>
+      </tr>
+      <DeleteConfirmModal
+        show={showModal}
+        setShow={setShowModal}
+        onConfirm={onConfirm}
+      />
+    </>
   );
 };
 

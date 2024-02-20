@@ -139,6 +139,7 @@ export const postUserSignup = async ({
   setError,
   login,
 }) => {
+  console.log(userData);
   try {
     const response = await axios.post(`${API_URL}/signup/`, userData);
     // Handle success
@@ -147,6 +148,7 @@ export const postUserSignup = async ({
     navigate('/');
   } catch (error) {
     userSignupLoginErrorHandler(error.response.status, setError, true);
+    console.log(error);
   }
 };
 
@@ -158,12 +160,13 @@ export const postUserSignup = async ({
  * @param {Function} setError - Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
+
 export const postLogin = async ({ credentials, navigate, setError, login }) => {
   try {
     const response = await axios.post(`${API_URL}/login/`, credentials);
     // Handle success
-    const { username, token, is_admin } = response.data;
-    login({ username, token, isAdmin: is_admin });
+    const { token, is_admin } = response.data;
+    login({ username: credentials.username, token, is_admin });
     navigate('/');
   } catch (error) {
     userSignupLoginErrorHandler(error.response.status, setError);

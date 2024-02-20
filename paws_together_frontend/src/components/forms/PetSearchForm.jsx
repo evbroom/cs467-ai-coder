@@ -61,16 +61,20 @@ const PetSearchForm = ({
 
   return (
     <Form onSubmit={handleSubmit(onSearch)} className="space-y-4">
-      <Form.Control controlId="type" className="flex flex-col">
+      <Form.Group controlId="text" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Type</Form.Label>
-        <Form.Select aria-label="Select pet type" {...register('type')}>
+        <Form.Select
+          id="type"
+          aria-label="Select pet type"
+          {...register('type')}
+        >
           <option value="">Select Type</option>
           <option value="dog">Dogs</option>
           <option value="cat">Cats</option>
           <option value="other">Other</option>
         </Form.Select>
-      </Form.Control>
-      <Form.Control controlId="breed" className="flex flex-col">
+      </Form.Group>
+      <Form.Group controlId="breed" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Breed</Form.Label>
         <Form.Select aria-label="Select pet breed" {...register('breed')}>
           <option value="">Select Breed</option>
@@ -80,8 +84,8 @@ const PetSearchForm = ({
             </option>
           ))}
         </Form.Select>
-      </Form.Control>
-      <Form.Control controlId="dispositions" className="flex flex-col">
+      </Form.Group>
+      <Form.Group controlId="dispositions" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
         <div className="border-2 rounded p-3">
           <Form.Check
@@ -106,8 +110,9 @@ const PetSearchForm = ({
             {...register('dispositions')}
           />
         </div>
-      </Form.Control>
-      <Form.Control controlId="date_created" className="flex flex-col">
+      </Form.Group>
+
+      <Form.Group controlId="date_created" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Created Date</Form.Label>
         <Controller
           name="date_created"
@@ -125,7 +130,8 @@ const PetSearchForm = ({
             );
           }}
         />
-      </Form.Control>
+      </Form.Group>
+
       <Button type="submit" variant="dark" className="w-full">
         Search
       </Button>

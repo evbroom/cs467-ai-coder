@@ -2,9 +2,17 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { FaPaw } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminNavDropdown from './AdminNavDropdown';
+import { useState, useEffect } from 'react';
 
 function NavBar() {
   const { user, isAdmin, logout } = useAuth();
+  const [adminDisplay, setAdminDisplay] = useState(false);
+  const [userDisplay, setUserDisplay] = useState(false);
+
+  useEffect(() => {
+    isAdmin ? setAdminDisplay(true) : setAdminDisplay(false);
+    user ? setUserDisplay(true) : setUserDisplay(false);
+  }, [isAdmin, user]);
 
   const handleLogout = () => {
     // TODO: Send logout request to the backend
@@ -39,7 +47,7 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <Navbar.Text className="ml-auto hidden lg:block">
-          Hello, {user ? user : 'Guest'} {isAdmin && ' (Admin)'}!
+          Hello, {userDisplay ? user : 'Guest'} {adminDisplay && ' (Admin)'}!
         </Navbar.Text>
       </Container>
     </Navbar>

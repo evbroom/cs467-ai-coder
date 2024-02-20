@@ -16,44 +16,40 @@ const PetProfileRow = ({ row, setData }) => {
     navigate(`/admin/pet-profiles/${id}`);
   };
 
-  const handleDelete = (id) => {
-    // Passing delete function to confirm modal
-    const onConfrim = async () => {
-      await deletePetProfile({ petId: id, authToken, setError });
-      if (!error) {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
-      }
-    };
-    setShowModal(true);
-    return (
+  const onConfrim = async () => {
+    await deletePetProfile({ petId: id, authToken, setError });
+    if (!error) {
+      setData((prevData) => prevData.filter((item) => item.id !== id));
+    }
+  };
+
+  return (
+    <>
+      <tr className="border text-center">
+        <td className="p-2 border">{type}</td>
+        <td className="p-2 border">{breed}</td>
+        <td className="p-2 border whitespace-pre text-left">
+          {dispositions.join('\n')}
+        </td>
+        <td className="p-2 border">{date_created}</td>
+        <td className="p-2 border">{availability}</td>
+        <td className="p-2 border">
+          <Button variant="primary" onClick={() => handleEdit(id)}>
+            Edit
+          </Button>
+        </td>
+        <td className="p-2 border">
+          <Button variant="danger" onClick={() => setShowModal(true)}>
+            Delete
+          </Button>
+        </td>
+      </tr>
       <DeleteConfirmModal
         show={showModal}
         setShow={setShowModal}
         onConfirm={onConfrim}
       />
-    );
-  };
-
-  return (
-    <tr className="border text-center">
-      <td className="p-2 border">{type}</td>
-      <td className="p-2 border">{breed}</td>
-      <td className="p-2 border whitespace-pre text-left">
-        {dispositions.join('\n')}
-      </td>
-      <td className="p-2 border">{date_created}</td>
-      <td className="p-2 border">{availability}</td>
-      <td className="p-2 border">
-        <Button variant="primary" onClick={() => handleEdit(id)}>
-          Edit
-        </Button>
-      </td>
-      <td className="p-2 border">
-        <Button variant="danger" onClick={() => handleDelete(id)}>
-          Delete
-        </Button>
-      </td>
-    </tr>
+    </>
   );
 };
 
