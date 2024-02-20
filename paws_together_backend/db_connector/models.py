@@ -37,7 +37,7 @@ class Pet(models.Model):
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     breed = models.CharField(max_length=255)
     disposition = ArrayField(models.CharField(max_length=50, choices=DISPOSITION_CHOICES))
-    picture_url = models.URLField()
+    picture_url = models.ImageField(upload_to='pets/')
     availability = models.CharField(max_length=50, choices=AVAILABILITY_CHOICES)
     description = models.TextField()
     date_created = models.DateField(auto_now_add=True)
