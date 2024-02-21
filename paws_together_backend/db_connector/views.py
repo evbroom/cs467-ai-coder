@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from .models import Pet
 from .serializers import PetSerializer
 from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -30,6 +30,15 @@ class PetViewSet(viewsets.ModelViewSet):
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
     pagination_class = PetPagination
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [IsAuthenticated]
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated]  # Default to IsAuthenticated if no action matches
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = Pet.objects.all().order_by('id')

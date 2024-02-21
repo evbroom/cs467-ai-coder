@@ -518,3 +518,39 @@ class PetViewSetTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), ['Other'])
+
+from unittest.mock import MagicMock
+class PetViewSetPermissionsTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        # Create a regular user and an admin user
+        self.regular_user = User.objects.create_user(username='regular', password='password')
+        self.admin_user = User.objects.create_superuser(username='admin', password='password')
+
+        # Create a pet object for testing
+        self.pet = Pet.objects.create(
+            type='dog', 
+            breed='Beagle', 
+            availability='available', 
+            disposition=['good_with_children', 'leash_needed'], 
+            picture_url='http://example.com/dog3.jpg', 
+            description='A friendly beagle.'
+        )
+
+    def test_regular_user_can_get_pets(self):
+        self.client.force_authenticate(user=self.regular_user)
+        response = self.client.get(reverse('pet-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_regular_user_cannot_create_pet(self):
+        self.client.force_authenticate(user=self.regular_user)
+        response = self.client.post(reverse('pet-list'), data={
+            'type': 'dog', 
+            'breed': 'Beagle', 
+            'availability': 'available', 
+            'disposition': ['good_with_children', 'leash_needed'], 
+            'picture_url': 'http://example.com/dog3.jpg', 
+            'description': 'A friendly beagle.'
+        })
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
