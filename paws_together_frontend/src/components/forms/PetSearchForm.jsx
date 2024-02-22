@@ -112,21 +112,23 @@ const PetSearchForm = ({
         </div>
       </Form.Group>
 
-      <Form.Group controlId="date_created" className="flex flex-col">
+      <Form.Group controlId="dateCreated" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Created Date</Form.Label>
         <Controller
-          name="date_created"
+          name="dateCreated"
           control={control}
           render={({ field: { onChange, value } }) => {
             return (
-              <DatePicker
-                selected={value}
-                onChange={onChange}
-                maxDate={new Date()}
-                dateFormat="MM-dd-yyyy"
-                className="border-2 rounded text-center mx-auto"
-                placeholderText="Select Date"
-              />
+              <div className="mx-auto">
+                <DatePicker
+                  selected={value}
+                  onChange={onChange}
+                  maxDate={new Date()}
+                  dateFormat="MM-dd-yyyy"
+                  className="border-2 rounded text-center"
+                  placeholderText="Select Date"
+                />
+              </div>
             );
           }}
         />

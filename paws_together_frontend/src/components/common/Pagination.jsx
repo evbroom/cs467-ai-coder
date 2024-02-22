@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 
-const PetCardPagination = ({ page, setPage, isNextPage }) => {
+const Pagination = ({ page, setPage, isNextPage }) => {
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(!isNextPage);
 
@@ -35,4 +35,4 @@ const PetCardPagination = ({ page, setPage, isNextPage }) => {
   );
 };
 
-export default PetCardPagination;
+export default Pagination;

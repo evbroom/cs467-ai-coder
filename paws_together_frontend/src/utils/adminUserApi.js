@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './constants';
 import { adminAPIErrorHandler } from './helper';
+import { TOKEN_PREFIX } from './constants';
 
 /**
  * Manage Users
@@ -25,7 +26,7 @@ export const getUsers = async ({ authToken, setUsers, setError }) => {
   try {
     const response = await axios.get(`${API_URL}/users/`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -50,7 +51,7 @@ export const getUserById = async ({ authToken, userId, setUser, setError }) => {
   try {
     const response = await axios.get(`${API_URL}/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -75,7 +76,7 @@ export const postUser = async ({ user, authToken, navigate, setError }) => {
   try {
     await axios.post(`${API_URL}/users/`, user, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -108,7 +109,7 @@ export const patchUser = async ({
   try {
     await axios.patch(`${API_URL}/users/${userId}`, user, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -132,7 +133,7 @@ export const deleteUser = async ({ userId, authToken, setError }) => {
   try {
     await axios.delete(`${API_URL}/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
   } catch (error) {

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import PetSearchForm from '../../components/forms/PetSearchForm';
 import PetCardContainer from '../../components/browsePets/PetCardContainer';
-import PetCardPagination from '../../components/browsePets/PetCardPagination';
+import Pagination from '../../components/common/Pagination';
 import { getPetProfiles } from '../../utils/api';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Modified from the generated code by OpenAI's ChatGPT 4:
@@ -15,18 +16,23 @@ const BrowsePetsPage = () => {
   const [page, setPage] = useState(1);
   const [isNextPage, setIsNextPage] = useState(false);
   const [fetchError, setFetchError] = useState('');
-  const [currentFilters, setCurrentFilters] = useState({});
+  const [currentFilter, setCurrentFilter] = useState({});
   const { authToken } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getPetProfiles({
-      page,
-      ...currentFilters,
-      authToken,
-      setPetProfiles,
-      setIsNextPage,
-      setError: setFetchError,
-    });
+    if (authToken) {
+      getPetProfiles({
+        page,
+        ...currentFilter,
+        authToken,
+        setPetProfiles,
+        setIsNextPage,
+        setError: setFetchError,
+      });
+    } else {
+      navigate('/login');
+    }
   }, [page, setPetProfiles, setIsNextPage, setFetchError]);
 
   return (
@@ -37,26 +43,26 @@ const BrowsePetsPage = () => {
           setPage={setPage}
           setIsNextPage={setIsNextPage}
           setError={setFetchError}
-          setCurrentFilters={setCurrentFilters}
+          setCurrentFilter={setCurrentFilter}
         />
       </div>
       <div className="lg:col-span-10 flex flex-col">
         {petProfiles ? (
           petProfiles.length === 0 ? (
-            <p>No pet profiles found.</p>
+            <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
+              <p>No pet profiles found.</p>
+            </div>
           ) : (
             <PetCardContainer petProfiles={petProfiles} />
           )
         ) : fetchError ? (
           <p className="text-red-500">{fetchError}</p>
         ) : (
-          <p>Loading...</p>
+          <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
+            <p className="loading">Loading</p>
+          </div>
         )}
-        <PetCardPagination
-          page={page}
-          setPage={setPage}
-          isNextPage={isNextPage}
-        />
+        <Pagination page={page} setPage={setPage} isNextPage={isNextPage} />
       </div>
     </div>
   );

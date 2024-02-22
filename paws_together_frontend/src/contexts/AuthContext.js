@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async ({ username, token, is_admin }) => {
-    // TODO: token validation.
     localStorage.setItem('user', username);
     localStorage.setItem('authToken', token);
     localStorage.setItem('isAdmin', is_admin);

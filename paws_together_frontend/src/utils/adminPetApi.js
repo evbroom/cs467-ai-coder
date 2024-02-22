@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './constants';
 import { adminAPIErrorHandler } from './helper';
+import { TOKEN_PREFIX } from './constants';
 
 /**
  * Manage Pet Profiles
@@ -24,16 +25,20 @@ import { adminAPIErrorHandler } from './helper';
 export const getPetProfiles = async ({
   authToken,
   setPetProfiles,
+  setIsNextPage,
   setError,
+  page,
 }) => {
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
+      params: { page },
     });
     // Handle success
-    setPetProfiles(response.data);
+    setIsNextPage(response.data.is_next_page);
+    setPetProfiles(response.data.pets);
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
     adminAPIErrorHandler(error.response.status, setError);
@@ -59,7 +64,7 @@ export const getPetProfileById = async ({
   try {
     const response = await axios.get(`${API_URL}/pets/${petId}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -98,7 +103,7 @@ export const postPetProfile = async ({
   try {
     await axios.post(`${API_URL}/pets/`, formData, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -139,7 +144,7 @@ export const patchPetProfile = async ({
   try {
     await axios.patch(`${API_URL}/pets/${petId}`, formData, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
     // Handle success
@@ -163,7 +168,7 @@ export const deletePetProfile = async ({ petId, authToken, setError }) => {
   try {
     await axios.delete(`${API_URL}/pets/${petId}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },
     });
   } catch (error) {

@@ -174,28 +174,28 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
           )}
         </Form.Group>
 
-        <Form.Group controlId="dispositions">
+        <Form.Group controlId="disposition">
           <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Good with other animals"
             value="Good with other animals"
-            {...register('dispositions')}
+            {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Good with children"
             value="Good with children"
-            {...register('dispositions')}
+            {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Must be leashed at all times"
             value="Must be leashed at all times"
-            {...register('dispositions')}
+            {...register('disposition')}
           />
         </Form.Group>
 

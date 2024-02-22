@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_URL } from './constants';
 import { format } from 'date-fns';
 import { userSignupLoginErrorHandler } from './helper';
+import { TOKEN_PREFIX } from './constants';
 
 /**
  * GET request for pet breeds.
@@ -61,19 +62,15 @@ export const getPetProfiles = async ({
   const queryParams = { page };
   if (type) queryParams.type = type;
   if (breed) queryParams.breed = breed;
-  if (dispositions) queryParams.dispositions = dispositions;
+  if (dispositions?.length > 0) queryParams.dispositions = dispositions;
   if (dateCreated) {
-    queryParams.dateCreated = format(dateCreated, 'yyyy-MM-dd');
+    queryParams.date_created = format(dateCreated, 'yyyy-MM-dd');
   }
-
   try {
-    const response = await axios.get(
-      `${API_URL}/pets/`,
-      {
-        params: queryParams,
-      },
-      { headers: { Authorization: `Bearer ${authToken}` } }
-    );
+    const response = await axios.get(`${API_URL}/pets/`, {
+      headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
+      params: queryParams,
+    });
     // Handle success
     setIsNextPage(response.data.is_next_page);
     setPetProfiles(response.data.pets);
@@ -107,7 +104,7 @@ export const getPetProfileById = async ({
 }) => {
   try {
     const response = await axios.get(`${API_URL}/pets/${petId}`, {
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
     });
     // Handle success
     setPetProfile(response.data);
@@ -139,7 +136,6 @@ export const postUserSignup = async ({
   setError,
   login,
 }) => {
-  console.log(userData);
   try {
     const response = await axios.post(`${API_URL}/signup/`, userData);
     // Handle success
@@ -148,7 +144,6 @@ export const postUserSignup = async ({
     navigate('/');
   } catch (error) {
     userSignupLoginErrorHandler(error.response.status, setError, true);
-    console.log(error);
   }
 };
 

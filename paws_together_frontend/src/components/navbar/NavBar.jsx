@@ -3,11 +3,13 @@ import { FaPaw } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminNavDropdown from './AdminNavDropdown';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NavBar() {
   const { user, isAdmin, logout } = useAuth();
   const [adminDisplay, setAdminDisplay] = useState(false);
   const [userDisplay, setUserDisplay] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     isAdmin ? setAdminDisplay(true) : setAdminDisplay(false);
@@ -15,8 +17,9 @@ function NavBar() {
   }, [isAdmin, user]);
 
   const handleLogout = () => {
-    // TODO: Send logout request to the backend
+    // TODO: Send logout request to the backend ?
     logout();
+    navigate('/');
   };
 
   return (

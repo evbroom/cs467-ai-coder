@@ -4,11 +4,16 @@ import { getPetProfiles } from '../../../utils/adminPetApi';
 import PetProfileRow from '../../../components/admin/PetProfileRow';
 import TableContainer from '../../../components/admin/TableContainer';
 import LinkButton from '../../../components/common/LinkButton';
+import Pagination from '../../../components/common/Pagination';
+import { useNavigate } from 'react-router-dom';
 
 const ManagePetProfilePage = () => {
   const [petProfiles, setPetProfiles] = useState([]);
   const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const [isNextPage, setIsNextPage] = useState(false);
   const { authToken } = useAuth();
+  const navigate = useNavigate();
 
   const fieldset = [
     'Type',
@@ -19,8 +24,15 @@ const ManagePetProfilePage = () => {
   ];
 
   useEffect(() => {
-    getPetProfiles({ authToken, setPetProfiles, setError });
-  }, []);
+    if (!authToken) navigate('/login');
+    getPetProfiles({
+      authToken,
+      setPetProfiles,
+      setIsNextPage,
+      setError,
+      page,
+    });
+  }, [page]);
 
   return (
     <div className="container my-6 space-y-2">
@@ -34,7 +46,9 @@ const ManagePetProfilePage = () => {
         </div>
         {petProfiles ? (
           petProfiles.length === 0 ? (
-            <p>No pet data...</p>
+            <div className="container">
+              <p>No pet data...</p>
+            </div>
           ) : (
             <TableContainer
               fieldset={fieldset}
@@ -46,8 +60,11 @@ const ManagePetProfilePage = () => {
         ) : error ? (
           <p className="text-danger">{error}</p>
         ) : (
-          <p className="loading">Fetching pet profiles</p>
+          <div className="container">
+            <p className="loading">Fetching pet profiles</p>
+          </div>
         )}
+        <Pagination page={page} setPage={setPage} isNextPage={isNextPage} />
       </div>
     </div>
   );
