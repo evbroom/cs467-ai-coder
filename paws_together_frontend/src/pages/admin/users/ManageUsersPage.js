@@ -14,7 +14,7 @@ const ManageUsersPage = () => {
 
   useEffect(() => {
     getUsers({ authToken, setUsers, setError });
-  }, [users, setUsers]);
+  }, []);
 
   return (
     <div className="container my-6 space-y-2">

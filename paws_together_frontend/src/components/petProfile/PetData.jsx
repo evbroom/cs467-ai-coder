@@ -6,14 +6,14 @@ const PetData = ({ field, value }) => {
       <h3>{field}</h3>
       <Card>
         <Card.Body>
-          {field === 'Dispositions' ? (
-            <ul>
-              {value.map((disposition) => (
-                <li key={disposition}>{disposition}</li>
+          {field === 'Disposition' ? (
+            <>
+              {value?.map((disposition) => (
+                <p key={disposition}>{disposition}</p>
               ))}
-            </ul>
+            </>
           ) : (
-            { value }
+            value
           )}
         </Card.Body>
       </Card>

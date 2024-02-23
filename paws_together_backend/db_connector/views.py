@@ -83,7 +83,7 @@ class PetViewSet(viewsets.ModelViewSet):
             try:
                 # Upload the file to DigitalOcean Spaces
                 s3.upload_fileobj(picture_file, bucket_name, file_name)
-                
+                print(f'File uploaded to DigitalOcean Spaces: {file_name}')
                 # Update the picture_url in the response
                 response.data['picture_url'] = f'https://nyc3.digitaloceanspaces.com/{bucket_name}/{file_name}'
             except NoCredentialsError:

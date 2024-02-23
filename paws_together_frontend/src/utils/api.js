@@ -52,7 +52,7 @@ export const getPetProfiles = async ({
   page,
   type,
   breed,
-  dispositions,
+  disposition,
   dateCreated,
   authToken,
   setPetProfiles,
@@ -62,7 +62,7 @@ export const getPetProfiles = async ({
   const queryParams = { page };
   if (type) queryParams.type = type;
   if (breed) queryParams.breed = breed;
-  if (dispositions?.length > 0) queryParams.dispositions = dispositions;
+  if (disposition?.length > 0) queryParams.disposition = disposition;
   if (dateCreated) {
     queryParams.date_created = format(dateCreated, 'yyyy-MM-dd');
   }

@@ -85,29 +85,29 @@ const PetSearchForm = ({
           ))}
         </Form.Select>
       </Form.Group>
-      <Form.Group controlId="dispositions" className="flex flex-col">
+      <Form.Group controlId="disposition" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
         <div className="border-2 rounded p-3">
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Good with other animals"
-            value="Good with other animals"
-            {...register('dispositions')}
+            value="good_with_animals"
+            {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Good with children"
-            value="Good with children"
-            {...register('dispositions')}
+            value="good_with_children"
+            {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
-            name="dispositions"
+            name="disposition"
             label="Must be leashed at all times"
-            value="Must be leashed at all times"
-            {...register('dispositions')}
+            value="leash_needed"
+            {...register('disposition')}
           />
         </div>
       </Form.Group>

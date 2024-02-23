@@ -2,7 +2,6 @@ import { Form, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
 import { isEqual } from 'lodash';
 import { getPetBreeds } from '../../utils/api';
 import { postPetProfile, patchPetProfile } from '../../utils/adminPetApi';
@@ -113,7 +112,6 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
       setError('No changes detected. Please make changes to update.');
     } else {
       // Handle add pet profile
-      data['date_created'] = format(new Date(), 'MM-dd-yyyy');
       postPetProfile({
         petProfile: data,
         authToken,
@@ -180,21 +178,21 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             type="checkbox"
             name="disposition"
             label="Good with other animals"
-            value="Good with other animals"
+            value="good_with_animals"
             {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Good with children"
-            value="Good with children"
+            value="good_with_children"
             {...register('disposition')}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Must be leashed at all times"
-            value="Must be leashed at all times"
+            value="leash_needed"
             {...register('disposition')}
           />
         </Form.Group>
@@ -209,10 +207,10 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             })}
           >
             <option value="">Select Availability</option>
-            <option value="Not Available">Not Available</option>
-            <option value="Available">Available</option>
-            <option value="Pending">Pending</option>
-            <option value="Adopted">Adopted</option>
+            <option value="not_available">Not Available</option>
+            <option value="available">Available</option>
+            <option value="pending">Pending</option>
+            <option value="adopted">Adopted</option>
           </Form.Select>
           {errors.availability && (
             <Form.Text className="text-danger">

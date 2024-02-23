@@ -33,7 +33,7 @@ export const getUsers = async ({ authToken, setUsers, setError }) => {
     setUsers(response.data);
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    adminAPIErrorHandler(error.response.status, setError);
+    adminAPIErrorHandler(error?.response?.status, setError);
   }
 };
 
@@ -107,7 +107,7 @@ export const patchUser = async ({
   setError,
 }) => {
   try {
-    await axios.patch(`${API_URL}/users/${userId}`, user, {
+    await axios.patch(`${API_URL}/users/${userId}/`, user, {
       headers: {
         Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },

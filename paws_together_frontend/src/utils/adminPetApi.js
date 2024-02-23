@@ -94,10 +94,18 @@ export const postPetProfile = async ({
   const formData = new FormData();
   for (const key in petProfile) {
     if (key === 'picture') {
-      formData.append(key, petProfile[key][0]);
+      formData.append('picture_url', petProfile[key][0]);
+    } else if (key === 'disposition') {
+      petProfile[key].forEach((disposition) =>
+        formData.append('disposition', disposition)
+      );
     } else {
       formData.append(key, petProfile[key]);
     }
+  }
+
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
   }
 
   try {
@@ -134,15 +142,19 @@ export const patchPetProfile = async ({
 }) => {
   const formData = new FormData();
   for (const key in petProfile) {
-    if (petProfile[key] && petProfile[key][0]) {
-      formData.append(key, petProfile[key][0]);
+    if (key === 'picture' && petProfile[key][0]) {
+      formData.append('picture_url', petProfile[key][0]);
+    } else if (key === 'disposition') {
+      petProfile[key].forEach((disposition) =>
+        formData.append('disposition', disposition)
+      );
     } else {
       formData.append(key, petProfile[key]);
     }
   }
 
   try {
-    await axios.patch(`${API_URL}/pets/${petId}`, formData, {
+    await axios.patch(`${API_URL}/pets/${petId}/`, formData, {
       headers: {
         Authorization: `${TOKEN_PREFIX} ${authToken}`,
       },

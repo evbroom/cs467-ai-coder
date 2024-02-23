@@ -21,10 +21,10 @@ const PetProfilePage = () => {
 
   return (
     <div>
-      {fetchError ? (
-        <p className="text-red-500">{fetchError}</p>
-      ) : (
+      {petProfile ? (
         <PetProfile petProfile={petProfile} />
+      ) : (
+        <p className="text-red-500">{fetchError}</p>
       )}
     </div>
   );
