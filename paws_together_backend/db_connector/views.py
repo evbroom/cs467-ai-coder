@@ -46,12 +46,10 @@ class PetViewSet(viewsets.ModelViewSet):
         type = self.request.query_params.get('type', None)
         breed = self.request.query_params.get('breed', None)
         availability = self.request.query_params.get('availability', None)
-        if self.request.query_params.getlist('disposition[]') is not None:
-            dispositions = self.request.query_params.getlist('disposition[]')
-        else:
-            # for tests
-            dispositions = self.request.query_params.getlist('disposition')
-        dispositions = self.request.query_params.getlist('disposition[]')
+        disposition_key = 'disposition'
+        if 'disposition[]' in self.request.query_params:
+            disposition_key = 'disposition[]'
+        dispositions = self.request.query_params.getlist(disposition_key)
         date_created = self.request.query_params.get('date_created', None)
 
         # Filter queryset based on query parameters
