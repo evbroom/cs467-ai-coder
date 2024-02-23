@@ -21,19 +21,16 @@ const BrowsePetsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authToken) {
-      getPetProfiles({
-        page,
-        ...currentFilter,
-        authToken,
-        setPetProfiles,
-        setIsNextPage,
-        setError: setFetchError,
-      });
-    } else {
-      navigate('/login');
-    }
-  }, [page, setPetProfiles, setIsNextPage, setFetchError]);
+    if (!authToken) navigate('/login');
+    getPetProfiles({
+      page,
+      ...currentFilter,
+      authToken,
+      setPetProfiles,
+      setIsNextPage,
+      setError: setFetchError,
+    });
+  }, [page]);
 
   return (
     <div className="grid lg:grid-cols-12 p-6 lg:p-12 space-y-4">

@@ -4,15 +4,17 @@ import { getUsers } from '../../../utils/adminUserApi';
 import UserRow from '../../../components/admin/UserRow';
 import TableContainer from '../../../components/admin/TableContainer';
 import LinkButton from '../../../components/common/LinkButton';
+import { useNavigate } from 'react-router-dom';
 
 const ManageUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const { authToken } = useAuth();
-
+  const navigate = useNavigate();
   const fieldset = ['Username', 'Email'];
 
   useEffect(() => {
+    if (!authToken) navigate('/login');
     getUsers({ authToken, setUsers, setError });
   }, []);
 

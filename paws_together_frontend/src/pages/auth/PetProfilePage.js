@@ -7,7 +7,7 @@ import PetProfile from '../../components/petProfile/PetProfile';
 const PetProfilePage = () => {
   const { id } = useParams();
   const { authToken } = useAuth();
-  const [petProfile, setPetProfile] = useState({});
+  const [petProfile, setPetProfile] = useState(null);
   const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {

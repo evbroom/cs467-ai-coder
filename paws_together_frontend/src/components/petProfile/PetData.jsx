@@ -6,15 +6,7 @@ const PetData = ({ field, value }) => {
       <h3>{field}</h3>
       <Card>
         <Card.Body>
-          {field === 'Disposition' ? (
-            <>
-              {value?.map((disposition) => (
-                <p key={disposition}>{disposition}</p>
-              ))}
-            </>
-          ) : (
-            value
-          )}
+          {field === 'Disposition' ? <>{value?.join(', ')}</> : value}
         </Card.Body>
       </Card>
     </div>

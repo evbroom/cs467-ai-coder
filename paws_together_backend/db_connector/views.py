@@ -15,7 +15,7 @@ from django.conf import settings
 # Create your views here.
 
 class PetPagination(PageNumberPagination):
-    page_size = 100  # Set the number of items per page
+    page_size = 8  # Set the number of items per page
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -42,24 +42,25 @@ class PetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Pet.objects.all().order_by('id')
-
         # Get query parameters
         type = self.request.query_params.get('type', None)
         breed = self.request.query_params.get('breed', None)
-        availability = self.request.query_params.get('availability', None)
-        dispositions = self.request.query_params.getlist('disposition')
+        # availability = self.request.query_params.get('availability', None)
+        dispositions = self.request.query_params.getlist('disposition[]')
+        date_created = self.request.query_params.get('date_created', None)
 
         # Filter queryset based on query parameters
         if type is not None:
             queryset = queryset.filter(type=type)
         if breed is not None:
             queryset = queryset.filter(breed=breed)
-        if availability is not None:
-            queryset = queryset.filter(availability=availability)
+        # if availability is not None:
+        #     queryset = queryset.filter(availability=availability)
         if dispositions is not None:
             for disposition in dispositions:
                 queryset = queryset.filter(disposition__contains=[disposition])
-        
+        if date_created is not None:
+            queryset = queryset.filter(date_created=date_created)
         return queryset
     
     def create(self, request, *args, **kwargs):

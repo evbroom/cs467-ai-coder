@@ -58,7 +58,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
     if (initialPetProfile && initialPetProfile.breed) {
       setValue('breed', initialPetProfile.breed);
     }
-  }, [type, initialPetProfile, setValue]);
+  }, [type, initialPetProfile]);
 
   /**
    * Handle file input change when editing pet profile.
@@ -127,9 +127,9 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Form.Text>Fields with * are required.</Form.Text>
+        <Form.Text>All fields are required.</Form.Text>
         <Form.Group controlId="type">
-          <Form.Label className="font-bold mx-auto">Type*</Form.Label>
+          <Form.Label className="font-bold mx-auto">Type</Form.Label>
           <Form.Select
             aria-label="Select pet type"
             name="type"
@@ -146,7 +146,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
         </Form.Group>
 
         <Form.Group controlId="breed">
-          <Form.Label className="font-bold mx-auto">Breed*</Form.Label>
+          <Form.Label className="font-bold mx-auto">Breed</Form.Label>
           <Controller
             name="breed"
             control={control}
@@ -179,26 +179,37 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             name="disposition"
             label="Good with other animals"
             value="good_with_animals"
-            {...register('disposition')}
+            {...register('disposition', {
+              required: 'Select at least one disposition.',
+            })}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Good with children"
             value="good_with_children"
-            {...register('disposition')}
+            {...register('disposition', {
+              required: 'Select at least one disposition.',
+            })}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Must be leashed at all times"
             value="leash_needed"
-            {...register('disposition')}
+            {...register('disposition', {
+              required: 'Select at least one disposition.',
+            })}
           />
+          {errors.disposition && (
+            <Form.Text className="text-danger">
+              {errors.disposition.message}
+            </Form.Text>
+          )}
         </Form.Group>
 
         <Form.Group controlId="availability">
-          <Form.Label className="font-bold mx-auto">Availability*</Form.Label>
+          <Form.Label className="font-bold mx-auto">Availability</Form.Label>
           <Form.Select
             aria-label="Select pet availability"
             name="availability"
@@ -236,14 +247,17 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
           <Form.Control
             type="file"
             accept="image/jpeg, image/png"
-            {...register('picture', { validate: validateFile })}
+            {...register('picture', {
+              validate: validateFile,
+              required: 'Please add a picture.',
+            })}
           />
-
-          {errors.picture ? (
+          {errors.picture && (
             <Form.Text className="text-danger">
               {errors.picture.message}
             </Form.Text>
-          ) : (
+          )}
+          {!errors.picture && (
             <Form.Text>Support file types: .jpg, .jpeg, .png</Form.Text>
           )}
         </Form.Group>
@@ -258,6 +272,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
                 value: 500,
                 message: 'Description cannot exceed 500 characters.',
               },
+              required: 'Description is required.',
             })}
           />
 

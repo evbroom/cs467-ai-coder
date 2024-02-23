@@ -21,7 +21,7 @@ const PetCard = ({ picture_url, breed, availability, date_created, id }) => {
       <Card.Body>
         <Card.Title>{breed}</Card.Title>
         <Card.Text>
-          {format(date_created, 'MM-dd-yyyy')} <br />
+          {date_created} <br />
           {availability}
         </Card.Text>
       </Card.Body>

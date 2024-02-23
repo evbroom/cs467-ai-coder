@@ -104,10 +104,6 @@ export const postPetProfile = async ({
     }
   }
 
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
-
   try {
     await axios.post(`${API_URL}/pets/`, formData, {
       headers: {

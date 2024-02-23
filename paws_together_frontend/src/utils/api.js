@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './constants';
 import { format } from 'date-fns';
-import { userSignupLoginErrorHandler } from './helper';
+import { userSignupLoginErrorHandler, formatPetData } from './helper';
 import { TOKEN_PREFIX } from './constants';
 
 /**
@@ -19,16 +19,20 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
     // Handle success
     setBreeds(response.data);
   } catch (error) {
-    switch (error.response.status) {
-      case 404:
-        setError('No breeds found for this type.');
-        break;
-      case 500:
-        setError('Server error. Please try again later.');
-        break;
-      default:
-        setError('An unexpected error occurred. Please try again later.');
-        break;
+    if (error.response) {
+      switch (error.response.status) {
+        case 404:
+          setError('No breeds found for this type.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+          break;
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };
@@ -71,19 +75,28 @@ export const getPetProfiles = async ({
       headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
       params: queryParams,
     });
+
     // Handle success
+    const responsePetData = response.data.pets;
+    responsePetData.forEach((petData) => {
+      formatPetData(petData);
+    });
+    setPetProfiles(responsePetData);
     setIsNextPage(response.data.is_next_page);
-    setPetProfiles(response.data.pets);
   } catch (error) {
-    switch (error.response.status) {
-      case 404:
-        setError('No pet profiles found.');
-
-      case 500:
-        setError('Server error. Please try again later.');
-
-      default:
-        setError('An unexpected error occurred. Please try again later.');
+    if (error.response) {
+      switch (error.response.status) {
+        case 404:
+          setError('No pet profiles found.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };
@@ -107,17 +120,22 @@ export const getPetProfileById = async ({
       headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
     });
     // Handle success
+    formatPetData(response.data);
     setPetProfile(response.data);
   } catch (error) {
-    switch (error.response.status) {
-      case 404:
-        setError('Pet profile not found.');
-
-      case 500:
-        setError('Server error. Please try again later.');
-
-      default:
-        setError('An unexpected error occurred. Please try again later.');
+    if (error.response) {
+      switch (error.response.status) {
+        case 404:
+          setError('Pet profile not found.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };

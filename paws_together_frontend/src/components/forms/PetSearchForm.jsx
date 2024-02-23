@@ -25,26 +25,26 @@ const PetSearchForm = ({
   const [catBreeds, setCatBreeds] = useState([]);
   const { authToken } = useAuth();
 
-  // Fetch breeds based on type
+  // Fetch dog and cat breeds from the server.
+  useEffect(() => {
+    getPetBreeds({ type: 'dog', setBreeds: setDogBreeds, setError });
+    getPetBreeds({ type: 'cat', setBreeds: setCatBreeds, setError });
+  }, []);
+
+  // Switch breeds based on the selected type.
   useEffect(() => {
     if (type) {
-      if (type === 'dog' && dogBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds, setError });
-        setDogBreeds(breeds);
-      } else {
+      if (type === 'dog') {
         setBreeds(dogBreeds);
-      }
-      if (type === 'cat' && catBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds, setError });
-        setCatBreeds(breeds);
-      } else {
+      } else if (type === 'cat') {
         setBreeds(catBreeds);
-      }
-      if (type === 'other') {
+      } else {
         setBreeds(['Other']);
       }
+    } else {
+      setBreeds([]);
     }
-  }, [type, setBreeds]);
+  }, [type]);
 
   const onSearch = (filters) => {
     getPetProfiles({
