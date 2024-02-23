@@ -45,7 +45,12 @@ class PetViewSet(viewsets.ModelViewSet):
         # Get query parameters
         type = self.request.query_params.get('type', None)
         breed = self.request.query_params.get('breed', None)
-        # availability = self.request.query_params.get('availability', None)
+        availability = self.request.query_params.get('availability', None)
+        if self.request.query_params.getlist('disposition[]') is not None:
+            dispositions = self.request.query_params.getlist('disposition[]')
+        else:
+            # for tests
+            dispositions = self.request.query_params.getlist('disposition')
         dispositions = self.request.query_params.getlist('disposition[]')
         date_created = self.request.query_params.get('date_created', None)
 
@@ -54,8 +59,8 @@ class PetViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(type=type)
         if breed is not None:
             queryset = queryset.filter(breed=breed)
-        # if availability is not None:
-        #     queryset = queryset.filter(availability=availability)
+        if availability is not None:
+            queryset = queryset.filter(availability=availability)
         if dispositions is not None:
             for disposition in dispositions:
                 queryset = queryset.filter(disposition__contains=[disposition])
