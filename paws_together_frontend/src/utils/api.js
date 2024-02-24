@@ -1,95 +1,237 @@
 import axios from 'axios';
-import { API_URL } from './helpers';
 import { format } from 'date-fns';
+import { API_URL, TOKEN_PREFIX } from './constants';
+import { formatPetData } from './helper';
 
 /**
- *  API - Requests from Public Users
- *  ------------
- *  getPetBreeds
- *  getPetProfiles
- *  getPetProfileById
+ * User Signup Login Error Handler
  *
+ * Handle error responses for user signup and login requests.
+ *
+ * @param {Number} status - HTTP status code
+ * @param {Function} setError - Function to set the request error message.
+ * @param {Boolean} isSignup - True if the error is from a signup request, false if from a login request.
  */
-
-/**
- * GET request for pet breeds.
- *
- * Use it to populate the breed dropdown in the Pet Search form.
- *
- * @param {string} type - pet type (e.g. Dog, Cat, Other)
- * @returns {Object} - Returns an object with pet breeds.
- */
-export const getPetBreeds = async (type) => {
-  try {
-    const response = await axios.get(`${API_URL}/pets/breeds/${type}`);
-    // Handle success
-    return response;
-  } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+const userSignupLoginErrorHandler = (status, setError, isSignup = false) => {
+  switch (status) {
+    case 400:
+      isSignup
+        ? setError('Username or email already exists. Please try again.')
+        : setError('Invalid username or password');
+      break;
+    case 401:
+      setError('Invalid username or password');
+      break;
+    case 500:
+      setError('Server error. Please try again.');
+      break;
+    default:
+      setError('An unexpected error occurred. Please try again later.');
   }
 };
 
 /**
- * Get request for Pet Profiles for Browse Pets page and Pet Search form.
+ * POST User Signup
  *
- * Use it to fetch pet profiles based on the search criteria or all pet profiles.
+ * POST request for user signup.
  *
- * @param {number} page - Page number (e.g. 10 or 20 pet profiles per page).
- * @param {string} type - Pet type. (e.g. Dog, Cat, Other)
- * @param {string} breed - Pet breed.
- * @param {Array} disposition - Pet dispositions. (e.g. Good with other animals, Good with children, Animal must be leased at all times)
- * @param {string} dateCreated - Date created of pet profile. (Format: YYYY-MM-DD)
- * @returns {Object} - Returns an object with pet profiles, including a boolean indicating if next page exists.
+ * @param {Object} user - User data to be posted. (username: string, email: string, password: string)
+ * @param {Function} navigate - Function to navigate to a new page.
+ * @param {Function} setError - Function to set the request error message.
+ * @param {Function} login - Function to set the login status.
  */
-export const getPetProfiles = async ({
+export const postUserSignup = async (
+  user,
+  navigate,
+  setError,
+  login = null
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/signup/`, user);
+    // Handle success response
+    const { username, token, is_admin } = response.data;
+    if (login) {
+      login({ username, token, isAdmin: is_admin });
+      navigate('/');
+    } else {
+      navigate('/admin/users');
+    }
+  } catch (error) {
+    if (error.response) {
+      // Handle error response
+      userSignupLoginErrorHandler(error.response.status, setError, true);
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  }
+};
+
+/**
+ * Post Login
+ *
+ * POST request for user and admin login.
+ *
+ * @param {Object} credentials - User credentials to be posted. (username: string, password: string)
+ * @param {Function} navigate - Function to navigate to a new page.
+ * @param {Function} setError- Function to set the request error message.
+ * @param {Function} login - Function to set the login status.
+ */
+export const postLogin = async (credentials, navigate, setError, login) => {
+  try {
+    const response = await axios.post(`${API_URL}/login/`, credentials);
+    // Handle success response
+    const { token, is_admin } = response.data;
+    login({ username: credentials.username, token, is_admin });
+    navigate('/');
+  } catch (error) {
+    if (error.response) {
+      // Handle error response
+      userSignupLoginErrorHandler(error.response.status, setError, true);
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  }
+};
+
+/**
+ * GET Pet Breeds
+ *
+ * Use it to populate the breed dropdown in the Pet Search/Add/Edit form.
+ *
+ * @param {String} type - Pet type (e.g. dog, cat, other)
+ * @param {Function} setBreeds - Function to set the pet breeds to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getPetBreeds = async (type, setBreeds, setError) => {
+  try {
+    const response = await axios.get(`${API_URL}/pets/breeds/${type}/`);
+    // Handle success response
+    setBreeds(response.data);
+  } catch (error) {
+    if (error.response) {
+      // Handle error response
+      switch (error.response.status) {
+        case 404:
+          setError('No breeds found for this type.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  }
+};
+
+/**
+ * Get Pet Profiles
+ *
+ * GET request for the Browse Pets page and Pet Search form.
+ *
+ * @param {Number} page - Page number to fetch.
+ * @param {Object} filter - Pet search filter object. (type: string, breed: string, dispositions: array, dateCreated: Date)
+ * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
+ * @param {Function} setIsNextPage - Function to set the next page status.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getPetProfiles = async (
   page,
-  type,
-  breed,
-  disposition,
-  dateCreated,
-}) => {
+  setPetProfiles,
+  setIsNextPage,
+  setError,
+  filter = null
+) => {
+  // Set query parameters
   const queryParams = { page };
-  if (type && type !== 'Select Type') {
-    queryParams.type = type;
-  }
-  if (breed && breed !== 'Select Breed') {
-    queryParams.breed = breed;
-  }
-  if (disposition) {
-    queryParams.disposition = disposition;
-  }
-  if (dateCreated) {
-    queryParams.dateCreated = format(dateCreated, 'yyyy-MM-dd');
+  if (filter) {
+    const { type, breed, disposition, dateCreated } = filter;
+    if (type) queryParams.type = type;
+    if (breed) queryParams.breed = breed;
+    if (disposition?.length > 0) queryParams.disposition = disposition;
+    if (dateCreated) {
+      queryParams.date_created = format(dateCreated, 'yyyy-MM-dd');
+    }
   }
 
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
       params: queryParams,
     });
-    // Handle success
-    return response;
+    // Handle success response
+    const responsePetData = response.data.pets;
+    responsePetData.forEach((petData) => {
+      formatPetData(petData);
+    });
+    setPetProfiles(responsePetData);
+    setIsNextPage(response.data.is_next_page);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    return error.response;
+    if (error.response) {
+      // Handle error response
+      switch (error.response.status) {
+        case 400:
+          setError('Invalid request. Please check your inputs.');
+          break;
+        case 401:
+          setError('Token expired. Please log in again.');
+          break;
+        case 403:
+          setError('Forbidden. Please log in as an admin.');
+          break;
+        case 429:
+          setError('Too many requests. Please try again later.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
   }
 };
 
 /**
- * GET request for a pet profile by ID
+ * Get Pet Profile By ID
  *
- * Use it to fetch a single pet profile based on the pet profile id.
+ * GET request for pet profile by ID.
  *
- * @param {number} id - Pet profile id.
- * @returns {Object} - Returns an object with pet profile details.
+ * @param {String} petId - The pet's ID.
+ * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const getPetProfileById = async (id) => {
+export const getPetProfileById = async (petId, setPetProfile, setError) => {
   try {
-    const response = await axios.get(`${API_URL}/pets/${id}`);
-    // Handle success
-    return response;
+    const response = await axios.get(`${API_URL}/pets/${petId}`, {
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
+    });
+    // Handle success response
+    formatPetData(response.data);
+    setPetProfile(response.data);
   } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    console.log(error);
+    if (error.response) {
+      // Handle error response
+      switch (error.response.status) {
+        case 404:
+          setError('Pet profile not found.');
+          break;
+        case 500:
+          setError('Server error. Please try again later.');
+          break;
+        default:
+          setError('An unexpected error occurred. Please try again later.');
+      }
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
   }
 };

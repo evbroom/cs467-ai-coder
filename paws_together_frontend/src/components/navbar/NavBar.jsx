@@ -1,19 +1,24 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { FaPaw } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../slices/loginStatusSlice';
+import { useAuth } from '../../contexts/AuthContext';
 import AdminNavDropdown from './AdminNavDropdown';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NavBar() {
-  const dispatch = useDispatch();
-  const userLoggedIn = useSelector((state) => state.loginStatus.loggedIn);
-  const username = useSelector((state) => state.loginStatus.user);
-  // const isAdmin = useSelector((state) => state.loginStatus.isAdmin);
-  const isAdmin = true;
+  const { user, isAdmin, logout } = useAuth();
+  const [adminDisplay, setAdminDisplay] = useState(false);
+  const [userDisplay, setUserDisplay] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    isAdmin ? setAdminDisplay(true) : setAdminDisplay(false);
+    user ? setUserDisplay(true) : setUserDisplay(false);
+  }, [isAdmin, user]);
 
   const handleLogout = () => {
-    // TODO: Send logout request to server
-    dispatch(logout());
+    logout();
+    navigate('/');
   };
 
   return (
@@ -28,7 +33,7 @@ function NavBar() {
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/browse-pets">Browse Pets</Nav.Link>
-            {userLoggedIn ? (
+            {user ? (
               <>
                 <Nav.Link href="#" onClick={handleLogout}>
                   Logout
@@ -44,7 +49,7 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <Navbar.Text className="ml-auto hidden lg:block">
-          Hello, {userLoggedIn ? username : 'Guest'} {isAdmin && ' (Admin)'}!
+          Hello, {userDisplay ? user : 'Guest'} {adminDisplay && ' (Admin)'}!
         </Navbar.Text>
       </Container>
     </Navbar>
