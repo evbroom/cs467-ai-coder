@@ -4,12 +4,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { isEqual } from 'lodash';
 import { getPetBreeds } from '../../utils/api';
-import { postPetProfile, patchPetProfile } from '../../utils/adminPetApi';
-import { useAuth } from '../../contexts/AuthContext';
+import { patchPetProfile } from '../../utils/adminApi';
 import LinkButton from '../common/LinkButton';
 import { openInNewWindow } from '../../utils/helper';
 
-const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
+const AdminEditPetForm = ({ initialPetProfile }) => {
   const {
     handleSubmit,
     watch,
@@ -18,67 +17,39 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: initialPetProfile ? initialPetProfile : {},
+    defaultValues: initialPetProfile,
   });
   const navigate = useNavigate();
-  const { authToken } = useAuth();
   const [error, setError] = useState('');
-
-  // States for pet breeds selection
   const type = watch('type');
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
-  const [selectBreedError, setSelectBreedError] = useState('');
 
-  // State for selected file (picture)
-  const [selectedFile, setSelectedFile] = useState(
-    initialPetProfile?.picture_url || null
-  );
-
-  // Fetch breed options and then for edit, set breed option to the initial pet profile's breed
-  useEffect(() => {
-    if (type) {
-      if (type === 'dog' && dogBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds, setError: setSelectBreedError });
-        setDogBreeds(breeds);
-      } else {
-        setBreeds(dogBreeds);
-      }
-      if (type === 'cat' && catBreeds.length === 0) {
-        getPetBreeds({ type, setBreeds, setError: setSelectBreedError });
-        setCatBreeds(breeds);
-      } else {
-        setBreeds(catBreeds);
-      }
-      if (type === 'other') {
-        setBreeds(['Other']);
-      }
-    }
-    if (initialPetProfile && initialPetProfile.breed) {
-      setValue('breed', initialPetProfile.breed);
-    }
-  }, [type, initialPetProfile]);
-
-  /**
-   * Handle file input change when editing pet profile.
-   * Reference from OpenAI's ChatGPT-4
-   * Access Date: 2-17-2024
-   * Source: https://chat.openai.com/share/db5c7cb9-8db0-4ea3-8c3a-2d69930f4601
-   */
-  const onFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
+  const setBreedOptions = (type) => {
+    if (type === 'dog') {
+      setBreeds(dogBreeds);
+    } else if (type === 'cat') {
+      setBreeds(catBreeds);
     } else {
-      setSelectedFile(null);
+      setBreeds(['Other']);
     }
   };
+
+  // Fetch dog and cat breeds from the server and then set the initial breed option.
   useEffect(() => {
-    if (!selectedFile && initialPetProfile) {
-      setValue('picture', initialPetProfile.picture_url);
+    getPetBreeds('dog', setDogBreeds, setError);
+    getPetBreeds('cat', setCatBreeds, setError);
+    setBreedOptions(initialPetProfile.type);
+    if (initialPetProfile.breed) {
+      setValue('breed', initialPetProfile.breed);
     }
-  }, [selectedFile, setValue, initialPetProfile?.picture_url]);
+  }, []);
+
+  // Updated breeds based on the selected type.
+  useEffect(() => {
+    setBreedOptions(type);
+  }, [type, dogBreeds, catBreeds]);
 
   // Validate picture file type
   const validateFile = (files) => {
@@ -91,33 +62,22 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
     }
   };
 
-  const onSubmit = (data) => {
-    if (initialPetProfile && !isEqual(data, initialPetProfile)) {
-      // Handle edit pet profile
-      const petProfile = Object.keys(data).reduce((acc, key) => {
-        if (!isEqual(data[key], initialPetProfile[key])) {
-          acc[key] = data[key];
-        }
-        return acc;
-      }, {});
-      patchPetProfile({
-        petProfile,
-        petId: initialPetProfile.id,
-        authToken,
-        navigate,
-        setError,
-      });
-    } else if (initialPetProfile) {
-      // Handle edit pet profile no changes
-      setError('No changes detected. Please make changes to update.');
+  const onSubmit = (petProfile) => {
+    const petId = initialPetProfile.id;
+    const updatedPetProfile = Object.keys(petProfile).reduce((acc, key) => {
+      if (
+        !isEqual(petProfile[key], initialPetProfile[key]) &&
+        petProfile[key].length > 0
+      ) {
+        acc[key] = petProfile[key];
+      }
+      return acc;
+    }, {});
+    // If there are updated fields, send a PATCH request to the server.
+    if (Object.keys(updatedPetProfile).length > 0) {
+      patchPetProfile(petId, updatedPetProfile, setError, navigate);
     } else {
-      // Handle add pet profile
-      postPetProfile({
-        petProfile: data,
-        authToken,
-        navigate,
-        setError,
-      });
+      navigate('/admin/pet-profiles');
     }
   };
 
@@ -127,30 +87,25 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Form.Text>All fields are required.</Form.Text>
         <Form.Group controlId="type">
           <Form.Label className="font-bold mx-auto">Type</Form.Label>
           <Form.Select
             aria-label="Select pet type"
             name="type"
-            {...register('type', { required: 'Type is required.' })}
+            onChange={(e) => register('type').onChange(e)}
+            {...register('type')}
           >
             <option value="">Select Type</option>
             <option value="dog">Dog</option>
             <option value="cat">Cat</option>
             <option value="other">Other</option>
           </Form.Select>
-          {errors.type && (
-            <Form.Text className="text-danger">{errors.type.message}</Form.Text>
-          )}
         </Form.Group>
-
         <Form.Group controlId="breed">
           <Form.Label className="font-bold mx-auto">Breed</Form.Label>
           <Controller
             name="breed"
             control={control}
-            rules={{ required: 'Breed is required.' }}
             render={({ field }) => (
               <Form.Select aria-label="Select pet breed" {...field}>
                 <option value="">Select Breed</option>
@@ -162,16 +117,7 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
               </Form.Select>
             )}
           />
-          {errors.breed && (
-            <Form.Text className="text-danger">
-              {errors.breed.message}
-            </Form.Text>
-          )}
-          {selectBreedError && (
-            <Form.Text className="text-danger">{selectBreedError}</Form.Text>
-          )}
         </Form.Group>
-
         <Form.Group controlId="disposition">
           <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
           <Form.Check
@@ -179,43 +125,29 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             name="disposition"
             label="Good with other animals"
             value="good_with_animals"
-            {...register('disposition', {
-              required: 'Select at least one disposition.',
-            })}
+            {...register('disposition', {})}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Good with children"
             value="good_with_children"
-            {...register('disposition', {
-              required: 'Select at least one disposition.',
-            })}
+            {...register('disposition', {})}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Must be leashed at all times"
             value="leash_needed"
-            {...register('disposition', {
-              required: 'Select at least one disposition.',
-            })}
+            {...register('disposition', {})}
           />
-          {errors.disposition && (
-            <Form.Text className="text-danger">
-              {errors.disposition.message}
-            </Form.Text>
-          )}
         </Form.Group>
-
         <Form.Group controlId="availability">
           <Form.Label className="font-bold mx-auto">Availability</Form.Label>
           <Form.Select
             aria-label="Select pet availability"
             name="availability"
-            {...register('availability', {
-              required: 'Availability is required.',
-            })}
+            {...register('availability')}
           >
             <option value="">Select Availability</option>
             <option value="not_available">Not Available</option>
@@ -223,45 +155,26 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             <option value="pending">Pending</option>
             <option value="adopted">Adopted</option>
           </Form.Select>
-          {errors.availability && (
-            <Form.Text className="text-danger">
-              {errors.availability.message}
-            </Form.Text>
-          )}
         </Form.Group>
-
-        <Form.Group controlId="picture" onChange={onFileChange}>
+        <Form.Group controlId="picture">
           <Form.Label className="font-bold mx-auto">Picture</Form.Label>
-          {initialPetProfile ? (
-            initialPetProfile.picture_url ? (
-              <img
-                src={initialPetProfile.picture_url}
-                alt="Pet profile picture"
-                className="pb-4 max-w-64 max-h-64 hover:cursor-pointer"
-                onClick={() => openInNewWindow(initialPetProfile.picture_url)}
-              />
-            ) : (
-              <p>No picture</p>
-            )
-          ) : null}
+          <img
+            src={initialPetProfile.picture_url}
+            alt="Pet profile picture"
+            className="pb-4 max-w-64 max-h-64 hover:cursor-pointer"
+            onClick={() => openInNewWindow(initialPetProfile.picture_url)}
+          />
           <Form.Control
             type="file"
             accept="image/jpeg, image/png"
             {...register('picture', {
               validate: validateFile,
-              required: 'Please add a picture.',
             })}
           />
-          {errors.picture && (
-            <Form.Text className="text-danger">
-              {errors.picture.message}
-            </Form.Text>
-          )}
           {!errors.picture && (
             <Form.Text>Support file types: .jpg, .jpeg, .png</Form.Text>
           )}
         </Form.Group>
-
         <Form.Group controlId="description">
           <Form.Label className="font-bold mx-auto">Description</Form.Label>
           <Form.Control
@@ -272,10 +185,8 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
                 value: 500,
                 message: 'Description cannot exceed 500 characters.',
               },
-              required: 'Description is required.',
             })}
           />
-
           {errors.description ? (
             <Form.Text className="text-danger">
               {errors.description.message}
@@ -284,13 +195,12 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
             <Form.Text>Max 500 characters</Form.Text>
           )}
         </Form.Group>
-
         <div className="flex justify-center">
           {error && <Form.Text className="text-danger">{error}</Form.Text>}
         </div>
         <div className="flex justify-center">
           <Button type="submit" variant="dark" className="w-1/2">
-            {initialPetProfile ? 'Update' : 'Add'}
+            Update
           </Button>
         </div>
       </Form>
@@ -298,4 +208,4 @@ const AdminAddEditPetProfileForm = ({ initialPetProfile }) => {
   );
 };
 
-export default AdminAddEditPetProfileForm;
+export default AdminEditPetForm;

@@ -14,11 +14,7 @@ const PetProfilePage = () => {
 
   useEffect(() => {
     if (!authToken) navigate('/login');
-    getPetProfileById({
-      petId: id,
-      setPetProfile,
-      setFetchError,
-    });
+    getPetProfileById(id, setPetProfile, setFetchError);
   }, [id, authToken]);
 
   return (

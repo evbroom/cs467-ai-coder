@@ -22,13 +22,7 @@ const BrowsePetsPage = () => {
 
   useEffect(() => {
     if (!authToken) navigate('/login');
-    getPetProfiles({
-      page,
-      filter,
-      setPetProfiles,
-      setIsNextPage,
-      setFetchError,
-    });
+    getPetProfiles(page, setPetProfiles, setIsNextPage, setFetchError, filter);
   }, [page, authToken]);
 
   return (

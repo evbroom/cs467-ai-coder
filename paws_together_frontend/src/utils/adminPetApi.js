@@ -33,36 +33,6 @@ const adminAPIErrorHandler = (status, setError) => {
 };
 
 /**
- * GET request for pet profile by ID.
- *
- * Use it to fetch a specific pet profile by its ID.
- *
- * @param {String} authToken - The user's token.
- * @param {String} petId - The pet's ID.
- * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
- * @param {Function} setError - Function to set the request error message.
- */
-export const getPetProfileById = async ({
-  authToken,
-  petId,
-  setPetProfile,
-  setError,
-}) => {
-  try {
-    const response = await axios.get(`${API_URL}/pets/${petId}`, {
-      headers: {
-        Authorization: `${TOKEN_PREFIX} ${authToken}`,
-      },
-    });
-    // Handle success
-    setPetProfile(response.data);
-  } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    adminAPIErrorHandler(error.response.status, setError);
-  }
-};
-
-/**
  * POST request for pet profile.
  *
  * Use it to add a new pet profile to the database.

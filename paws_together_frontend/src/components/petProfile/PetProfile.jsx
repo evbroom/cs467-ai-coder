@@ -1,7 +1,6 @@
 import React from 'react';
 import PetData from './PetData';
 import PetPicture from './PetPicture';
-import { format } from 'date-fns';
 
 const PetProfile = ({ petProfile }) => {
   const {

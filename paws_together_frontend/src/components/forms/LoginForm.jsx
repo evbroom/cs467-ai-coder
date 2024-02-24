@@ -16,12 +16,7 @@ const LoginForm = () => {
   const [loginError, setLoginError] = useState('');
 
   const onSubmit = (credentials) => {
-    postLogin({
-      credentials,
-      navigate,
-      setLoginError,
-      login,
-    });
+    postLogin(credentials, navigate, setLoginError, login);
   };
 
   /**

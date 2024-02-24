@@ -16,7 +16,7 @@ const SignupForm = () => {
   const [signupError, setSignupError] = useState('');
 
   const onSubmit = (userData) => {
-    postUserSignup({ userData, navigate, setSignupError, login });
+    postUserSignup(userData, navigate, setSignupError, login);
   };
 
   /**

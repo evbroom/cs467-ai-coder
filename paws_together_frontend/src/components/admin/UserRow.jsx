@@ -16,15 +16,12 @@ const UserRow = ({ row, setData }) => {
     navigate(`/admin/users/${id}`);
   };
 
+  // Modal confirm delete function
   const onConfirm = async () => {
     await deleteUser({ userId: id, authToken, setError });
     if (!error) {
       setData((prevData) => prevData.filter((item) => item.id !== id));
     }
-  };
-  const handleDelete = () => {
-    // Passing delete function to confirm modal
-    setShowModal(true);
   };
 
   return (
@@ -38,7 +35,7 @@ const UserRow = ({ row, setData }) => {
           </Button>
         </td>
         <td className="p-2 border">
-          <Button variant="danger" onClick={() => handleDelete()}>
+          <Button variant="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>
         </td>

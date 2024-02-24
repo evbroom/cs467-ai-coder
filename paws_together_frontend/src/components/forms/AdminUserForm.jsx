@@ -12,7 +12,7 @@ import LinkButton from '../common/LinkButton';
  *
  * @returns {JSX.Element} - Add and edit user form.
  */
-const AddEditUserForm = ({ initialUserData }) => {
+const AdminUserForm = ({ initialUserData }) => {
   const { handleSubmit, register } = useForm({
     defaultValues: initialUserData ? initialUserData : {},
   });
@@ -81,4 +81,4 @@ const AddEditUserForm = ({ initialUserData }) => {
   );
 };
 
-export default AddEditUserForm;
+export default AdminUserForm;

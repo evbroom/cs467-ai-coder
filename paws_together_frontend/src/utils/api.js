@@ -35,19 +35,14 @@ const userSignupLoginErrorHandler = (status, setError, isSignup = false) => {
  *
  * POST request for user signup.
  *
- * @param {Object} userData - User data to be posted. (username: string, email: string, password: string)
+ * @param {Object} user - User data to be posted. (username: string, email: string, password: string)
  * @param {Function} navigate - Function to navigate to a new page.
- * @param {Function} setSignupError - Function to set the request error message.
+ * @param {Function} setError - Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
-export const postUserSignup = async ({
-  userData,
-  navigate,
-  setSignupError,
-  login,
-}) => {
+export const postUserSignup = async (user, navigate, setError, login) => {
   try {
-    const response = await axios.post(`${API_URL}/signup/`, userData);
+    const response = await axios.post(`${API_URL}/signup/`, user);
     // Handle success response
     const { username, token, is_admin } = response.data;
     login({ username, token, isAdmin: is_admin });
@@ -55,9 +50,9 @@ export const postUserSignup = async ({
   } catch (error) {
     if (error.response) {
       // Handle error response
-      userSignupLoginErrorHandler(error.response.status, setSignupError, true);
+      userSignupLoginErrorHandler(error.response.status, setError, true);
     } else {
-      setSignupError('An unexpected error occurred. Please try again later.');
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };
@@ -69,15 +64,10 @@ export const postUserSignup = async ({
  *
  * @param {Object} credentials - User credentials to be posted. (username: string, password: string)
  * @param {Function} navigate - Function to navigate to a new page.
- * @param {Function} setLoginError- Function to set the request error message.
+ * @param {Function} setError- Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
-export const postLogin = async ({
-  credentials,
-  navigate,
-  setLoginError,
-  login,
-}) => {
+export const postLogin = async (credentials, navigate, setError, login) => {
   try {
     const response = await axios.post(`${API_URL}/login/`, credentials);
     // Handle success response
@@ -87,9 +77,9 @@ export const postLogin = async ({
   } catch (error) {
     if (error.response) {
       // Handle error response
-      userSignupLoginErrorHandler(error.response.status, setLoginError, true);
+      userSignupLoginErrorHandler(error.response.status, setError, true);
     } else {
-      setLoginError('An unexpected error occurred. Please try again later.');
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };
@@ -103,7 +93,7 @@ export const postLogin = async ({
  * @param {Function} setBreeds - Function to set the pet breeds to be displayed.
  * @param {Function} setError - Function to set the request error message.
  */
-export const getPetBreeds = async ({ type, setBreeds, setError }) => {
+export const getPetBreeds = async (type, setBreeds, setError) => {
   try {
     const response = await axios.get(`${API_URL}/pets/breeds/${type}/`);
     // Handle success response
@@ -136,15 +126,15 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
  * @param {Object} filter - Pet search filter object. (type: string, breed: string, dispositions: array, dateCreated: Date)
  * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
  * @param {Function} setIsNextPage - Function to set the next page status.
- * @param {Function} setFetchError - Function to set the request error message.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const getPetProfiles = async ({
+export const getPetProfiles = async (
   page,
-  filter = null,
   setPetProfiles,
   setIsNextPage,
-  setFetchError,
-}) => {
+  setError,
+  filter = null
+) => {
   // Set query parameters
   const queryParams = { page };
   if (filter) {
@@ -176,27 +166,25 @@ export const getPetProfiles = async ({
       // Handle error response
       switch (error.response.status) {
         case 400:
-          setFetchError('Invalid request. Please check your inputs.');
+          setError('Invalid request. Please check your inputs.');
           break;
         case 401:
-          setFetchError('Token expired. Please log in again.');
+          setError('Token expired. Please log in again.');
           break;
         case 403:
-          setFetchError('Forbidden. Please log in as an admin.');
+          setError('Forbidden. Please log in as an admin.');
           break;
         case 429:
-          setFetchError('Too many requests. Please try again later.');
+          setError('Too many requests. Please try again later.');
           break;
         case 500:
-          setFetchError('Server error. Please try again later.');
+          setError('Server error. Please try again later.');
           break;
         default:
-          setFetchError(
-            'An unexpected error occurred. Please try again later.'
-          );
+          setError('An unexpected error occurred. Please try again later.');
       }
     } else {
-      setFetchError('An unexpected error occurred. Please try again later.');
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };
@@ -208,13 +196,9 @@ export const getPetProfiles = async ({
  *
  * @param {String} petId - The pet's ID.
  * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
- * @param {Function} setFetchError - Function to set the request error message.
+ * @param {Function} setError - Function to set the request error message.
  */
-export const getPetProfileById = async ({
-  petId,
-  setPetProfile,
-  setFetchError,
-}) => {
+export const getPetProfileById = async (petId, setPetProfile, setError) => {
   try {
     const response = await axios.get(`${API_URL}/pets/${petId}`, {
       headers: {
@@ -229,18 +213,16 @@ export const getPetProfileById = async ({
       // Handle error response
       switch (error.response.status) {
         case 404:
-          setFetchError('Pet profile not found.');
+          setError('Pet profile not found.');
           break;
         case 500:
-          setFetchError('Server error. Please try again later.');
+          setError('Server error. Please try again later.');
           break;
         default:
-          setFetchError(
-            'An unexpected error occurred. Please try again later.'
-          );
+          setError('An unexpected error occurred. Please try again later.');
       }
     } else {
-      setFetchError('An unexpected error occurred. Please try again later.');
+      setError('An unexpected error occurred. Please try again later.');
     }
   }
 };

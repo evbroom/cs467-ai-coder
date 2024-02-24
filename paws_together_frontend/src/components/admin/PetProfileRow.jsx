@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { deletePetProfile } from '../../utils/adminPetApi';
+import { deletePetProfile } from '../../utils/adminApi';
 import { useState } from 'react';
 import DeleteConfirmModal from '../common/DeleteConfirmModal';
 
@@ -12,9 +12,9 @@ const PetProfileRow = ({ row, setData }) => {
   const [error, setError] = useState();
   const [showModal, setShowModal] = useState(false);
 
-  // Confirm handler for the delete confirmation modal
+  // Modal confirm delete function
   const onConfrim = async () => {
-    await deletePetProfile({ petId: id, authToken, setError });
+    await deletePetProfile(id, setError);
     if (!error) {
       setData((prevData) => prevData.filter((item) => item.id !== id));
     }

@@ -27,13 +27,7 @@ const ManagePetProfilePage = () => {
 
   useEffect(() => {
     if (!authToken) navigate('/login');
-    getPetProfiles({
-      authToken,
-      setPetProfiles,
-      setIsNextPage,
-      setFetchError,
-      page,
-    });
+    getPetProfiles(page, setPetProfiles, setIsNextPage, setFetchError);
   }, [page]);
 
   return (

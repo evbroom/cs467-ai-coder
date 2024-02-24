@@ -4,7 +4,6 @@ import { Form, Button } from 'react-bootstrap';
 import { getPetBreeds, getPetProfiles } from '../../utils/api';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * Modified from the generated code by ChatGPT by OpenAI
@@ -23,21 +22,12 @@ const PetSearchForm = ({
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
-  const { authToken } = useAuth();
   const [breedsFetchError, setBreedsFetchError] = useState('');
 
   // Fetch dog and cat breeds from the server.
   useEffect(() => {
-    getPetBreeds({
-      type: 'dog',
-      setBreeds: setDogBreeds,
-      setError: setBreedsFetchError,
-    });
-    getPetBreeds({
-      type: 'cat',
-      setBreeds: setCatBreeds,
-      setError: setBreedsFetchError,
-    });
+    getPetBreeds('dog', setDogBreeds, setFetchError);
+    getPetBreeds('cat', setCatBreeds, setFetchError);
   }, []);
 
   // Updated breeds based on the selected type.
@@ -53,16 +43,10 @@ const PetSearchForm = ({
     } else {
       setBreeds([]);
     }
-  }, [type]);
+  }, [type, dogBreeds, catBreeds]);
 
   const onSearch = (filter) => {
-    getPetProfiles({
-      page: 1,
-      filter,
-      setPetProfiles,
-      setIsNextPage,
-      setFetchError,
-    });
+    getPetProfiles(1, setPetProfiles, setIsNextPage, setFetchError, filter);
     setFilter(filter);
     setPage(1); // Reset page to 1
   };

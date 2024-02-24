@@ -1,4 +1,4 @@
-import AdminAddEditUserForm from '../../../components/forms/AdminAddEditUserForm';
+import AdminUserForm from '../../../components/forms/AdminUserForm';
 import { getUserById } from '../../../utils/adminUserApi';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState, useEffect } from 'react';
@@ -19,7 +19,7 @@ const EditUserPage = () => {
     <div className="container my-6 space-y-4">
       <h1 className="text-center">Edit User</h1>
       {user ? (
-        <AdminAddEditUserForm initialUserData={user} />
+        <AdminUserForm initialUserData={user} />
       ) : error ? (
         <Alert variant="danger">{error}</Alert>
       ) : (
