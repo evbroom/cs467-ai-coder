@@ -193,40 +193,45 @@ export const getPetProfiles = async ({
 };
 
 /**
+ * Get Pet Profile By ID
+ *
  * GET request for pet profile by ID.
  *
  * @param {String} petId - The pet's ID.
  * @param {String} authToken - The user's token.
  * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
- * @param {Function} setError - Function to set the request error message.
+ * @param {Function} setFetchError - Function to set the request error message.
  */
 export const getPetProfileById = async ({
   petId,
   authToken,
   setPetProfile,
-  setError,
+  setFetchError,
 }) => {
   try {
     const response = await axios.get(`${API_URL}/pets/${petId}`, {
       headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
     });
-    // Handle success
+    // Handle success response
     formatPetData(response.data);
     setPetProfile(response.data);
   } catch (error) {
     if (error.response) {
+      // Handle error response
       switch (error.response.status) {
         case 404:
-          setError('Pet profile not found.');
+          setFetchError('Pet profile not found.');
           break;
         case 500:
-          setError('Server error. Please try again later.');
+          setFetchError('Server error. Please try again later.');
           break;
         default:
-          setError('An unexpected error occurred. Please try again later.');
+          setFetchError(
+            'An unexpected error occurred. Please try again later.'
+          );
       }
     } else {
-      setError('An unexpected error occurred. Please try again later.');
+      setFetchError('An unexpected error occurred. Please try again later.');
     }
   }
 };

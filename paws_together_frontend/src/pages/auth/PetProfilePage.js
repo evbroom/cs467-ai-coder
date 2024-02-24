@@ -15,7 +15,7 @@ const PetProfilePage = () => {
       petId: id,
       authToken,
       setPetProfile,
-      setError: setFetchError,
+      setFetchError,
     });
   }, [id, authToken]);
 
@@ -24,7 +24,9 @@ const PetProfilePage = () => {
       {petProfile ? (
         <PetProfile petProfile={petProfile} />
       ) : (
-        <p className="text-red-500">{fetchError}</p>
+        <div className="container justify-items-center m-10">
+          <p className="text-red-500">{fetchError}</p>
+        </div>
       )}
     </div>
   );

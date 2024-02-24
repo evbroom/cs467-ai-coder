@@ -23,7 +23,6 @@ const PetProfile = ({ petProfile }) => {
       <PetData field="Disposition" value={disposition} />
       <PetData field="Availability" value={availability} />
       <PetData field="Description" value={description} />
-      <PetData field="Date Created" value={date_created} />
     </div>
   );
 };
