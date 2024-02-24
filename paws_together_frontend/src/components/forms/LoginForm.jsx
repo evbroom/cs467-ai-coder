@@ -19,7 +19,7 @@ const LoginForm = () => {
     postLogin({
       credentials,
       navigate,
-      setError: setLoginError,
+      setLoginError,
       login,
     });
   };

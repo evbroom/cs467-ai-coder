@@ -37,7 +37,7 @@ const userSignupLoginErrorHandler = (status, setError, isSignup = false) => {
  *
  * @param {Object} userData - User data to be posted. (username: string, email: string, password: string)
  * @param {Function} navigate - Function to navigate to a new page.
- * @param {Function} setError - Function to set the request error message.
+ * @param {Function} setSignupError - Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
 export const postUserSignup = async ({
@@ -63,15 +63,21 @@ export const postUserSignup = async ({
 };
 
 /**
- * POST request for user login.
+ * Post Login
  *
- * @param {Object} credentials - username: {String}, password: {String}
+ * POST request for user and admin login.
+ *
+ * @param {Object} credentials - User credentials to be posted. (username: string, password: string)
  * @param {Function} navigate - Function to navigate to a new page.
- * @param {Function} setError - Function to set the request error message.
+ * @param {Function} setLoginError- Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
-
-export const postLogin = async ({ credentials, navigate, setError, login }) => {
+export const postLogin = async ({
+  credentials,
+  navigate,
+  setLoginError,
+  login,
+}) => {
   try {
     const response = await axios.post(`${API_URL}/login/`, credentials);
     // Handle success response
@@ -81,9 +87,9 @@ export const postLogin = async ({ credentials, navigate, setError, login }) => {
   } catch (error) {
     if (error.response) {
       // Handle error response
-      userSignupLoginErrorHandler(error.response.status, setError, true);
+      userSignupLoginErrorHandler(error.response.status, setLoginError, true);
     } else {
-      setError('An unexpected error occurred. Please try again later.');
+      setLoginError('An unexpected error occurred. Please try again later.');
     }
   }
 };
