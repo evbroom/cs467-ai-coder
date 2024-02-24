@@ -4,48 +4,6 @@ import { adminAPIErrorHandler } from './helper';
 import { TOKEN_PREFIX } from './constants';
 
 /**
- * Manage Pet Profiles
- * -------------------
- * getPetProfiles
- * getPetProfileById
- * postPetProfile
- * patchPetProfile
- * deletePetProfile
- */
-
-/**
- * GET request for pet profiles.
- *
- * Use it to fetch all pet profiles and display them on the Manage Pet Profiles Page.
- *
- * @param {String} authToken - The user's token.
- * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
- * @param {Function} setError - Function to set the request error message.
- */
-export const getPetProfiles = async ({
-  authToken,
-  setPetProfiles,
-  setIsNextPage,
-  setError,
-  page,
-}) => {
-  try {
-    const response = await axios.get(`${API_URL}/pets/`, {
-      headers: {
-        Authorization: `${TOKEN_PREFIX} ${authToken}`,
-      },
-      params: { page },
-    });
-    // Handle success
-    setIsNextPage(response.data.is_next_page);
-    setPetProfiles(response.data.pets);
-  } catch (error) {
-    // Handle error (e.g. 404, 500, etc.)
-    adminAPIErrorHandler(error.response.status, setError);
-  }
-};
-
-/**
  * GET request for pet profile by ID.
  *
  * Use it to fetch a specific pet profile by its ID.

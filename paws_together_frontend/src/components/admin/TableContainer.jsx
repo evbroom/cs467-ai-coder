@@ -1,4 +1,3 @@
-// Table contianer component for both pet profiles and users
 const TableContainer = ({ fieldset, data, RowComponent, setData }) => {
   return (
     <table className="mx-auto">

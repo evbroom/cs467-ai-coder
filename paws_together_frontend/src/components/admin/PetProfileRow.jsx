@@ -12,10 +12,7 @@ const PetProfileRow = ({ row, setData }) => {
   const [error, setError] = useState();
   const [showModal, setShowModal] = useState(false);
 
-  const handleEdit = (id) => {
-    navigate(`/admin/pet-profiles/${id}`);
-  };
-
+  // Confirm handler for the delete confirmation modal
   const onConfrim = async () => {
     await deletePetProfile({ petId: id, authToken, setError });
     if (!error) {
@@ -23,38 +20,21 @@ const PetProfileRow = ({ row, setData }) => {
     }
   };
 
-  // Convert disposition array to string
-  function convertDisposition(disposition) {
-    let dispositionString = '';
-    for (let i = 0; i < disposition.length; i++) {
-      const disp = disposition[i];
-      switch (disp) {
-        case 'good_with_animals':
-          dispositionString += 'Good with animals\n';
-          break;
-        case 'good_with_children':
-          dispositionString += 'Good with children\n';
-          break;
-        case 'leash_needed':
-          dispositionString += 'Pet must be leashed at all times\n';
-          break;
-      }
-    }
-    return dispositionString;
-  }
-
   return (
     <>
       <tr className="border text-center">
         <td className="p-2 border">{type}</td>
         <td className="p-2 border">{breed}</td>
         <td className="p-2 border whitespace-pre text-left">
-          {convertDisposition(disposition)}
+          {disposition.join('\n')}
         </td>
-        <td className="p-2 border">{date_created}</td>
         <td className="p-2 border">{availability}</td>
+        <td className="p-2 border">{date_created}</td>
         <td className="p-2 border">
-          <Button variant="primary" onClick={() => handleEdit(id)}>
+          <Button
+            variant="primary"
+            onClick={() => navigate(`/admin/pet-profiles/${id}`)}
+          >
             Edit
           </Button>
         </td>

@@ -141,7 +141,7 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
  */
 export const getPetProfiles = async ({
   page,
-  filter,
+  filter = null,
   authToken,
   setPetProfiles,
   setIsNextPage,
@@ -175,6 +175,15 @@ export const getPetProfiles = async ({
     if (error.response) {
       // Handle error response
       switch (error.response.status) {
+        case 400:
+          setFetchError('Invalid request. Please check your inputs.');
+          break;
+        case 401:
+          setFetchError('Token expired. Please log in again.');
+          break;
+        case 403:
+          setFetchError('Forbidden. Please log in as an admin.');
+          break;
         case 429:
           setFetchError('Too many requests. Please try again later.');
           break;
