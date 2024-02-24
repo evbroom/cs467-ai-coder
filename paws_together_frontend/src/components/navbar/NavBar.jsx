@@ -17,7 +17,6 @@ function NavBar() {
   }, [isAdmin, user]);
 
   const handleLogout = () => {
-    // TODO: Send logout request to the backend ?
     logout();
     navigate('/');
   };
