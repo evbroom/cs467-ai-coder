@@ -25,12 +25,11 @@ const BrowsePetsPage = () => {
     getPetProfiles({
       page,
       filter,
-      authToken,
       setPetProfiles,
       setIsNextPage,
       setFetchError,
     });
-  }, [page]);
+  }, [page, authToken]);
 
   return (
     <div className="grid lg:grid-cols-12 p-6 lg:p-12 space-y-4">

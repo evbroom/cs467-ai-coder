@@ -59,7 +59,6 @@ const PetSearchForm = ({
     getPetProfiles({
       page: 1,
       filter,
-      authToken,
       setPetProfiles,
       setIsNextPage,
       setFetchError,

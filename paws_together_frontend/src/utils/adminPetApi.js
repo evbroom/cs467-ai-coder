@@ -1,7 +1,36 @@
 import axios from 'axios';
 import { API_URL } from './constants';
-import { adminAPIErrorHandler } from './helper';
 import { TOKEN_PREFIX } from './constants';
+
+const adminAPIErrorHandler = (status, setError) => {
+  switch (status) {
+    case 400:
+      setError('Invalid request. Please check your inputs.');
+      break;
+    case 401:
+      setError('Token expired. Please log in again.');
+      break;
+    case 403:
+      setError('Forbidden. Please log in as an admin.');
+      break;
+    case 404:
+      setError('Resource not found.');
+      break;
+    case 408:
+      setError('Request timeout. Please try again later.');
+      break;
+    case 429:
+      setError('Too many requests. Please try again later.');
+      break;
+    default:
+      if (status >= 500) {
+        setError('Server error. Please try again later.');
+      } else {
+        setError('Failed to fetch resource. Please try again later.');
+      }
+      break;
+  }
+};
 
 /**
  * GET request for pet profile by ID.
@@ -122,9 +151,9 @@ export const patchPetProfile = async ({
 };
 
 /**
- * DELETE request for pet profile.
+ * DELETE Pet Profile
  *
- * Use it to delete a pet profile from the database.
+ * DELETE request for pet profile.
  *
  * @param {String} petId - The ID of the pet profile to be deleted.
  * @param {String} authToken - The user's token.

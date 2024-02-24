@@ -134,7 +134,6 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
  *
  * @param {Number} page - Page number to fetch.
  * @param {Object} filter - Pet search filter object. (type: string, breed: string, dispositions: array, dateCreated: Date)
- * @param {String} authToken - User authentication token
  * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
  * @param {Function} setIsNextPage - Function to set the next page status.
  * @param {Function} setFetchError - Function to set the request error message.
@@ -142,7 +141,6 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
 export const getPetProfiles = async ({
   page,
   filter = null,
-  authToken,
   setPetProfiles,
   setIsNextPage,
   setFetchError,
@@ -161,7 +159,9 @@ export const getPetProfiles = async ({
 
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
-      headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
       params: queryParams,
     });
     // Handle success response
@@ -207,19 +207,19 @@ export const getPetProfiles = async ({
  * GET request for pet profile by ID.
  *
  * @param {String} petId - The pet's ID.
- * @param {String} authToken - The user's token.
  * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
  * @param {Function} setFetchError - Function to set the request error message.
  */
 export const getPetProfileById = async ({
   petId,
-  authToken,
   setPetProfile,
   setFetchError,
 }) => {
   try {
     const response = await axios.get(`${API_URL}/pets/${petId}`, {
-      headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
     });
     // Handle success response
     formatPetData(response.data);

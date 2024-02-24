@@ -1,33 +1,10 @@
-export const adminAPIErrorHandler = (status, setError) => {
-  switch (status) {
-    case 400:
-      setError('Invalid request. Please check your inputs.');
-      break;
-    case 401:
-      setError('Token expired. Please log in again.');
-      break;
-    case 403:
-      setError('Forbidden. Please log in as an admin.');
-      break;
-    case 404:
-      setError('Resource not found.');
-      break;
-    case 408:
-      setError('Request timeout. Please try again later.');
-      break;
-    case 429:
-      setError('Too many requests. Please try again later.');
-      break;
-    default:
-      if (status >= 500) {
-        setError('Server error. Please try again later.');
-      } else {
-        setError('Failed to fetch resource. Please try again later.');
-      }
-      break;
-  }
-};
-
+/**
+ * Open in New Window
+ *
+ * Use it to open pet image in a new window.
+ *
+ * @param {String} url - The URL of the pet image.
+ */
 export const openInNewWindow = (url) => {
   window.open(url, '_blank');
 };
@@ -39,9 +16,9 @@ export const openInNewWindow = (url) => {
  * Used to format the response from the API.
  *
  * @param {String} type - The type of pet.
- * @returns
+ * @returns {String} - The formatted type.
  */
-export const formatType = (type) => {
+const formatType = (type) => {
   return type.charAt(0).toUpperCase() + type.slice(1);
 };
 
@@ -50,9 +27,9 @@ export const formatType = (type) => {
  * Used to format the response from the API.
  *
  * @param {String} availability - The availability of the pet.
- * @returns
+ * @returns {String} - The formatted availability.
  */
-export const formatAvailability = (availability) => {
+const formatAvailability = (availability) => {
   switch (availability) {
     case 'available':
       return 'Available';
@@ -70,9 +47,9 @@ export const formatAvailability = (availability) => {
  * Used to format the response from the API.
  *
  * @param {String} disposition - The disposition of the pet.
- * @returns
+ * @returns {String} - The formatted disposition.
  */
-export const formatDisposition = (disposition) => {
+const formatDisposition = (disposition) => {
   switch (disposition) {
     case 'good_with_animals':
       return 'Good with other animals';
@@ -92,9 +69,9 @@ export const formatDisposition = (disposition) => {
  * Used to format the response from the API.
  *
  * @param {String} date - The date in UTC format.
- * @returns
+ * @returns {String} - The formatted date.
  */
-export const convertUTCDate = (date) => {
+const convertUTCDate = (date) => {
   const dateUTC = new Date(date + 'T00:00:00Z');
   const year = dateUTC.getUTCFullYear();
   const month = dateUTC.getUTCMonth() + 1;
