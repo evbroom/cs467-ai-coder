@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { deletePetProfile } from '../../utils/adminApi';
 import { useState } from 'react';
-import DeleteConfirmModal from '../common/DeleteConfirmModal';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 const PetProfileRow = ({ row, setData }) => {
   const { id, type, breed, disposition, availability, date_created } = row;

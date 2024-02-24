@@ -1,19 +1,22 @@
 import AdminUserForm from '../../../components/forms/AdminUserForm';
-import { getUserById } from '../../../utils/adminUserApi';
+import { getUserById } from '../../../utils/adminApi';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const EditUserPage = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const { authToken } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getUserById({ authToken, userId: id, setUser, setError });
-  }, [id]);
+    if (!authToken) navigate('/login');
+    getUserById(id, setUser, setError);
+  }, [id, authToken]);
 
   return (
     <div className="container my-6 space-y-4">
@@ -21,9 +24,13 @@ const EditUserPage = () => {
       {user ? (
         <AdminUserForm initialUserData={user} />
       ) : error ? (
-        <Alert variant="danger">{error}</Alert>
+        <div className="container justify-items-center">
+          <Alert variant="danger">{error}</Alert>
+        </div>
       ) : (
-        <p className="loading">Fetching User Data</p>
+        <div className="container justify-items-center">
+          <p className="loading">Fetching User Data</p>
+        </div>
       )}
     </div>
   );

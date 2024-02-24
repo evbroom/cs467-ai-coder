@@ -2,40 +2,26 @@ import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { isEqual } from 'lodash';
-import { postUser, patchUser } from '../../utils/adminUserApi';
-import { useAuth } from '../../contexts/AuthContext';
+import { patchUser } from '../../utils/adminApi';
+import { postUserSignup } from '../../utils/api';
 import LinkButton from '../common/LinkButton';
 
-/**
- * Add and edit user form
- *
- * @returns {JSX.Element} - Add and edit user form.
- */
-const AdminUserForm = ({ initialUserData }) => {
+const AdminUserForm = ({ initialUserData = {} }) => {
   const { handleSubmit, register } = useForm({
-    defaultValues: initialUserData ? initialUserData : {},
+    defaultValues: initialUserData,
   });
   const navigate = useNavigate();
-  const { authToken } = useAuth();
   const [error, setError] = useState('');
+  const isAddForm = Object.keys(initialUserData).length === 0;
 
-  const onSubmit = (data) => {
-    if (initialUserData && !isEqual(data, initialUserData)) {
-      // Handle edit user data
-      patchUser({
-        user: data,
-        userId: initialUserData.id,
-        authToken,
-        navigate,
-        setError,
-      });
-    } else if (initialUserData) {
-      // Handle add user data no change
-      setError('No changes detected. Please make changes to update.');
-    } else {
+  const onSubmit = (user) => {
+    if (isAddForm) {
       // Handle add user data
-      postUser({ user: data, authToken, navigate, setError });
+      postUserSignup(user, navigate, setError);
+    } else {
+      // Handle edit user data
+      const userId = initialUserData.id;
+      patchUser(userId, user, navigate, setError);
     }
   };
 
@@ -52,15 +38,17 @@ const AdminUserForm = ({ initialUserData }) => {
             {...register('username', { required: 'Username is required.' })}
           />
         </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Label className="font-bold mx-auto">Password</Form.Label>
-          <Form.Control
-            type="password"
-            {...register('password', {
-              required: 'Password is required.',
-            })}
-          />
-        </Form.Group>
+        {isAddForm && (
+          <Form.Group controlId="password">
+            <Form.Label className="font-bold mx-auto">Password</Form.Label>
+            <Form.Control
+              type="password"
+              {...register('password', {
+                required: 'Password is required.',
+              })}
+            />
+          </Form.Group>
+        )}
         <Form.Group controlId="email">
           <Form.Label className="font-bold mx-auto">Email</Form.Label>
           <Form.Control
@@ -72,8 +60,10 @@ const AdminUserForm = ({ initialUserData }) => {
         </Form.Group>
         <div className="flex justify-center">
           {error && <Form.Text className="text-danger">{error}</Form.Text>}
+        </div>
+        <div className="flex justify-center">
           <Button type="submit" variant="dark" className="w-1/2">
-            {initialUserData ? 'Update' : 'Add'}
+            {isAddForm ? 'Add' : 'Update'}
           </Button>
         </div>
       </Form>

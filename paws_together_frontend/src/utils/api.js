@@ -40,13 +40,22 @@ const userSignupLoginErrorHandler = (status, setError, isSignup = false) => {
  * @param {Function} setError - Function to set the request error message.
  * @param {Function} login - Function to set the login status.
  */
-export const postUserSignup = async (user, navigate, setError, login) => {
+export const postUserSignup = async (
+  user,
+  navigate,
+  setError,
+  login = null
+) => {
   try {
     const response = await axios.post(`${API_URL}/signup/`, user);
     // Handle success response
     const { username, token, is_admin } = response.data;
-    login({ username, token, isAdmin: is_admin });
-    navigate('/');
+    if (login) {
+      login({ username, token, isAdmin: is_admin });
+      navigate('/');
+    } else {
+      navigate('/admin/users');
+    }
   } catch (error) {
     if (error.response) {
       // Handle error response

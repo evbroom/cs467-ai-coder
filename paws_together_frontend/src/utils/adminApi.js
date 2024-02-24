@@ -100,7 +100,7 @@ export const postPetProfile = async (petProfile, setError, navigate) => {
     navigate('/admin/pet-profiles');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    adminAPIErrorHandler(error.response.status, setError);
+    adminAPIErrorHandler(error.response, setError);
   }
 };
 
@@ -139,7 +139,7 @@ export const patchPetProfile = async (
     navigate('/admin/pet-profiles');
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
-    adminAPIErrorHandler(error.response.status, setError);
+    adminAPIErrorHandler(error.response, setError);
   }
 };
 
@@ -154,6 +154,83 @@ export const patchPetProfile = async (
 export const deletePetProfile = async (petId, setError) => {
   try {
     await adminAxios.delete(`/pets/${petId}`);
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response, setError);
+  }
+};
+
+/**
+ * GET Users
+ *
+ * Use it to fetch all user data and display them on the Manage Users Page.
+ *
+ * @param {Function} setUsers - Function to set the user data to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getUsers = async (setUsers, setError) => {
+  try {
+    const response = await adminAxios.get(`/users/`);
+    // Handle success
+    setUsers(response.data);
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response, setError);
+  }
+};
+
+/**
+ * GET User by ID
+ *
+ * Use it to fetch a specific user data by its ID.
+ *
+ * @param {String} userId - The user's ID.
+ * @param {Function} setUser - Function to set the user data to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getUserById = async (userId, setUser, setError) => {
+  try {
+    const response = await adminAxios.get(`/users/${userId}`);
+    // Handle success
+    setUser(response.data);
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response, setError);
+  }
+};
+
+/**
+ * PATCH User
+ *
+ * Use it to update an existing user data in the database.
+ *
+ * @param {String} userId - The ID of the user to be updated.
+ * @param {Object} user - The updated user data.
+ * @param {Function} navigate - Function to navigate to another page.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const patchUser = async (userId, user, navigate, setError) => {
+  try {
+    await adminAxios.patch(`/users/${userId}/`, user);
+    // Handle success
+    navigate('/admin/users');
+  } catch (error) {
+    // Handle error (e.g. 404, 500, etc.)
+    adminAPIErrorHandler(error.response, setError);
+  }
+};
+
+/**
+ * DELETE User
+ *
+ * Use it to delete a user from the database.
+ *
+ * @param {String} userId - The ID of the user to be deleted.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const deleteUser = async (userId, setError) => {
+  try {
+    await adminAxios.delete(`/users/${userId}`);
   } catch (error) {
     // Handle error (e.g. 404, 500, etc.)
     adminAPIErrorHandler(error.response.status, setError);

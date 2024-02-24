@@ -1,24 +1,18 @@
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { deleteUser } from '../../utils/adminUserApi';
+import { deleteUser } from '../../utils/adminApi';
 import { useState } from 'react';
-import DeleteConfirmModal from '../common/DeleteConfirmModal';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 const UserRow = ({ row, setData }) => {
   const { id, username, email } = row;
   const navigate = useNavigate();
-  const { authToken } = useAuth();
-  const [error, setError] = useState();
+  const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
-
-  const handleEdit = (id) => {
-    navigate(`/admin/users/${id}`);
-  };
 
   // Modal confirm delete function
   const onConfirm = async () => {
-    await deleteUser({ userId: id, authToken, setError });
+    await deleteUser(id, setError);
     if (!error) {
       setData((prevData) => prevData.filter((item) => item.id !== id));
     }
@@ -30,7 +24,10 @@ const UserRow = ({ row, setData }) => {
         <td className="p-2 border">{username}</td>
         <td className="p-2 border">{email}</td>
         <td className="p-2 border">
-          <Button variant="primary" onClick={() => handleEdit(id)}>
+          <Button
+            variant="primary"
+            onClick={() => navigate(`/admin/users/${id}`)}
+          >
             Edit
           </Button>
         </td>
