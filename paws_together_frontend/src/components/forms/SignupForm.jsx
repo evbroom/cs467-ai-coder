@@ -16,7 +16,7 @@ const SignupForm = () => {
   const [signupError, setSignupError] = useState('');
 
   const onSubmit = (userData) => {
-    postUserSignup({ userData, navigate, setError: setSignupError, login });
+    postUserSignup({ userData, navigate, setSignupError, login });
   };
 
   /**
@@ -26,7 +26,7 @@ const SignupForm = () => {
    */
   return (
     <div className="mx-auto sm:w-1/2 xl:w-1/3">
-      <h1 className="font-bold text-center">Signup</h1>
+      <h1 className="font-bold text-center">Sign-up</h1>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Form.Text className="text-gray-500">* Required fields</Form.Text>
         <Form.Group controlId="username">

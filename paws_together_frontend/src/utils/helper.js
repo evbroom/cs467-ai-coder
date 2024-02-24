@@ -28,29 +28,6 @@ export const adminAPIErrorHandler = (status, setError) => {
   }
 };
 
-export const userSignupLoginErrorHandler = (
-  status,
-  setError,
-  isSignup = false
-) => {
-  switch (status) {
-    case 400:
-      isSignup
-        ? setError('Username or email already exists. Please try again.')
-        : setError('Invalid username or password');
-      break;
-    case 401:
-      setError('Invalid username or password');
-      break;
-    case 500:
-      setError('Server error. Please try again.');
-      break;
-    default:
-      setError('An unexpected error occurred. Please try again later.');
-      break;
-  }
-};
-
 export const openInNewWindow = (url) => {
   window.open(url, '_blank');
 };
