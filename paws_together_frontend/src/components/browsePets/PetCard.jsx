@@ -1,5 +1,4 @@
 import Card from 'react-bootstrap/Card';
-import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -7,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
  * Accessed on: 2/13/24
  * Source: https://chat.openai.com/share/20b55a1d-8825-49da-8127-682eebcc2908
  */
-const PetCard = ({ picture_url, breed, availability, date_created, id }) => {
+const PetCard = ({ petProfile }) => {
+  const { picture_url, breed, availability, date_created, id } = petProfile;
   const navigate = useNavigate();
 
   return (

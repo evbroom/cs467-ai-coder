@@ -32,6 +32,26 @@ export const openInNewWindow = (url) => {
   window.open(url, '_blank');
 };
 
+/**
+ * Format Type
+ *
+ * Capitalize the first letter of the type.
+ * Used to format the response from the API.
+ *
+ * @param {String} type - The type of pet.
+ * @returns
+ */
+export const formatType = (type) => {
+  return type.charAt(0).toUpperCase() + type.slice(1);
+};
+
+/**
+ * Format Availability
+ * Used to format the response from the API.
+ *
+ * @param {String} availability - The availability of the pet.
+ * @returns
+ */
 export const formatAvailability = (availability) => {
   switch (availability) {
     case 'available':
@@ -45,6 +65,13 @@ export const formatAvailability = (availability) => {
   }
 };
 
+/**
+ * Format Disposition
+ * Used to format the response from the API.
+ *
+ * @param {String} disposition - The disposition of the pet.
+ * @returns
+ */
 export const formatDisposition = (disposition) => {
   switch (disposition) {
     case 'good_with_animals':
@@ -58,6 +85,15 @@ export const formatDisposition = (disposition) => {
   }
 };
 
+/**
+ * Convert UTC Date
+ *
+ * Convert the date to month/day/year format.
+ * Used to format the response from the API.
+ *
+ * @param {String} date - The date in UTC format.
+ * @returns
+ */
 export const convertUTCDate = (date) => {
   const dateUTC = new Date(date + 'T00:00:00Z');
   const year = dateUTC.getUTCFullYear();
@@ -66,7 +102,16 @@ export const convertUTCDate = (date) => {
   return `${month}/${day}/${year}`;
 };
 
+/**
+ * Format Pet Data
+ *
+ * Format the pet data from the API response.
+ * Used to format the response from the API.
+ *
+ * @param {Object} petData - The pet data from the API response.
+ */
 export const formatPetData = (petData) => {
+  petData.type = formatType(petData.type);
   petData.availability = formatAvailability(petData.availability);
   petData.disposition = petData.disposition.map((item) => {
     return formatDisposition(item);

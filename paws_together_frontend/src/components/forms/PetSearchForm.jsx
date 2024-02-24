@@ -15,8 +15,8 @@ const PetSearchForm = ({
   setPetProfiles,
   setPage,
   setIsNextPage,
-  setError,
-  setCurrentFilter,
+  setFetchError,
+  setFilter,
 }) => {
   const { handleSubmit, watch, register, control } = useForm();
   const type = watch('type');
@@ -24,14 +24,23 @@ const PetSearchForm = ({
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
   const { authToken } = useAuth();
+  const [breedsFetchError, setBreedsFetchError] = useState('');
 
   // Fetch dog and cat breeds from the server.
   useEffect(() => {
-    getPetBreeds({ type: 'dog', setBreeds: setDogBreeds, setError });
-    getPetBreeds({ type: 'cat', setBreeds: setCatBreeds, setError });
+    getPetBreeds({
+      type: 'dog',
+      setBreeds: setDogBreeds,
+      setError: setBreedsFetchError,
+    });
+    getPetBreeds({
+      type: 'cat',
+      setBreeds: setCatBreeds,
+      setError: setBreedsFetchError,
+    });
   }, []);
 
-  // Switch breeds based on the selected type.
+  // Updated breeds based on the selected type.
   useEffect(() => {
     if (type) {
       if (type === 'dog') {
@@ -46,16 +55,16 @@ const PetSearchForm = ({
     }
   }, [type]);
 
-  const onSearch = (filters) => {
+  const onSearch = (filter) => {
     getPetProfiles({
       page: 1,
-      ...filters,
+      filter,
       authToken,
       setPetProfiles,
       setIsNextPage,
-      setError,
+      setFetchError,
     });
-    setCurrentFilter(filters);
+    setFilter(filter);
     setPage(1); // Reset page to 1
   };
 
@@ -84,6 +93,9 @@ const PetSearchForm = ({
             </option>
           ))}
         </Form.Select>
+        {breedsFetchError && (
+          <Form.Text className="text-danger">{breedsFetchError}</Form.Text>
+        )}
       </Form.Group>
       <Form.Group controlId="disposition" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
@@ -111,7 +123,6 @@ const PetSearchForm = ({
           />
         </div>
       </Form.Group>
-
       <Form.Group controlId="dateCreated" className="flex flex-col">
         <Form.Label className="font-bold mx-auto">Created Date</Form.Label>
         <Controller
@@ -133,7 +144,6 @@ const PetSearchForm = ({
           }}
         />
       </Form.Group>
-
       <Button type="submit" variant="dark" className="w-full">
         Search
       </Button>

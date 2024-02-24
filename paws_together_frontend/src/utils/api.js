@@ -95,7 +95,7 @@ export const postLogin = async ({
 };
 
 /**
- * GET request for pet breeds.
+ * GET Pet Breeds
  *
  * Use it to populate the breed dropdown in the Pet Search/Add/Edit form.
  *
@@ -106,10 +106,11 @@ export const postLogin = async ({
 export const getPetBreeds = async ({ type, setBreeds, setError }) => {
   try {
     const response = await axios.get(`${API_URL}/pets/breeds/${type}/`);
-    // Handle success
+    // Handle success response
     setBreeds(response.data);
   } catch (error) {
     if (error.response) {
+      // Handle error response
       switch (error.response.status) {
         case 404:
           setError('No breeds found for this type.');
@@ -119,7 +120,6 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
           break;
         default:
           setError('An unexpected error occurred. Please try again later.');
-          break;
       }
     } else {
       setError('An unexpected error occurred. Please try again later.');
@@ -128,45 +128,43 @@ export const getPetBreeds = async ({ type, setBreeds, setError }) => {
 };
 
 /**
+ * Get Pet Profiles
+ *
  * GET request for the Browse Pets page and Pet Search form.
  *
- * Use it to fetch pet profiles based on the search criteria or all pet profiles.
- *
  * @param {Number} page - Page number to fetch.
- * @param {String} type - Pet type (e.g. dog, cat, other)
- * @param {String} breed - Pet breed
- * @param {Array} dispositions - Pet dispositions
- * @param {Date} dateCreated - Pet profile creation date
+ * @param {Object} filter - Pet search filter object. (type: string, breed: string, dispositions: array, dateCreated: Date)
  * @param {String} authToken - User authentication token
  * @param {Function} setPetProfiles - Function to set the pet profiles to be displayed.
  * @param {Function} setIsNextPage - Function to set the next page status.
- * @param {Function} setError - Function to set the request error message.
+ * @param {Function} setFetchError - Function to set the request error message.
  */
 export const getPetProfiles = async ({
   page,
-  type,
-  breed,
-  disposition,
-  dateCreated,
+  filter,
   authToken,
   setPetProfiles,
   setIsNextPage,
-  setError,
+  setFetchError,
 }) => {
+  // Set query parameters
   const queryParams = { page };
-  if (type) queryParams.type = type;
-  if (breed) queryParams.breed = breed;
-  if (disposition?.length > 0) queryParams.disposition = disposition;
-  if (dateCreated) {
-    queryParams.date_created = format(dateCreated, 'yyyy-MM-dd');
+  if (filter) {
+    const { type, breed, disposition, dateCreated } = filter;
+    if (type) queryParams.type = type;
+    if (breed) queryParams.breed = breed;
+    if (disposition?.length > 0) queryParams.disposition = disposition;
+    if (dateCreated) {
+      queryParams.date_created = format(dateCreated, 'yyyy-MM-dd');
+    }
   }
+
   try {
     const response = await axios.get(`${API_URL}/pets/`, {
       headers: { Authorization: `${TOKEN_PREFIX} ${authToken}` },
       params: queryParams,
     });
-
-    // Handle success
+    // Handle success response
     const responsePetData = response.data.pets;
     responsePetData.forEach((petData) => {
       formatPetData(petData);
@@ -175,18 +173,21 @@ export const getPetProfiles = async ({
     setIsNextPage(response.data.is_next_page);
   } catch (error) {
     if (error.response) {
+      // Handle error response
       switch (error.response.status) {
-        case 404:
-          setError('No pet profiles found.');
+        case 429:
+          setFetchError('Too many requests. Please try again later.');
           break;
         case 500:
-          setError('Server error. Please try again later.');
+          setFetchError('Server error. Please try again later.');
           break;
         default:
-          setError('An unexpected error occurred. Please try again later.');
+          setFetchError(
+            'An unexpected error occurred. Please try again later.'
+          );
       }
     } else {
-      setError('An unexpected error occurred. Please try again later.');
+      setFetchError('An unexpected error occurred. Please try again later.');
     }
   }
 };

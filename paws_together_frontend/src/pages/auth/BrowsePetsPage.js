@@ -12,23 +12,23 @@ import { useNavigate } from 'react-router-dom';
  * Source: https://chat.openai.com/share/20b55a1d-8825-49da-8127-682eebcc2908
  */
 const BrowsePetsPage = () => {
-  const [petProfiles, setPetProfiles] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isNextPage, setIsNextPage] = useState(false);
-  const [fetchError, setFetchError] = useState('');
-  const [currentFilter, setCurrentFilter] = useState({});
   const { authToken } = useAuth();
   const navigate = useNavigate();
+  const [petProfiles, setPetProfiles] = useState(null);
+  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState(null);
+  const [fetchError, setFetchError] = useState('');
+  const [isNextPage, setIsNextPage] = useState(false);
 
   useEffect(() => {
     if (!authToken) navigate('/login');
     getPetProfiles({
       page,
-      ...currentFilter,
+      filter,
       authToken,
       setPetProfiles,
       setIsNextPage,
-      setError: setFetchError,
+      setFetchError,
     });
   }, [page]);
 
@@ -39,24 +39,26 @@ const BrowsePetsPage = () => {
           setPetProfiles={setPetProfiles}
           setPage={setPage}
           setIsNextPage={setIsNextPage}
-          setError={setFetchError}
-          setCurrentFilter={setCurrentFilter}
+          setFetchError={setFetchError}
+          setFilter={setFilter}
         />
       </div>
       <div className="lg:col-span-10 flex flex-col">
         {petProfiles ? (
           petProfiles.length === 0 ? (
-            <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
+            <div className="container justify-items-center">
               <p>No pet profiles found.</p>
             </div>
           ) : (
             <PetCardContainer petProfiles={petProfiles} />
           )
         ) : fetchError ? (
-          <p className="text-red-500">{fetchError}</p>
+          <div className="container justify-items-center">
+            <p className="text-red-500">{fetchError}</p>
+          </div>
         ) : (
-          <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
-            <p className="loading">Loading</p>
+          <div className="container justify-items-center">
+            <p className="loading">Loading pet profiles</p>
           </div>
         )}
         <Pagination page={page} setPage={setPage} isNextPage={isNextPage} />
