@@ -23,6 +23,7 @@ const PetSearchForm = ({
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
   const [breedsFetchError, setBreedsFetchError] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch dog and cat breeds from the server.
   useEffect(() => {
@@ -45,10 +46,20 @@ const PetSearchForm = ({
     }
   }, [type, dogBreeds, catBreeds]);
 
-  const onSearch = (filter) => {
-    getPetProfiles(1, setPetProfiles, setIsNextPage, setFetchError, filter);
-    setFilter(filter);
-    setPage(1); // Reset page to 1
+  const onSearch = async (filter) => {
+    if (!isRequesting) {
+      setIsRequesting(true);
+      await getPetProfiles(
+        1,
+        setPetProfiles,
+        setIsNextPage,
+        setFetchError,
+        filter
+      );
+      setFilter(filter);
+      setPage(1); // Reset page to 1
+    }
+    setIsRequesting(false);
   };
 
   return (

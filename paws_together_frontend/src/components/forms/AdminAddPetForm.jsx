@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPetBreeds } from '../../utils/api';
 import { postPetProfile } from '../../utils/adminApi';
 import LinkButton from '../common/LinkButton';
+import { set } from 'date-fns';
 
 const AdminAddPetForm = () => {
   const {
@@ -21,6 +22,7 @@ const AdminAddPetForm = () => {
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch dog and cat breeds from the server.
   useEffect(() => {
@@ -52,8 +54,12 @@ const AdminAddPetForm = () => {
     }
   };
 
-  const onSubmit = (petProfile) => {
-    postPetProfile(petProfile, setError, navigate);
+  const onSubmit = async (petProfile) => {
+    if (!isRequesting) {
+      setIsRequesting(true);
+      await postPetProfile(petProfile, setError, navigate);
+    }
+    setIsRequesting(false);
   };
 
   return (

@@ -14,9 +14,14 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [loginError, setLoginError] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
 
-  const onSubmit = (credentials) => {
-    postLogin(credentials, navigate, setLoginError, login);
+  const onSubmit = async (credentials) => {
+    if (!isRequesting) {
+      setIsRequesting(true);
+      await postLogin(credentials, navigate, setLoginError, login);
+    }
+    setIsRequesting(false);
   };
 
   /**
