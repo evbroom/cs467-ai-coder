@@ -26,8 +26,8 @@ const BrowsePetsPage = () => {
   }, [page, authToken]);
 
   return (
-    <div className="grid lg:grid-cols-12 p-6 lg:p-12 space-y-4">
-      <div className="lg:col-span-2">
+    <div className="grid lg:grid-cols-5 p-6 lg:p-12 space-y-4 lg:space-x-8">
+      <div className="lg:col-span-1">
         <PetSearchForm
           setPetProfiles={setPetProfiles}
           setPage={setPage}
@@ -36,7 +36,7 @@ const BrowsePetsPage = () => {
           setFilter={setFilter}
         />
       </div>
-      <div className="lg:col-span-10 flex flex-col">
+      <div className="lg:col-span-4 flex flex-col">
         {petProfiles ? (
           petProfiles.length === 0 ? (
             <div className="container justify-items-center">

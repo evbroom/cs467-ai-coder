@@ -2,7 +2,7 @@ import PetCard from './PetCard';
 
 const PetCardContainer = ({ petProfiles }) => {
   return (
-    <div className="container grid lg:grid-cols-4 gap-4 justify-items-center">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {petProfiles.map((petProfile) => {
         return <PetCard key={petProfile.id} petProfile={petProfile} />;
       })}
