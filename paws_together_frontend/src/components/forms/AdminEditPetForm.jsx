@@ -25,6 +25,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   const setBreedOptions = (type) => {
     if (type === 'dog') {
@@ -62,7 +63,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
     }
   };
 
-  const onSubmit = (petProfile) => {
+  const onSubmit = async (petProfile) => {
     const petId = initialPetProfile.id;
     const updatedPetProfile = Object.keys(petProfile).reduce((acc, key) => {
       if (
@@ -75,7 +76,11 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
     }, {});
     // If there are updated fields, send a PATCH request to the server.
     if (Object.keys(updatedPetProfile).length > 0) {
-      patchPetProfile(petId, updatedPetProfile, setError, navigate);
+      if (!isRequesting) {
+        setIsRequesting(true);
+        await patchPetProfile(petId, updatedPetProfile, setError, navigate);
+      }
+      setIsRequesting(false);
     } else {
       navigate('/admin/pet-profiles');
     }

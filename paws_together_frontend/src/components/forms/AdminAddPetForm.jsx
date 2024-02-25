@@ -25,6 +25,7 @@ const AdminAddPetForm = () => {
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
   const [news, setNews] = useState([]);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch dog and cat breeds from the server.
   useEffect(() => {
@@ -56,10 +57,13 @@ const AdminAddPetForm = () => {
     }
   };
 
-  const onSubmit = (petProfile) => {
-    petProfile.news = news;
-    console.log(petProfile);
-    // postPetProfile(petProfile, setError, navigate);
+  const onSubmit = async (petProfile) => {
+    if (!isRequesting) {
+      setIsRequesting(true);
+      petProfile.news = news;
+      await postPetProfile(petProfile, setError, navigate);
+    }
+    setIsRequesting(false);
   };
 
   return (
@@ -91,7 +95,7 @@ const AdminAddPetForm = () => {
           <Controller
             name="breed"
             control={control}
-            // rules={{ required: 'Breed is required.' }}
+            rules={{ required: 'Breed is required.' }}
             render={({ field }) => (
               <Form.Select aria-label="Select pet breed" {...field}>
                 <option value="">Select Breed</option>
