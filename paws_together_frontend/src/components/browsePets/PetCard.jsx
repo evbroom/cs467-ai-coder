@@ -8,10 +8,9 @@ import { useNavigate } from 'react-router-dom';
  * Source: https://chat.openai.com/share/20b55a1d-8825-49da-8127-682eebcc2908
  */
 const PetCard = ({ petProfile }) => {
-  const { picture_url, breed, availability, date_created, description, id } = petProfile;
+  const { picture_url, breed, availability, date_created, description, id } =
+    petProfile;
   const navigate = useNavigate();
-
-  console.log('Availability:', availability)
 
   let borderColorClass, bgColorClass, textColorClass;
   switch (availability) {
@@ -48,7 +47,7 @@ const PetCard = ({ petProfile }) => {
           navigate(`/browse-pets/${id}`);
         }
       }}
-      >
+    >
       <Card.Img
         variant="top"
         src={picture_url}
@@ -57,16 +56,23 @@ const PetCard = ({ petProfile }) => {
       />
       <Card.Body className="flex flex-col">
         <Card.Title className="flex justify-between items-center">
-        <span className="pr-2">{breed}</span>
-        <span className={`border-1 p-1 rounded text-xs ${borderColorClass} ${bgColorClass} ${textColorClass}`}>{availability}</span>
+          <span className="pr-2">{breed}</span>
+          <span
+            className={`border-1 p-1 rounded text-xs ${borderColorClass} ${bgColorClass} ${textColorClass}`}
+          >
+            {availability}
+          </span>
         </Card.Title>
         <Card.Text>
-          <span className="text-sm">Added on <span className="font-semibold">{date_created}</span></span> <br />
+          <span className="text-sm">
+            Added on <span className="font-semibold">{date_created}</span>
+          </span>{' '}
+          <br />
           <span className="line-clamp-2 text-sm mt-3">{description}</span>
         </Card.Text>
-        <Button 
-          variant="outline-primary" 
-          className="view-profile-button px-2 py-1 text-sm mt-auto mx-auto inline-block" 
+        <Button
+          variant="outline-primary"
+          className="view-profile-button px-2 py-1 text-sm mt-auto mx-auto inline-block"
           onClick={() => navigate(`/browse-pets/${id}`)}
         >
           View Profile

@@ -9,13 +9,10 @@ export const AuthProvider = ({ children }) => {
   );
   const [isAdmin, setIsAdmin] = useState(() => {
     const isAdmin = localStorage.getItem('isAdmin');
-    if (!isAdmin) {
-      return false;
+    if (isAdmin === 'true') {
+      return true;
     }
-    if (isAdmin === 'null' || isAdmin === 'undefined') {
-      return false;
-    }
-    return true;
+    return false;
   });
 
   useEffect(() => {

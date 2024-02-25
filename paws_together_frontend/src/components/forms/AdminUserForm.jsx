@@ -13,15 +13,24 @@ const AdminUserForm = ({ initialUserData = {} }) => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const isAddForm = Object.keys(initialUserData).length === 0;
+  const [isRequesting, setIsRequesting] = useState(false);
 
-  const onSubmit = (user) => {
+  const onSubmit = async (user) => {
     if (isAddForm) {
       // Handle add user data
-      postUserSignup(user, navigate, setError);
+      if (!isRequesting) {
+        setIsRequesting(true);
+        await postUserSignup(user, navigate, setError);
+      }
+      setIsRequesting(false);
     } else {
       // Handle edit user data
-      const userId = initialUserData.id;
-      patchUser(userId, user, navigate, setError);
+      if (!isRequesting) {
+        setIsRequesting(true);
+        const userId = initialUserData.id;
+        await patchUser(userId, user, navigate, setError);
+      }
+      setIsRequesting(false);
     }
   };
 

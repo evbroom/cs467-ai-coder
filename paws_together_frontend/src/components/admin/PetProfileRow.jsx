@@ -8,13 +8,17 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 const PetProfileRow = ({ row, setData }) => {
   const { id, type, breed, disposition, availability, date_created } = row;
   const navigate = useNavigate();
-  const { authToken } = useAuth();
   const [error, setError] = useState();
   const [showModal, setShowModal] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   // Modal confirm delete function
   const onConfrim = async () => {
-    await deletePetProfile(id, setError);
+    if (!isRequesting) {
+      setIsRequesting(true);
+      await deletePetProfile(id, setError);
+    }
+    setIsRequesting(false);
     if (!error) {
       setData((prevData) => prevData.filter((item) => item.id !== id));
     }
