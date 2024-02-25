@@ -54,7 +54,7 @@ const PetSearchForm = ({
   return (
     <Form onSubmit={handleSubmit(onSearch)} className="space-y-4">
       <Form.Group controlId="text" className="flex flex-col">
-        <Form.Label className="font-bold mx-auto">Type</Form.Label>
+        <Form.Label className="font-bold">Type</Form.Label>
         <Form.Select
           id="type"
           aria-label="Select pet type"
@@ -67,7 +67,7 @@ const PetSearchForm = ({
         </Form.Select>
       </Form.Group>
       <Form.Group controlId="breed" className="flex flex-col">
-        <Form.Label className="font-bold mx-auto">Breed</Form.Label>
+        <Form.Label className="font-bold">Breed</Form.Label>
         <Form.Select aria-label="Select pet breed" {...register('breed')}>
           <option value="">Select Breed</option>
           {breeds.map((breed) => (
@@ -81,7 +81,7 @@ const PetSearchForm = ({
         )}
       </Form.Group>
       <Form.Group controlId="disposition" className="flex flex-col">
-        <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
+        <Form.Label className="font-bold">Disposition</Form.Label>
         <div className="border-2 rounded p-3">
           <Form.Check
             type="checkbox"
@@ -107,13 +107,13 @@ const PetSearchForm = ({
         </div>
       </Form.Group>
       <Form.Group controlId="dateCreated" className="flex flex-col">
-        <Form.Label className="font-bold mx-auto">Created Date</Form.Label>
+        <Form.Label className="font-bold">Date Added</Form.Label>
         <Controller
           name="dateCreated"
           control={control}
           render={({ field: { onChange, value } }) => {
             return (
-              <div className="mx-auto">
+              <div className="">
                 <DatePicker
                   selected={value}
                   onChange={onChange}
