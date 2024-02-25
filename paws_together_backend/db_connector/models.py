@@ -41,6 +41,7 @@ class Pet(models.Model):
     availability = models.CharField(max_length=50, choices=AVAILABILITY_CHOICES)
     description = models.TextField()
     date_created = models.DateField(auto_now_add=True)
+    news = models.TextField(blank=True, null=True)
 
     # display the type, breed, and availabilaity 
     def __str__(self):
