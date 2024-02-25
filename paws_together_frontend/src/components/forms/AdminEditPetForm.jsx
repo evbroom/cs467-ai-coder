@@ -200,6 +200,26 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
             <Form.Text>Max 500 characters</Form.Text>
           )}
         </Form.Group>
+        <Form.Group controlId="news">
+          <Form.Label className="font-bold mx-auto">News</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={8}
+            {...register('news', {
+              maxLength: {
+                value: 500,
+                message: 'News cannot exceed 500 characters.',
+              },
+            })}
+          />
+          {errors.description ? (
+            <Form.Text className="text-danger">
+              {errors.description.message}
+            </Form.Text>
+          ) : (
+            <Form.Text>Max 500 characters</Form.Text>
+          )}
+        </Form.Group>
         <div className="flex justify-center">
           {error && <Form.Text className="text-danger">{error}</Form.Text>}
         </div>
