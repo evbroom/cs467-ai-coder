@@ -27,8 +27,11 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
-  const [news, setNews] = useState([]);
+  const [news, setNews] = useState(initialPetProfile.news || []);
   const [isRequesting, setIsRequesting] = useState(false);
+  useEffect(() => {
+    setValue('news', ''); // Set 'news' field to empty string after page load
+  }, [setValue]);
 
   const setBreedOptions = (type) => {
     if (type === 'dog') {
@@ -77,6 +80,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
       }
       return acc;
     }, {});
+    updatedPetProfile.news = news;
     // If there are updated fields, send a PATCH request to the server.
     if (Object.keys(updatedPetProfile).length > 0) {
       if (!isRequesting) {
