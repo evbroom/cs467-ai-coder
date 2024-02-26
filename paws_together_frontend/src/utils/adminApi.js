@@ -131,6 +131,8 @@ export const patchPetProfile = async (
       petProfile[key].forEach((disposition) =>
         formData.append('disposition', disposition)
       );
+    } else if (key === 'news') {
+      petProfile[key].forEach((news) => formData.append('news', news));
     } else {
       formData.append(key, petProfile[key]);
     }
