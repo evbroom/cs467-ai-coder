@@ -15,7 +15,6 @@ const AdminAddPetForm = () => {
     control,
     setValue,
     getValues,
-    reset,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -204,7 +203,7 @@ const AdminAddPetForm = () => {
                 const newsItem = getValues('news');
                 if (newsItem) {
                   setNews([...news, newsItem]);
-                  reset({ news: '' });
+                  setValue('news', '');
                 }
               }}
             >
