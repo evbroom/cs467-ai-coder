@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPetBreeds } from '../../utils/api';
 import { postPetProfile } from '../../utils/adminApi';
 import LinkButton from '../common/LinkButton';
-import { set } from 'date-fns';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const AdminAddPetForm = () => {
   const {
@@ -14,6 +14,8 @@ const AdminAddPetForm = () => {
     register,
     control,
     setValue,
+    getValues,
+    reset,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const AdminAddPetForm = () => {
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
+  const [news, setNews] = useState([]);
   const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch dog and cat breeds from the server.
@@ -57,6 +60,7 @@ const AdminAddPetForm = () => {
   const onSubmit = async (petProfile) => {
     if (!isRequesting) {
       setIsRequesting(true);
+      petProfile.news = news;
       await postPetProfile(petProfile, setError, navigate);
     }
     setIsRequesting(false);
@@ -184,6 +188,56 @@ const AdminAddPetForm = () => {
             <Form.Text>Support file types: .jpg, .jpeg, .png</Form.Text>
           )}
         </Form.Group>
+
+        <Form.Group controlId="news">
+          <Form.Label className="font-bold mx-auto">News</Form.Label>
+          <div className="flex items-center">
+            <Form.Control
+              type="text"
+              placeholder="Add news item"
+              {...register('news')}
+            />
+            <button
+              type="button"
+              className="ml-2 btn btn-primary"
+              onClick={() => {
+                const newsItem = getValues('news');
+                if (newsItem) {
+                  setNews([...news, newsItem]);
+                  reset({ news: '' });
+                }
+              }}
+            >
+              Add
+            </button>
+          </div>
+          {errors.news && (
+            <Form.Text className="text-danger">{errors.news.message}</Form.Text>
+          )}
+        </Form.Group>
+
+        <div className="">
+          <p className="font-bold">Added News Items</p>
+          <ul>
+            {news.length > 0 ? (
+              news.map((item, index) => (
+                <li key={index}>
+                  <RiDeleteBin6Line
+                    className="inline cursor-pointer size-6 mr-2 text-danger"
+                    onClick={() => {
+                      const updatedNews = news.filter((_, i) => i !== index);
+                      setNews(updatedNews);
+                    }}
+                  />
+                  {item}
+                </li>
+              ))
+            ) : (
+              <li>No news items added</li>
+            )}
+          </ul>
+        </div>
+
         <Form.Group controlId="description">
           <Form.Label className="font-bold mx-auto">Description</Form.Label>
           <Form.Control
