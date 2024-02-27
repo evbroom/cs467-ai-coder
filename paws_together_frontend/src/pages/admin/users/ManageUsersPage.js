@@ -22,7 +22,7 @@ const ManageUsersPage = () => {
     <div className="my-6 space-y-2">
       <h1 className="text-center">Manage Users</h1>
       <div className="w-1/2 mx-auto">
-        <div className="flex justify-end pb-2">
+        <div className="flex justify-center pb-2">
           <LinkButton route="/admin/add-user" text="Add New" />
         </div>
         {users ? (

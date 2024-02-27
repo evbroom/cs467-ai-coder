@@ -4,7 +4,7 @@ import { deleteUser } from '../../utils/adminApi';
 import { useState } from 'react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
-const UserRow = ({ row, setData }) => {
+const UserRow = ({ row, setData, fieldset }) => {
   const { id, username, email } = row;
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -18,12 +18,14 @@ const UserRow = ({ row, setData }) => {
     }
   };
 
+  const [usernameLabel, emailLabel, editLabel, deleteLabel] = fieldset;
+
   return (
     <>
       <tr className="border text-center">
-        <td className="p-2 border">{username}</td>
-        <td className="p-2 border">{email}</td>
-        <td className="p-2 border">
+        <td className="p-2 lg:border" data-column={usernameLabel}>{username}</td>
+        <td className="p-2 lg:border" data-column={emailLabel}>{email}</td>
+        <td className="p-2 lg:border" data-column={editLabel}>
           <Button
             variant="primary"
             onClick={() => navigate(`/admin/users/${id}`)}
@@ -31,7 +33,7 @@ const UserRow = ({ row, setData }) => {
             Edit
           </Button>
         </td>
-        <td className="p-2 border">
+        <td className="p-2 lg:border" data-column={deleteLabel}>
           <Button variant="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>

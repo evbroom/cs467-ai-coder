@@ -14,7 +14,7 @@ const TableContainer = ({ fieldset, data, RowComponent, setData }) => {
       </thead>
       <tbody>
         {data.map((row) => {
-          return <RowComponent key={row.id} row={row} setData={setData} />;
+          return <RowComponent fieldset={fieldset} key={row.id} row={row} setData={setData} />;
         })}
       </tbody>
     </table>
