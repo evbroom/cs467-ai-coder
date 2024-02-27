@@ -29,10 +29,6 @@ form .error {
 
 @media screen and (max-width: 991px) {
   /* styles for medium and small screens */
-  thead {
-    display: none;
-  }
-
   tr {
     display: grid;
     grid-template-columns: auto;
@@ -44,9 +40,10 @@ form .error {
 
   td {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 2fr;
     align-items: flex-start;
     margin-bottom: 0.5em;
+    text-align: left;
   }
 
   td:before {

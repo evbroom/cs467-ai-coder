@@ -1,9 +1,9 @@
-import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import { deletePetProfile } from '../../utils/adminApi';
 import { useState } from 'react';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import { FaRegEdit } from 'react-icons/fa';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const PetProfileRow = ({ row, setData, fieldset }) => {
   const { id, type, breed, disposition, availability, date_created } = row;
@@ -31,8 +31,7 @@ const PetProfileRow = ({ row, setData, fieldset }) => {
     dispositionLabel,
     availabilityLabel,
     dateCreatedLabel,
-    editLabel,
-    deleteLabel,
+    actionsLabel,
   ] = fieldset;
   return (
     <>
@@ -55,18 +54,17 @@ const PetProfileRow = ({ row, setData, fieldset }) => {
         <td className="p-2 lg:border" data-column={dateCreatedLabel}>
           {date_created}
         </td>
-        <td className="p-2 lg:border" data-column={editLabel}>
-          <Button
-            variant="primary"
-            onClick={() => navigate(`/admin/pet-profiles/${id}`)}
-          >
-            Edit
-          </Button>
-        </td>
-        <td className="p-2 lg:border" data-column={deleteLabel}>
-          <Button variant="danger" onClick={() => setShowModal(true)}>
-            Delete
-          </Button>
+        <td className="p-2 lg:border" data-column={actionsLabel}>
+          <div>
+            <FaRegEdit
+              className="inline text-blue-600 mr-4 cursor-pointer size-5"
+              onClick={() => navigate(`/admin/pet-profiles/${id}`)}
+            />
+            <RiDeleteBin6Line
+              className="inline text-red-600 cursor-pointer size-5"
+              onClick={() => setShowModal(true)}
+            />
+          </div>
         </td>
       </tr>
       <DeleteConfirmModal
