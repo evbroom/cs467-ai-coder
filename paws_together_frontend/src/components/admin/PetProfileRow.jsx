@@ -5,7 +5,7 @@ import { deletePetProfile } from '../../utils/adminApi';
 import { useState } from 'react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
-const PetProfileRow = ({ row, setData }) => {
+const PetProfileRow = ({ row, setData, fieldset }) => {
   const { id, type, breed, disposition, availability, date_created } = row;
   const navigate = useNavigate();
   const [error, setError] = useState();
@@ -24,17 +24,19 @@ const PetProfileRow = ({ row, setData }) => {
     }
   };
 
+  // destructuring fieldsets to use as labels on mobile
+  const [typeLabel, breedLabel, dispositionLabel, availabilityLabel, dateCreatedLabel, editLabel, deleteLabel] = fieldset;
   return (
     <>
       <tr className="border text-center">
-        <td className="p-2 border">{type}</td>
-        <td className="p-2 border">{breed}</td>
-        <td className="p-2 border whitespace-pre text-left">
+        <td className="p-2 lg:border" data-column={typeLabel}>{type}</td>
+        <td className="p-2 lg:border" data-column={breedLabel}>{breed}</td>
+        <td className="p-2 lg:border whitespace-pre text-left" data-column={dispositionLabel}>
           {disposition.join('\n')}
         </td>
-        <td className="p-2 border">{availability}</td>
-        <td className="p-2 border">{date_created}</td>
-        <td className="p-2 border">
+        <td className="p-2 lg:border" data-column={availabilityLabel}>{availability}</td>
+        <td className="p-2 lg:border" data-column={dateCreatedLabel}>{date_created}</td>
+        <td className="p-2 lg:border" data-column={editLabel}>
           <Button
             variant="primary"
             onClick={() => navigate(`/admin/pet-profiles/${id}`)}
@@ -42,7 +44,7 @@ const PetProfileRow = ({ row, setData }) => {
             Edit
           </Button>
         </td>
-        <td className="p-2 border">
+        <td className="p-2 lg:border" data-column={deleteLabel}>
           <Button variant="danger" onClick={() => setShowModal(true)}>
             Delete
           </Button>

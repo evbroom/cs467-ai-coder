@@ -34,7 +34,7 @@ const ManagePetProfilePage = () => {
     <div className="my-6 space-y-2 mx-auto">
       <h1 className="text-center">Manage Pet Profiles</h1>
       <div className="container">
-        <div className="flex justify-end pb-2">
+        <div className="flex justify-center pb-2">
           <LinkButton route="/admin/add-pet-profile" text="Add New" />
         </div>
         {petProfiles ? (
