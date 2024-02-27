@@ -1,12 +1,12 @@
-/* Style for form error messages */
 form .error {
+  /* Style for form error messages */
   color: red;
   font-size: 0.8em;
   margin-top: 0.25em;
 }
 
-/* Animation dots for loading text */
 @keyframes loadingDots {
+  /* Animation dots for loading text */
   0% {
     content: '';
   }
@@ -22,6 +22,7 @@ form .error {
 }
 
 .loading::after {
+  /* Style for loading text */
   content: '';
   animation: loadingDots 2s infinite;
 }
@@ -53,7 +54,6 @@ form .error {
     font-weight: bold;
     margin-right: 1em;
   }
-  
 }
 
 @media (min-width: 992px) {

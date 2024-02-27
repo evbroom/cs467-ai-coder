@@ -25,17 +25,36 @@ const PetProfileRow = ({ row, setData, fieldset }) => {
   };
 
   // destructuring fieldsets to use as labels on mobile
-  const [typeLabel, breedLabel, dispositionLabel, availabilityLabel, dateCreatedLabel, editLabel, deleteLabel] = fieldset;
+  const [
+    typeLabel,
+    breedLabel,
+    dispositionLabel,
+    availabilityLabel,
+    dateCreatedLabel,
+    editLabel,
+    deleteLabel,
+  ] = fieldset;
   return (
     <>
       <tr className="border text-center">
-        <td className="p-2 lg:border" data-column={typeLabel}>{type}</td>
-        <td className="p-2 lg:border" data-column={breedLabel}>{breed}</td>
-        <td className="p-2 lg:border whitespace-pre text-left" data-column={dispositionLabel}>
+        <td className="p-2 lg:border" data-column={typeLabel}>
+          {type}
+        </td>
+        <td className="p-2 lg:border" data-column={breedLabel}>
+          {breed}
+        </td>
+        <td
+          className="p-2 lg:border whitespace-pre text-left"
+          data-column={dispositionLabel}
+        >
           {disposition.join('\n')}
         </td>
-        <td className="p-2 lg:border" data-column={availabilityLabel}>{availability}</td>
-        <td className="p-2 lg:border" data-column={dateCreatedLabel}>{date_created}</td>
+        <td className="p-2 lg:border" data-column={availabilityLabel}>
+          {availability}
+        </td>
+        <td className="p-2 lg:border" data-column={dateCreatedLabel}>
+          {date_created}
+        </td>
         <td className="p-2 lg:border" data-column={editLabel}>
           <Button
             variant="primary"

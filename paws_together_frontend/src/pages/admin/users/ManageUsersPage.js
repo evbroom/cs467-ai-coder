@@ -19,9 +19,9 @@ const ManageUsersPage = () => {
   }, [authToken]);
 
   return (
-    <div className="my-6 space-y-2">
+    <div className="my-6 space-y-2 mx-auto">
       <h1 className="text-center">Manage Users</h1>
-      <div className="w-1/2 mx-auto">
+      <div className="container">
         <div className="flex justify-center pb-2">
           <LinkButton route="/admin/add-user" text="Add New" />
         </div>
