@@ -11,7 +11,7 @@ const TableContainer = ({
       <thead>
         <tr>
           <th colSpan={fieldset.length} className="text-center">
-            <div className="flex flex-col lg:flex-row justify-between space-y-2 lg:space-y-0 items-center w-full">
+            <div className="flex flex-col lg:flex-row justify-between space-y-2 lg:space-y-0 items-center w-full p-2">
               <h1>{title}</h1>
               {linkButton}
             </div>
