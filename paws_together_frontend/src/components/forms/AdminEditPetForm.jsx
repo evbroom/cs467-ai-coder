@@ -87,7 +87,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
   };
 
   return (
-    <div className="w-1/2 mx-auto">
+    <div className="w-3/4 lg:w-1/2 mx-auto">
       <div className="flex justify-end">
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
@@ -166,7 +166,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           <img
             src={initialPetProfile.picture_url}
             alt="Pet profile picture"
-            className="pb-4 max-w-64 max-h-64 hover:cursor-pointer"
+            className="pb-4 max-w-54 max-h-54 lg:max-w-64 lg:max-h-64 hover:cursor-pointer"
             onClick={() => openInNewWindow(initialPetProfile.picture_url)}
           />
           <Form.Control

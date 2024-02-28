@@ -3,9 +3,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getPetProfiles } from '../../../utils/api';
 import PetProfileRow from '../../../components/admin/PetProfileRow';
 import TableContainer from '../../../components/admin/TableContainer';
-import LinkButton from '../../../components/common/LinkButton';
 import Pagination from '../../../components/common/Pagination';
 import { useNavigate } from 'react-router-dom';
+import LinkButton from '../../../components/common/LinkButton';
 
 const ManagePetProfilePage = () => {
   const [petProfiles, setPetProfiles] = useState(null);
@@ -21,8 +21,7 @@ const ManagePetProfilePage = () => {
     'Disposition',
     'Availability',
     'Date Created',
-    'Edit',
-    'Delete',
+    'Actions',
   ];
 
   useEffect(() => {
@@ -31,36 +30,35 @@ const ManagePetProfilePage = () => {
   }, [page]);
 
   return (
-    <div className="my-6 space-y-2 mx-auto">
-      <h1 className="text-center">Manage Pet Profiles</h1>
-      <div className="container">
-        <div className="flex justify-center pb-2">
-          <LinkButton route="/admin/add-pet-profile" text="Add New" />
-        </div>
-        {petProfiles ? (
-          petProfiles.length === 0 ? (
-            <div className="container justify-items-center">
-              <p>No pet profiles found.</p>
-            </div>
-          ) : (
+    <div className="container my-6 space-y-2">
+      {petProfiles ? (
+        <>
+          <div className="flex justify-center mx-auto">
             <TableContainer
+              title="Pet Profiles"
               fieldset={fieldset}
               data={petProfiles}
               RowComponent={PetProfileRow}
               setData={setPetProfiles}
+              linkButton={
+                <LinkButton
+                  route="/admin/add-pet-profile"
+                  text="Add a New Pet"
+                />
+              }
             />
-          )
-        ) : fetchError ? (
-          <div className="container justify-items-center">
-            <p className="text-red-500">{fetchError}</p>
           </div>
-        ) : (
-          <div className="container justify-items-center">
-            <p className="loading">Fetching pet profiles</p>
-          </div>
-        )}
-        <Pagination page={page} setPage={setPage} isNextPage={isNextPage} />
-      </div>
+          <Pagination page={page} setPage={setPage} isNextPage={isNextPage} />
+        </>
+      ) : fetchError ? (
+        <div className="flex justify-center mx-auto">
+          <p className="text-red-500">{fetchError}</p>
+        </div>
+      ) : (
+        <div className="flex justify-center mx-auto">
+          <p className="loading">Fetching pet profiles</p>
+        </div>
+      )}
     </div>
   );
 };

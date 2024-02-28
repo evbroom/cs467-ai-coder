@@ -1,8 +1,9 @@
-import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser } from '../../utils/adminApi';
 import { useState } from 'react';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import { FaRegEdit } from 'react-icons/fa';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const UserRow = ({ row, setData, fieldset }) => {
   const { id, username, email } = row;
@@ -18,25 +19,28 @@ const UserRow = ({ row, setData, fieldset }) => {
     }
   };
 
-  const [usernameLabel, emailLabel, editLabel, deleteLabel] = fieldset;
+  const [usernameLabel, emailLabel, actionsLabel] = fieldset;
 
   return (
     <>
       <tr className="border text-center">
-        <td className="p-2 lg:border" data-column={usernameLabel}>{username}</td>
-        <td className="p-2 lg:border" data-column={emailLabel}>{email}</td>
-        <td className="p-2 lg:border" data-column={editLabel}>
-          <Button
-            variant="primary"
-            onClick={() => navigate(`/admin/users/${id}`)}
-          >
-            Edit
-          </Button>
+        <td className="p-2 lg:border" data-column={usernameLabel}>
+          {username}
         </td>
-        <td className="p-2 lg:border" data-column={deleteLabel}>
-          <Button variant="danger" onClick={() => setShowModal(true)}>
-            Delete
-          </Button>
+        <td className="p-2 lg:border" data-column={emailLabel}>
+          {email}
+        </td>
+        <td className="p-2 lg:border" data-column={actionsLabel}>
+          <div>
+            <FaRegEdit
+              className="inline text-blue-600 mr-4 cursor-pointer size-5"
+              onClick={() => navigate(`/admin/users/${id}`)}
+            />
+            <RiDeleteBin6Line
+              className="inline text-red-600 cursor-pointer size-5"
+              onClick={() => setShowModal(true)}
+            />
+          </div>
         </td>
       </tr>
       <DeleteConfirmModal

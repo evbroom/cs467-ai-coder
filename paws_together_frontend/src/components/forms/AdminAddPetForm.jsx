@@ -67,7 +67,7 @@ const AdminAddPetForm = () => {
   };
 
   return (
-    <div className="w-1/2 mx-auto">
+    <div className="w-3/4 lg:w-1/2 mx-auto">
       <div className="flex justify-end">
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>

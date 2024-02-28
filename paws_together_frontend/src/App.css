@@ -1,12 +1,12 @@
-/* Style for form error messages */
 form .error {
+  /* Style for form error messages */
   color: red;
   font-size: 0.8em;
   margin-top: 0.25em;
 }
 
-/* Animation dots for loading text */
 @keyframes loadingDots {
+  /* Animation dots for loading text */
   0% {
     content: '';
   }
@@ -22,30 +22,27 @@ form .error {
 }
 
 .loading::after {
+  /* Style for loading text */
   content: '';
   animation: loadingDots 2s infinite;
 }
 
 @media screen and (max-width: 991px) {
   /* styles for medium and small screens */
-  thead {
-    display: none;
-  }
-
   tr {
     display: grid;
     grid-template-columns: auto;
     gap: 1em;
     margin-bottom: 1em;
     border: 1px solid #ccc;
-    padding: 1em;
   }
 
   td {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 2fr;
     align-items: flex-start;
     margin-bottom: 0.5em;
+    text-align: left;
   }
 
   td:before {
@@ -53,7 +50,6 @@ form .error {
     font-weight: bold;
     margin-right: 1em;
   }
-  
 }
 
 @media (min-width: 992px) {
