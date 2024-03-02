@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
-import { getPetsWithNews } from '../../utils/api'; // Adjust the import path as necessary
+import { useAuth } from '../../contexts/AuthContext';
+import { getPetsWithNews } from '../../utils/api';
 import PetNewsCard from '../../components/petProfile/PetNewsCard';
 
 const HomePage = () => {
   const catImageUrl =
     'https://images.pexels.com/photos/6631855/pexels-photo-6631855.jpeg?auto=compress&cs=tinysrgb&w=600';
   const [petsWithNews, setPetsWithNews] = useState([]);
+  const { authToken } = useAuth();
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -55,17 +57,18 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Newsfeed section */}
-      <section>
-        <h2>Newsfeed</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {
-          petsWithNews.map(pet => (
-            <PetNewsCard key={pet.id} pet={pet} />
-          ))
-        }
-        </div>
-      </section>
+      {authToken && (
+        <section>
+          <h2>Newsfeed</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {
+            petsWithNews.map(pet => (
+              <PetNewsCard key={pet.id} pet={pet} />
+            ))
+          }
+          </div>
+        </section>
+      )}
     </div>
   );
 };
