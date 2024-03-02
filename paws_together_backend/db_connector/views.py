@@ -116,3 +116,16 @@ def breed_options(request, type=None):
         options = ['Other']
     
     return JsonResponse(options, safe=False)
+
+def pets_with_news(request):
+    print("****************************")
+    print("Adentro")
+    pets = Pet.objects.exclude(news__isnull=True).exclude(news__len=0)
+    pets_data = [{
+        'id': pet.id,
+        'type': pet.type,
+        'breed': pet.breed,
+        'picture_url': pet.picture_url.url,
+        'news': pet.news
+    } for pet in pets]
+    return JsonResponse({'pets': pets_data})

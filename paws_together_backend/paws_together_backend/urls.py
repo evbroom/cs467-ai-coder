@@ -22,7 +22,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from db_connector.views import PetViewSet, breed_options
+from db_connector.views import PetViewSet, breed_options, pets_with_news
 from authentication.views import UserViewSet, SignupView, LoginView, LogoutView
 from django.urls import path
 
@@ -38,4 +38,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('pets/breeds/<str:type>/', breed_options, name='breed_options'),
+    path('news/', pets_with_news, name='pets_with_news'),
 ]

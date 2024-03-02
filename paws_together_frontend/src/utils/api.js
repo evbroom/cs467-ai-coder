@@ -235,3 +235,31 @@ export const getPetProfileById = async (petId, setPetProfile, setError) => {
     }
   }
 };
+
+/**
+ * Get Pet Profile By ID
+ *
+ * GET request for pet profile by ID.
+ *
+ * @param {String} petId - The pet's ID.
+ * @param {Function} setPetProfile - Function to set the pet profile to be displayed.
+ * @param {Function} setError - Function to set the request error message.
+ */
+export const getPetsWithNews = async (setError) => {
+  try {
+    const response = await axios.get(`${API_URL}/news/`, {
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
+    });
+    // Handle success response
+    return response.data.pets;
+  } catch (error) {
+    if (error.response) {
+      // Handle error response
+      setError('An unexpected error occurred. Please try again later.');
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  }
+};
