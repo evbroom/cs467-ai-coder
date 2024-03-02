@@ -310,7 +310,8 @@ class PetAPITestCase(APITestCase):
             'availability': pet.availability,
             'disposition': pet.disposition,
             'picture_url': pet.picture_url,
-            'description': pet.description
+            'description': pet.description,
+            'news': pet.news
         }
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # date_created is in the response, but we don't need it in the expected_data

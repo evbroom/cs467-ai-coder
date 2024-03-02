@@ -118,8 +118,6 @@ def breed_options(request, type=None):
     return JsonResponse(options, safe=False)
 
 def pets_with_news(request):
-    print("****************************")
-    print("Adentro")
     pets = Pet.objects.exclude(news__isnull=True).exclude(news__len=0)
     pets_data = [{
         'id': pet.id,
