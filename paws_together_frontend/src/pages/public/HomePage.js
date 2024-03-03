@@ -59,8 +59,8 @@ const HomePage = () => {
       
       {authToken && (
         <section>
-          <h2>Newsfeed</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <h2 className="text-left text-2xl font-semibold pl-5">Newsfeed</h2>
+          <div className="pets-news-container">
           {
             petsWithNews.map(pet => (
               <PetNewsCard key={pet.id} pet={pet} />

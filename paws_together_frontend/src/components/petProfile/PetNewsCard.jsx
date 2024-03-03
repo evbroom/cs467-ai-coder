@@ -24,11 +24,11 @@ const PetNewsCard = ({ pet }) => {
       />
       <Card.Body className="flex flex-col">
         <Card.Title>{breed}</Card.Title>
-        <Card.Text>
+        <div>
           <ul>
             {renderNewsItems(news)}
           </ul>
-        </Card.Text>
+        </div>
       </Card.Body>
     </Card>
   );
