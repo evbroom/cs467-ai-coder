@@ -235,3 +235,23 @@ export const getPetProfileById = async (petId, setPetProfile, setError) => {
     }
   }
 };
+
+/**
+ * Get Pets with News
+ *
+ * GET request for Pets that have something in their "news" field
+ */
+export const getPetsWithNews = async (setError) => {
+  try {
+    const response = await axios.get(`${API_URL}/news/`, {
+      headers: {
+        Authorization: `${TOKEN_PREFIX} ${localStorage.getItem('authToken')}`,
+      },
+    });
+    // Handle success response
+    return response.data.pets;
+  } catch (error) {
+    // Handle error response
+    setError('Failed to fetch pets with news.');
+  }
+};

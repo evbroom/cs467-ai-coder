@@ -1,11 +1,11 @@
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, ListGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { getPetBreeds } from '../../utils/api';
 import { postPetProfile } from '../../utils/adminApi';
 import LinkButton from '../common/LinkButton';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+import { RiDeleteBack2Line } from 'react-icons/ri';
 
 const AdminAddPetForm = () => {
   const {
@@ -15,7 +15,6 @@ const AdminAddPetForm = () => {
     control,
     setValue,
     getValues,
-    reset,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -204,7 +203,7 @@ const AdminAddPetForm = () => {
                 const newsItem = getValues('news');
                 if (newsItem) {
                   setNews([...news, newsItem]);
-                  reset({ news: '' });
+                  setValue('news', '');
                 }
               }}
             >
@@ -218,24 +217,23 @@ const AdminAddPetForm = () => {
 
         <div className="">
           <p className="font-bold">Added News Items</p>
-          <ul>
-            {news.length > 0 ? (
+          <ListGroup>
+            {news.length > 0 &&
               news.map((item, index) => (
-                <li key={index}>
-                  <RiDeleteBin6Line
-                    className="inline cursor-pointer size-6 mr-2 text-danger"
-                    onClick={() => {
-                      const updatedNews = news.filter((_, i) => i !== index);
-                      setNews(updatedNews);
-                    }}
-                  />
-                  {item}
-                </li>
-              ))
-            ) : (
-              <li>No news items added</li>
-            )}
-          </ul>
+                <ListGroup.Item key={index}>
+                  <div className="flex justify-between">
+                    {item}
+                    <RiDeleteBack2Line
+                      className="inline cursor-pointer size-6 mr-2 text-danger"
+                      onClick={() => {
+                        const updatedNews = news.filter((_, i) => i !== index);
+                        setNews(updatedNews);
+                      }}
+                    />
+                  </div>
+                </ListGroup.Item>
+              ))}
+          </ListGroup>
         </div>
 
         <Form.Group controlId="description">

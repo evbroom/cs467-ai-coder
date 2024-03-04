@@ -1,4 +1,4 @@
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, ListGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { getPetBreeds } from '../../utils/api';
 import { patchPetProfile } from '../../utils/adminApi';
 import LinkButton from '../common/LinkButton';
 import { openInNewWindow } from '../../utils/helper';
+import { RiDeleteBack2Line } from 'react-icons/ri';
 
 const AdminEditPetForm = ({ initialPetProfile }) => {
   const {
@@ -15,6 +16,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
     register,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: initialPetProfile,
@@ -25,7 +27,11 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
   const [breeds, setBreeds] = useState([]);
   const [dogBreeds, setDogBreeds] = useState([]);
   const [catBreeds, setCatBreeds] = useState([]);
+  const [news, setNews] = useState(initialPetProfile.news || []);
   const [isRequesting, setIsRequesting] = useState(false);
+  useEffect(() => {
+    setValue('news', ''); // Set 'news' field to empty string after page load
+  }, [setValue]);
 
   const setBreedOptions = (type) => {
     if (type === 'dog') {
@@ -74,6 +80,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
       }
       return acc;
     }, {});
+    updatedPetProfile.news = news;
     // If there are updated fields, send a PATCH request to the server.
     if (Object.keys(updatedPetProfile).length > 0) {
       if (!isRequesting) {
@@ -180,6 +187,54 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
             <Form.Text>Support file types: .jpg, .jpeg, .png</Form.Text>
           )}
         </Form.Group>
+        <Form.Group controlId="news">
+          <Form.Label className="font-bold mx-auto">News</Form.Label>
+          <div className="flex items-center">
+            <Form.Control
+              type="text"
+              placeholder="Add news item"
+              {...register('news')}
+            />
+            <button
+              type="button"
+              className="ml-2 btn btn-primary"
+              onClick={() => {
+                const newsItem = getValues('news');
+                if (newsItem) {
+                  setNews([...news, newsItem]);
+                  setValue('news', '');
+                }
+              }}
+            >
+              Add
+            </button>
+          </div>
+          {errors.news && (
+            <Form.Text className="text-danger">{errors.news.message}</Form.Text>
+          )}
+        </Form.Group>
+
+        <div className="">
+          <p className="font-bold">Added News Items</p>
+          <ListGroup>
+            {news.length > 0 &&
+              news.map((item, index) => (
+                <ListGroup.Item key={index}>
+                  <div className="flex justify-between">
+                    {item}
+                    <RiDeleteBack2Line
+                      className="inline cursor-pointer size-6 mr-2 text-danger"
+                      onClick={() => {
+                        const updatedNews = news.filter((_, i) => i !== index);
+                        setNews(updatedNews);
+                      }}
+                    />
+                  </div>
+                </ListGroup.Item>
+              ))}
+          </ListGroup>
+        </div>
+
         <Form.Group controlId="description">
           <Form.Label className="font-bold mx-auto">Description</Form.Label>
           <Form.Control
