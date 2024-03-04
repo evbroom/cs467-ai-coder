@@ -54,21 +54,20 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+          {authToken && (
+            <section className="py-8 md:py-16 lg:py-24">
+              <h2 className="text-left text-3xl font-semibold mb-2">Newsfeed</h2>
+              <div className="pets-news-container">
+              {
+                petsWithNews.map(pet => (
+                  <PetNewsCard key={pet.id} pet={pet} />
+                ))
+              }
+              </div>
+            </section>
+          )}
         </div>
       </section>
-      
-      {authToken && (
-        <section>
-          <h2 className="text-left text-2xl font-semibold pl-5">Newsfeed</h2>
-          <div className="pets-news-container">
-          {
-            petsWithNews.map(pet => (
-              <PetNewsCard key={pet.id} pet={pet} />
-            ))
-          }
-          </div>
-        </section>
-      )}
     </div>
   );
 };
