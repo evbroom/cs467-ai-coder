@@ -57,10 +57,3 @@ form .error {
     background-color: #f9f9f9;
   }
 }
-
-.pets-news-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 20px;
-}
