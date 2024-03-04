@@ -7,11 +7,10 @@ const PetNewsCard = ({ pet }) => {
 
   // This function processes and displays news items. Adapt it as needed.
   const renderNewsItems = (news) => {
-    return news.map((item, index) => (
-      <li key={index} className="text-sm mt-1">
-        {item}
-      </li>
-    ));
+    return news
+      .slice(Math.max(-3, -news.length))
+      .reverse()
+      .map((item, index) => <li key={index}>{item}</li>);
   };
 
   return (
@@ -24,11 +23,9 @@ const PetNewsCard = ({ pet }) => {
       />
       <Card.Body className="flex flex-col">
         <Card.Title>{breed}</Card.Title>
-        <Card.Text>
-          <ul>
-            {renderNewsItems(news)}
-          </ul>
-        </Card.Text>
+        <div>
+          <ul>{renderNewsItems(news)}</ul>
+        </div>
       </Card.Body>
     </Card>
   );

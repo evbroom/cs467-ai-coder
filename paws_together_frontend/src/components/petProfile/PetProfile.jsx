@@ -1,8 +1,8 @@
-import React from "react";
-import PetData from "./PetData";
-import PetPicture from "./PetPicture";
-import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import PetData from './PetData';
+import PetPicture from './PetPicture';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const PetProfile = ({ petProfile }) => {
   const navigate = useNavigate();
@@ -14,15 +14,19 @@ const PetProfile = ({ petProfile }) => {
     availability,
     description,
     date_created,
+    news,
   } = petProfile;
 
   return (
     <div className="px-4 py-6 md:py-12 max-w-3xl mx-auto space-y-4">
       <button
         onClick={() => navigate(-1)}
-        className="px-3 py-2 border-2 border-gray-300 rounded-md flex items-center"><FaArrowLeft className="mr-2"/>Back to Browse Pets
+        className="px-3 py-2 border-2 border-gray-300 rounded-md flex items-center"
+      >
+        <FaArrowLeft className="mr-2" />
+        Back to Browse Pets
       </button>
-        <PetPicture imageUrl={picture_url} />
+      <PetPicture imageUrl={picture_url} />
       <div className="flex items-center space-2 mt-0">
         <span className="text-sm text-gray-500 dark:text-gray-400">
           Created on {date_created}
@@ -38,6 +42,17 @@ const PetProfile = ({ petProfile }) => {
       </div>
       <div className="grid gap-4 text-base md:text-lg">
         <p>{description}</p>
+      </div>
+      <div>
+        <p>
+          <span className="fw-semibold pr-1 block">News Items</span>
+          {news?.map((item, index) => (
+            <span key={index}>
+              {item}
+              <br />
+            </span>
+          ))}
+        </p>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const HomePage = () => {
     const fetchPetsWithNews = async () => {
       const pets = await getPetsWithNews(setError);
       setPetsWithNews(pets);
+      console.log(error);
     };
 
     fetchPetsWithNews();
@@ -56,17 +57,22 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      
+
       {authToken && (
-        <section>
+        <section className="container px-4 md:px-6">
           <h2>Newsfeed</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {
-            petsWithNews.map(pet => (
-              <PetNewsCard key={pet.id} pet={pet} />
-            ))
-          }
-          </div>
+          {error ? (
+            error
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {petsWithNews
+                .slice(Math.max(-4, -petsWithNews.length))
+                .reverse()
+                .map((pet) => (
+                  <PetNewsCard key={pet.id} pet={pet} />
+                ))}
+            </div>
+          )}
         </section>
       )}
     </div>

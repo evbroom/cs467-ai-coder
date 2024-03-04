@@ -251,11 +251,7 @@ export const getPetsWithNews = async (setError) => {
     // Handle success response
     return response.data.pets;
   } catch (error) {
-    if (error.response) {
-      // Handle error response
-      setError('An unexpected error occurred. Please try again later.');
-    } else {
-      setError('An unexpected error occurred. Please try again later.');
-    }
+    // Handle error response
+    setError('Failed to fetch pets with news.');
   }
 };
