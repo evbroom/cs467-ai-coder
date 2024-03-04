@@ -132,11 +132,16 @@ export const patchPetProfile = async (
         formData.append('disposition', disposition)
       );
     } else if (key === 'news') {
-      petProfile[key].forEach((news) => formData.append('news', news));
+      if (petProfile[key].length > 0) {
+        petProfile[key].forEach((news) => formData.append('news', news));
+      } else {
+        formData.append('news', 'null');
+      }
     } else {
       formData.append(key, petProfile[key]);
     }
   }
+
   try {
     await adminAxios.patch(`/pets/${petId}/`, formData);
     // Handle success response

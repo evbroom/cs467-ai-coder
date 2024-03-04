@@ -23,7 +23,7 @@ const ManageUsersPage = () => {
       {users ? (
         <div className="flex justify-center mx-auto">
           <TableContainer
-            title="User Data"
+            title="Users"
             fieldset={fieldset}
             data={users}
             RowComponent={UserRow}

@@ -37,6 +37,7 @@ const LoginForm = () => {
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
+            autoComplete="username"
             {...register('username', { required: 'Username is required.' })}
           />
           {errors.username && (
@@ -47,6 +48,7 @@ const LoginForm = () => {
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
+            autoComplete="current-password"
             {...register('password', { required: 'Password is required.' })}
           />
           {errors.password && (

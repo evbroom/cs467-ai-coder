@@ -16,7 +16,6 @@ const HomePage = () => {
     const fetchPetsWithNews = async () => {
       const pets = await getPetsWithNews(setError);
       setPetsWithNews(pets);
-      console.log(error);
     };
 
     fetchPetsWithNews();

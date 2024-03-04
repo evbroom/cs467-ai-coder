@@ -44,6 +44,7 @@ const AdminUserForm = ({ initialUserData = {} }) => {
           <Form.Label className="font-bold mx-auto">Username</Form.Label>
           <Form.Control
             type="text"
+            autoComplete="username"
             {...register('username', { required: 'Username is required.' })}
           />
         </Form.Group>
@@ -52,6 +53,7 @@ const AdminUserForm = ({ initialUserData = {} }) => {
             <Form.Label className="font-bold mx-auto">Password</Form.Label>
             <Form.Control
               type="password"
+              autoComplete="new-password"
               {...register('password', {
                 required: 'Password is required.',
               })}
@@ -62,6 +64,7 @@ const AdminUserForm = ({ initialUserData = {} }) => {
           <Form.Label className="font-bold mx-auto">Email</Form.Label>
           <Form.Control
             type="email"
+            autoComplete="email"
             {...register('email', {
               required: 'Email is required.',
             })}
