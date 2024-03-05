@@ -96,9 +96,9 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
       <div className="flex justify-end">
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
-      <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
         <Form.Text>
-          Empty field will not be updated except for the news items.
+          Any field left blank will not be updated, except for news items.
         </Form.Text>
         <Form.Group controlId="type">
           <Form.Label className="font-bold mx-auto">Type</Form.Label>
