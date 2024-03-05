@@ -64,7 +64,7 @@ const PetSearchForm = ({
 
   return (
     <Form onSubmit={handleSubmit(onSearch)} className="space-y-4">
-      <Form.Group controlId="text" className="flex flex-col">
+      <Form.Group controlId="type" className="flex flex-col">
         <Form.Label className="font-bold">Type</Form.Label>
         <Form.Select
           id="type"
@@ -92,13 +92,14 @@ const PetSearchForm = ({
         )}
       </Form.Group>
       <Form.Group controlId="disposition" className="flex flex-col">
-        <Form.Label className="font-bold">Disposition</Form.Label>
+        <p className="font-bold">Disposition</p>
         <div className="border-2 rounded p-3">
           <Form.Check
             type="checkbox"
             name="disposition"
             label="Good with other animals"
             value="good_with_animals"
+            id="good_with_animals"
             {...register('disposition')}
           />
           <Form.Check
@@ -106,6 +107,7 @@ const PetSearchForm = ({
             name="disposition"
             label="Good with children"
             value="good_with_children"
+            id="good_with_children"
             {...register('disposition')}
           />
           <Form.Check
@@ -113,6 +115,7 @@ const PetSearchForm = ({
             name="disposition"
             label="Must be leashed at all times"
             value="leash_needed"
+            id="leash_needed"
             {...register('disposition')}
           />
         </div>
@@ -126,6 +129,7 @@ const PetSearchForm = ({
             return (
               <div className="">
                 <DatePicker
+                  id="dateCreated"
                   selected={value}
                   onChange={onChange}
                   maxDate={new Date()}

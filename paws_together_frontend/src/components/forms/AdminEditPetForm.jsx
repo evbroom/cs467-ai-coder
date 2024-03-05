@@ -29,6 +29,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
   const [catBreeds, setCatBreeds] = useState([]);
   const [news, setNews] = useState(initialPetProfile.news || []);
   const [isRequesting, setIsRequesting] = useState(false);
+
   useEffect(() => {
     setValue('news', ''); // Set 'news' field to empty string after page load
   }, [setValue]);
@@ -71,26 +72,23 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
 
   const onSubmit = async (petProfile) => {
     const petId = initialPetProfile.id;
-    const updatedPetProfile = Object.keys(petProfile).reduce((acc, key) => {
-      if (
-        !isEqual(petProfile[key], initialPetProfile[key]) &&
-        petProfile[key].length > 0
-      ) {
-        acc[key] = petProfile[key];
-      }
-      return acc;
-    }, {});
-    updatedPetProfile.news = news;
-    // If there are updated fields, send a PATCH request to the server.
-    if (Object.keys(updatedPetProfile).length > 0) {
-      if (!isRequesting) {
-        setIsRequesting(true);
-        await patchPetProfile(petId, updatedPetProfile, setError, navigate);
-      }
-      setIsRequesting(false);
-    } else {
-      navigate('/admin/pet-profiles');
+    const updatedPetProfile = Object.keys(petProfile).reduce(
+      (acc, key) => {
+        if (
+          !isEqual(petProfile[key], initialPetProfile[key]) &&
+          petProfile[key].length > 0
+        ) {
+          acc[key] = petProfile[key];
+        }
+        return acc;
+      },
+      { news: news }
+    );
+    if (!isRequesting) {
+      setIsRequesting(true);
+      await patchPetProfile(petId, updatedPetProfile, setError, navigate);
     }
+    setIsRequesting(false);
   };
 
   return (
@@ -98,7 +96,10 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
       <div className="flex justify-end">
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
-      <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
+        <Form.Text>
+          Any field left blank will not be updated, except for news items.
+        </Form.Text>
         <Form.Group controlId="type">
           <Form.Label className="font-bold mx-auto">Type</Form.Label>
           <Form.Select
@@ -117,6 +118,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           <Form.Label className="font-bold mx-auto">Breed</Form.Label>
           <Controller
             name="breed"
+            aria-label="Select pet breed"
             control={control}
             render={({ field }) => (
               <Form.Select aria-label="Select pet breed" {...field}>
@@ -131,26 +133,32 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           />
         </Form.Group>
         <Form.Group controlId="disposition">
-          <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
+          <p className="font-bold mx-auto">Disposition</p>
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Good with other animals"
             label="Good with other animals"
             value="good_with_animals"
+            id="good_with_animals"
             {...register('disposition', {})}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Good with children"
             label="Good with children"
             value="good_with_children"
+            id="good_with_children"
             {...register('disposition', {})}
           />
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Must be leashed at all times"
             label="Must be leashed at all times"
             value="leash_needed"
+            id="leash_needed"
             {...register('disposition', {})}
           />
         </Form.Group>
@@ -179,6 +187,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           <Form.Control
             type="file"
             accept="image/jpeg, image/png"
+            aria-label="Select pet picture"
             {...register('picture', {
               validate: validateFile,
             })}
@@ -188,10 +197,11 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           )}
         </Form.Group>
         <Form.Group controlId="news">
-          <Form.Label className="font-bold mx-auto">News</Form.Label>
+          <Form.Label className="font-bold mx-auto">News Items</Form.Label>
           <div className="flex items-center">
             <Form.Control
               type="text"
+              aria-label="Add news item"
               placeholder="Add news item"
               {...register('news')}
             />
@@ -240,6 +250,7 @@ const AdminEditPetForm = ({ initialPetProfile }) => {
           <Form.Control
             as="textarea"
             rows={8}
+            aria-label="Enter pet description"
             {...register('description', {
               maxLength: {
                 value: 500,

@@ -38,6 +38,7 @@ const SignupForm = () => {
           <Form.Label>Username*</Form.Label>
           <Form.Control
             type="text"
+            autoComplete="username"
             {...register('username', { required: 'Username is required.' })}
           />
           {errors.username && (
@@ -48,6 +49,7 @@ const SignupForm = () => {
           <Form.Label>Password*</Form.Label>
           <Form.Control
             type="password"
+            autoComplete="new-password"
             {...register('password', { required: 'Password is required.' })}
           />
           {errors.password && (
@@ -58,6 +60,7 @@ const SignupForm = () => {
           <Form.Label>Email*</Form.Label>
           <Form.Control
             type="email"
+            autoComplete="email"
             {...register('email', { required: 'Email is required.' })}
           />
           {errors.email && <p className="error">{errors.email.message}</p>}

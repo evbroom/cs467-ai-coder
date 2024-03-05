@@ -71,12 +71,15 @@ const AdminAddPetForm = () => {
         <LinkButton route="/admin/pet-profiles/" text="Go Back" />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Form.Text>All fields are required.</Form.Text>
+        <Form.Text>
+          <span className="font-bold">*</span> required fields
+        </Form.Text>
         <Form.Group controlId="type">
-          <Form.Label className="font-bold mx-auto">Type</Form.Label>
+          <Form.Label className="font-bold mx-auto">Type *</Form.Label>
           <Form.Select
             aria-label="Select pet type"
             name="type"
+            area-required="true"
             onChange={(e) => register('type').onChange(e)}
             {...register('type', { required: 'Type is required.' })}
           >
@@ -90,9 +93,11 @@ const AdminAddPetForm = () => {
           )}
         </Form.Group>
         <Form.Group controlId="breed">
-          <Form.Label className="font-bold mx-auto">Breed</Form.Label>
+          <Form.Label className="font-bold mx-auto">Breed *</Form.Label>
           <Controller
             name="breed"
+            aria-label="Select pet breed"
+            area-required="true"
             control={control}
             rules={{ required: 'Breed is required.' }}
             render={({ field }) => (
@@ -113,12 +118,15 @@ const AdminAddPetForm = () => {
           )}
         </Form.Group>
         <Form.Group controlId="disposition">
-          <Form.Label className="font-bold mx-auto">Disposition</Form.Label>
+          <p className="font-bold mx-auto">Disposition *</p>
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Good with other animals"
+            area-required="true"
             label="Good with other animals"
             value="good_with_animals"
+            id="good_with_animals"
             {...register('disposition', {
               required: 'Select at least one disposition.',
             })}
@@ -126,8 +134,11 @@ const AdminAddPetForm = () => {
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Good with children"
+            area-required="true"
             label="Good with children"
             value="good_with_children"
+            id="good_with_children"
             {...register('disposition', {
               required: 'Select at least one disposition.',
             })}
@@ -135,8 +146,11 @@ const AdminAddPetForm = () => {
           <Form.Check
             type="checkbox"
             name="disposition"
+            aria-label="Must be leashed at all times"
+            area-required="true"
             label="Must be leashed at all times"
             value="leash_needed"
+            id="leash_needed"
             {...register('disposition', {
               required: 'Select at least one disposition.',
             })}
@@ -148,9 +162,10 @@ const AdminAddPetForm = () => {
           )}
         </Form.Group>
         <Form.Group controlId="availability">
-          <Form.Label className="font-bold mx-auto">Availability</Form.Label>
+          <Form.Label className="font-bold mx-auto">Availability *</Form.Label>
           <Form.Select
             aria-label="Select pet availability"
+            area-required="true"
             name="availability"
             {...register('availability', {
               required: 'Availability is required.',
@@ -169,10 +184,12 @@ const AdminAddPetForm = () => {
           )}
         </Form.Group>
         <Form.Group controlId="picture">
-          <Form.Label className="font-bold mx-auto">Picture</Form.Label>
+          <Form.Label className="font-bold mx-auto">Picture *</Form.Label>
           <Form.Control
             type="file"
             accept="image/jpeg, image/png"
+            aria-label="Select pet picture"
+            area-required="true"
             {...register('picture', {
               validate: validateFile,
               required: 'Please add a picture.',
@@ -189,10 +206,11 @@ const AdminAddPetForm = () => {
         </Form.Group>
 
         <Form.Group controlId="news">
-          <Form.Label className="font-bold mx-auto">News</Form.Label>
+          <Form.Label className="font-bold mx-auto">News Items</Form.Label>
           <div className="flex items-center">
             <Form.Control
               type="text"
+              aria-label="Add news item"
               placeholder="Add news item"
               {...register('news')}
             />
@@ -237,10 +255,11 @@ const AdminAddPetForm = () => {
         </div>
 
         <Form.Group controlId="description">
-          <Form.Label className="font-bold mx-auto">Description</Form.Label>
+          <Form.Label className="font-bold mx-auto">Description *</Form.Label>
           <Form.Control
             as="textarea"
             rows={8}
+            aria-label="Enter pet description"
             {...register('description', {
               maxLength: {
                 value: 500,
