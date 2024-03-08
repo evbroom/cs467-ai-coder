@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from pathlib import Path
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,12 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#35mxf%lxn+&j8vz@=1=ct-t1%3r)es@op4lp&j)#=dixi#u-!'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
+# https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:    
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -90,14 +96,15 @@ WSGI_APPLICATION = 'paws_together_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pawsapp',
-        'USER': 'postgres',
-        'PASSWORD': 'cs467',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'pawsapp',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'cs467',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 # Use the GitHub Actions database if the workflow is running
