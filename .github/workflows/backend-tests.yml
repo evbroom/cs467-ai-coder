@@ -9,11 +9,14 @@ on:
 env:
   PYTHONPATH: ${{ github.workspace }}/paws_together_backend
   DJANGO_SETTINGS_MODULE: paws_together_backend.settings
-  DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  # dummy secret key for github actions to work correctly
+  SECRET_KEY: '&-zxa6mpo3(du#0m6&urem8w!xwl3&*#n922)i^l%28uj%uroa'
 
 jobs:
   build:
 
+    environment: pawsappenv
     runs-on: ubuntu-latest
 
     services:
