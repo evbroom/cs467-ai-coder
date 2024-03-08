@@ -14,6 +14,7 @@ env:
 jobs:
   build:
 
+    environment: pawsappenv
     runs-on: ubuntu-latest
 
     services:
