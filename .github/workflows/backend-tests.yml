@@ -9,7 +9,7 @@ on:
 env:
   PYTHONPATH: ${{ github.workspace }}/paws_together_backend
   DJANGO_SETTINGS_MODULE: paws_together_backend.settings
-  DATABASE_URL: postgres://postgres:postgres@localhost:5432/github_actions
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   build:
