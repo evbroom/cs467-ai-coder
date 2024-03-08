@@ -5,12 +5,10 @@ set -o errexit
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
 
-pwd
-
 # Apply any outstanding database migrations
-python manage.py migrate
+python paws_together_backend/manage.py migrate
 
 if [[ $CREATE_SUPERUSER ]];
 then
-  python world_champ_2022/manage.py createsuperuser --no-input
+  python paws_together_backend/manage.py createsuperuser --no-input
 fi
