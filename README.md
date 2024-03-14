@@ -1,7 +1,7 @@
 # cs467-ai-coder
 CS467 - AI Coder - Animal Adoption
 
-## Setup and Running Instructions
+## Backend Setup and Running Instructions
 
 1. **Install Python**: The application is built with Django, which requires Python. You can download it from the [official Python website](https://www.python.org/downloads/).
 
